@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
 import 'package:rabadmin/features/auth/domain/usecases/login_use_case.dart';
 import 'package:rabadmin/features/auth/presentation/controllers/login_controller.dart';
-import 'package:rabadmin/features/auth/presentation/controllers/login_state.dart';
 
 // Create a mock class manually
 class MockLoginUseCase extends Mock implements LoginUseCase {}

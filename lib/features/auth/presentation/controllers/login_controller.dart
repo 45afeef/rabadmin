@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:rabadmin/core/providers/providers.dart';
-import 'package:rabadmin/features/auth/domain/usecases/login_use_case.dart';
-import 'package:rabadmin/features/auth/presentation/controllers/login_state.dart';
+
+import 'login_state.dart';
+import '../../domain/usecases/login_use_case.dart';
+import '../../../../core/providers/providers.dart';
 
 final loginControllerProvider =
     StateNotifierProvider<LoginController, LoginState>(
