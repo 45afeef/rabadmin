@@ -40,20 +40,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     LoginApi loginApi = rab.getLoginApi();
 
-    Response<Token> res = await loginApi.loginLoginAccessToken(
-      grantType: dotenv.env['GRANDTYPE'] ?? '',
-      username: dotenv.env['PASSWORD'] ?? '',
-      password: dotenv.env['USERNAME'] ?? '',
-    );
+    try {
+      Response<Token> res = await loginApi.loginLoginAccessToken(
+        grantType: dotenv.env['GRANDTYPE'] ?? '',
+        username: dotenv.env['USERNAME'] ?? '',
+        password: dotenv.env['PASSWORDS'] ?? '',
+      );
 
-    setState(() {
-      result = res;
-    });
-
-    result?.data?.accessToken;
-
-    print(res);
-    print("Afeef is doing this.");
+      setState(() {
+        result = res;
+      });
+    } on DioException catch (e) {
+    }
   }
 
   @override
