@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rab_dio/rab_dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:rabadmin/features/auth/presentation/pages/login_page.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env"); // Specify the path if not in root
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,27 +35,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Response<Token>? result;
 
-  Future<void> _loginUser() async {
-    Dio dio = Dio(BaseOptions(baseUrl: dotenv.env['API_URL'] ?? ''));
-
-    RabDio rab = RabDio(dio: dio);
-
-    LoginApi loginApi = rab.getLoginApi();
-
-    try {
-      Response<Token> res = await loginApi.loginLoginAccessToken(
-        grantType: dotenv.env['GRANDTYPE'] ?? '',
-        username: dotenv.env['USERNAME'] ?? '',
-        password: dotenv.env['PASSWORDS'] ?? '',
-      );
-
-      setState(() {
-        result = res;
-      });
-    } on DioException catch (e) {
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,14 +42,9 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [Text(result.toString())],
-        ),
-      ),
+      body: LoginPage(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _loginUser,
+        onPressed: null,
         tooltip: 'Get the user',
         child: const Icon(Icons.add),
       ),
