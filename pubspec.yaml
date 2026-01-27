@@ -45,6 +45,7 @@ dependencies:
       url: https://github.com/45afeef/rab_client.git
       ref: master
       path: dart_sdk
+  go_router: ^17.0.1
 
 
 dev_dependencies:
