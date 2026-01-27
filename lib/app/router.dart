@@ -1,47 +1,50 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../features/home/presentation/pages/home_page.dart';
 import '../features/auth/presentation/pages/login_page.dart';
+import '../features/home/presentation/pages/home_page.dart';
+import '../features/auth/presentation/controllers/auth_controller.dart';
+// import '../features/home/presentation/pages/home_page.dart';
 
-/// Centralized route names (optional but recommended)
 abstract class AppRoutes {
   static const login = '/login';
   static const home = '/';
 }
 
-/// AppRouter
-///
-/// Keeps navigation logic outside UI
-/// Easy to plug auth guards later
-class AppRouter {
-  static GoRouter router = GoRouter(
+/// Router provider (reactive)
+final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authControllerProvider);
+
+  return GoRouter(
     initialLocation: AppRoutes.login,
     debugLogDiagnostics: true,
 
-    routes: <RouteBase>[
-      GoRoute(
-        path: AppRoutes.login,
-        name: 'login',
-        builder: (BuildContext context, GoRouterState state) {
-          return const LoginPage();
-        },
-      ),
+    redirect: (context, state) {
+      final isLoggedIn = authState.isAuthenticated;
+      final isLoggingIn = state.fullPath?.contains(AppRoutes.login);
+
+      // 🚫 Not logged in → login
+      if (!isLoggedIn && !isLoggingIn!) {
+        return AppRoutes.login;
+      }
+
+      // ✅ Logged in → prevent going back to login
+      if (isLoggedIn && isLoggingIn!) {
+        return AppRoutes.home;
+      }
+
+      return null;
+    },
+
+    routes: [
+      GoRoute(path: AppRoutes.login, builder: (context, state) => LoginPage()),
 
       GoRoute(
         path: AppRoutes.home,
-        name: 'home',
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) {
+          return const HomePage();
+        },
       ),
     ],
-
-    /// Global error page (404, route failures, etc.)
-    errorBuilder: (context, state) {
-      return Scaffold(
-        body: Center(
-          child: Text(state.error.toString(), textAlign: TextAlign.center),
-        ),
-      );
-    },
   );
-}
+});

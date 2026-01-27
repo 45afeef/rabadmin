@@ -6,14 +6,14 @@ import '../controllers/login_controller.dart';
 import '../widgets/login_form.dart';
 
 class LoginPage extends ConsumerWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(loginControllerProvider);
-
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
 
     return Scaffold(
       body: Padding(
