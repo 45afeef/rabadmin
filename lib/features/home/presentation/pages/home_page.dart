@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rabadmin/features/auth/presentation/controllers/login_controller.dart';
+import 'package:rabadmin/features/auth/presentation/controllers/auth_controller.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -16,9 +16,9 @@ class HomePage extends ConsumerWidget {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                ref.read(loginControllerProvider.notifier).logout();
+                ref.read(authControllerProvider.notifier).logout();
               },
-              child: Text("Logout"),
+              child: const Text("Logout"),
             ),
           ],
         ),

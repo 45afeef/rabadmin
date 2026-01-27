@@ -20,6 +20,7 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
       children: [
         TextField(
           controller: emailController,

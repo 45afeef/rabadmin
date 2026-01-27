@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
 import '../features/auth/presentation/controllers/auth_controller.dart';
-// import '../features/home/presentation/pages/home_page.dart';
 
 abstract class AppRoutes {
   static const login = '/login';
@@ -16,20 +15,20 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authControllerProvider);
 
   return GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.home,
     debugLogDiagnostics: true,
 
     redirect: (context, state) {
       final isLoggedIn = authState.isAuthenticated;
-      final isLoggingIn = state.fullPath?.contains(AppRoutes.login);
+      final isLoggingIn = state.matchedLocation == AppRoutes.login;
 
       // 🚫 Not logged in → login
-      if (!isLoggedIn && !isLoggingIn!) {
+      if (!isLoggedIn && !isLoggingIn) {
         return AppRoutes.login;
       }
 
       // ✅ Logged in → prevent going back to login
-      if (isLoggedIn && isLoggingIn!) {
+      if (isLoggedIn && isLoggingIn) {
         return AppRoutes.home;
       }
 
@@ -38,7 +37,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 
     routes: [
       GoRoute(path: AppRoutes.login, builder: (context, state) => LoginPage()),
-
       GoRoute(
         path: AppRoutes.home,
         builder: (context, state) {
