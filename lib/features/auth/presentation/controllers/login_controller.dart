@@ -20,9 +20,13 @@ class LoginController extends StateNotifier<LoginState> {
     try {
       String token = await loginUseCase(email: email, password: password);
 
-      state = state.copyWith(isLoading: false, token: token);
+      state = state.copyWith(isLoading: false, token: token, error: null);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+        token: null,
+      );
     }
   }
 }
