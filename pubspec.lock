@@ -470,9 +470,11 @@ packages:
   rab_dio:
     dependency: "direct main"
     description:
-      path: "../rab_client/dart_sdk"
-      relative: true
-    source: path
+      path: dart_sdk
+      ref: master
+      resolved-ref: f533ff543b56e0911861d48e1f4391b9a79b9f90
+      url: "https://github.com/45afeef/rab_client.git"
+    source: git
     version: "1.0.0"
   riverpod:
     dependency: transitive
