@@ -10,7 +10,6 @@ class LoginPage extends ConsumerWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(authControllerProvider);
