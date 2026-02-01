@@ -39,6 +39,7 @@ dependencies:
   flutter_riverpod: ^3.2.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  go_router: ^17.0.1
 
   # Github packages
   rab_dio:
@@ -47,7 +48,6 @@ dependencies:
       url: https://github.com/45afeef/rab_client.git
       ref: master
       path: dart_sdk
-  go_router: ^17.0.1
 
 
 dev_dependencies:

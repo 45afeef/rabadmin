@@ -1,0 +1,23 @@
+Integration Test Example
+
+This file demonstrates how to test the agency feature integration
+with the rab_dio API client.
+
+Save as: test/features/agency/integration_test.dart (optional)
+
+To run:
+flutter test test/features/agency/integration_test.dart
+
+Example (pseudo-code):
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:rabadmin/features/agency/data/datasources/agency_remote_data_source.dart';
+import 'package:rabadmin/features/agency/data/models/agency_model.dart';
+import 'package:rabadmin/features/agency/data/repositories/agency_repository_impl.dart';
+import 'package:rabadmin/features/agency/domain/usecases/list_agencies_use_case.dart';
+import 'package:rabadmin/features/agency/domain/usecases/create_agency_use_case.dart';
+
+void main() {
+  // Move the example into proper test files under /test when ready.
+}

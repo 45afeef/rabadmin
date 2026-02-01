@@ -1,0 +1,522 @@
+/// Example Implementation File
+/// 
+/// This file demonstrates various use cases of the Agency feature.
+/// It serves as a reference for how to use the agency repositories,
+/// use cases, and state management in your UI.
+/// 
+/// DO NOT include this in production. Use it as documentation only.
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Import paths (adjust based on your file locations)
+// import 'package:rabadmin/features/agency/presentation/controllers/agencies_list_notifier.dart';
+// import 'package:rabadmin/features/agency/presentation/controllers/agency_detail_notifier.dart';
+// import 'package:rabadmin/core/providers/providers.dart';
+
+// ============================================================================
+// EXAMPLE 1: Display List of Agencies
+// ============================================================================
+
+/// Example widget that displays a list of all agencies.
+/// 
+/// This demonstrates:
+/// - Using the agenciesListProvider to watch state changes
+/// - Handling loading state
+/// - Handling error state
+/// - Displaying agency data in a ListView
+class AgenciesListExample extends ConsumerStatefulWidget {
+  const AgenciesListExample({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<AgenciesListExample> createState() =>
+      _AgenciesListExampleState();
+}
+
+class _AgenciesListExampleState extends ConsumerState<AgenciesListExample> {
+  @override
+  void initState() {
+    super.initState();
+    // Load agencies when widget is first built
+    Future.microtask(() {
+      ref.read(agenciesListProvider.notifier).loadAgencies();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch the agencies list state
+    final state = ref.watch(agenciesListProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Agencies')),
+      body: Builder(
+        builder: (context) {
+          // Show loading indicator while fetching data
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Show error message if something went wrong
+          if (state.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Error: ${state.error}'),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Clear error and retry
+                      ref.read(agenciesListProvider.notifier)
+                        ..clearError()
+                        ..loadAgencies();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // Show empty state if no agencies
+          if (state.agencies.isEmpty) {
+            return const Center(
+              child: Text('No agencies found'),
+            );
+          }
+
+          // Display list of agencies
+          return ListView.builder(
+            itemCount: state.agencies.length,
+            itemBuilder: (context, index) {
+              final agency = state.agencies[index];
+              return ListTile(
+                title: Text(agency.name),
+                subtitle: Text(agency.description ?? 'No description'),
+                trailing: Chip(
+                  label: Text(agency.isActive ? 'Active' : 'Inactive'),
+                  backgroundColor:
+                      agency.isActive ? Colors.green : Colors.grey,
+                ),
+                onTap: () {
+                  // Navigate to agency detail page
+                  // Navigator.push(context, MaterialPageRoute(...))
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// EXAMPLE 2: Display Agency Details
+// ============================================================================
+
+/// Example widget that displays detailed information about a single agency.
+/// 
+/// This demonstrates:
+/// - Using the agencyDetailProvider with a specific agencyId parameter
+/// - Passing data through Riverpod family providers
+/// - Displaying nested staff information
+class AgencyDetailExample extends ConsumerStatefulWidget {
+  final String agencyId;
+
+  const AgencyDetailExample({
+    Key? key,
+    required this.agencyId,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<AgencyDetailExample> createState() =>
+      _AgencyDetailExampleState();
+}
+
+class _AgencyDetailExampleState extends ConsumerState<AgencyDetailExample> {
+  @override
+  void initState() {
+    super.initState();
+    // Load agency details when widget is built
+    Future.microtask(() {
+      ref.read(agencyDetailProvider(widget.agencyId).notifier).loadAgency();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch the specific agency detail state
+    final state = ref.watch(agencyDetailProvider(widget.agencyId));
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Agency Details')),
+      body: Builder(
+        builder: (context) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.error != null) {
+            return Center(
+              child: Text('Error loading agency: ${state.error}'),
+            );
+          }
+
+          if (state.agency == null) {
+            return const Center(child: Text('Agency not found'));
+          }
+
+          final agency = state.agency!;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Agency header information
+                Text(
+                  agency.name,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 8),
+                if (agency.description != null) ...[
+                  Text(agency.description!),
+                  const SizedBox(height: 16),
+                ],
+
+                // Agency metadata
+                Text(
+                  'Status: ${agency.isActive ? "Active" : "Inactive"}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  'Created: ${agency.createdAt}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+
+                // Staff members section
+                Text(
+                  'Staff Members (${agency.staffs.length})',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                if (agency.staffs.isEmpty) ...[
+                  const Text('No staff members assigned'),
+                ] else ...[
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: agency.staffs.length,
+                    itemBuilder: (context, index) {
+                      final staff = agency.staffs[index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(staff.fullName ?? 'Unknown'),
+                          subtitle: Text('Role: ${staff.role}'),
+                          trailing: Text(staff.email ?? 'N/A'),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// EXAMPLE 3: Create an Agency
+// ============================================================================
+
+/// Example widget that demonstrates creating a new agency.
+/// 
+/// This demonstrates:
+/// - Using use cases directly for specific operations
+/// - Form submission with error handling
+/// - Refreshing the list after successful creation
+class CreateAgencyExample extends ConsumerStatefulWidget {
+  const CreateAgencyExample({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<CreateAgencyExample> createState() =>
+      _CreateAgencyExampleState();
+}
+
+class _CreateAgencyExampleState extends ConsumerState<CreateAgencyExample> {
+  late TextEditingController _nameController;
+  late TextEditingController _descriptionController;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _descriptionController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _createAgency() async {
+    if (_nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter agency name')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Get the use case from the provider
+      final useCase = ref.read(createAgencyUseCaseProvider);
+
+      // Execute the creation
+      final newAgency = await useCase.call(
+        name: _nameController.text,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
+      );
+
+      // Refresh the agencies list
+      ref.read(agenciesListProvider.notifier).loadAgencies();
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Agency created: ${newAgency.name}')),
+      );
+
+      // Clear form
+      _nameController.clear();
+      _descriptionController.clear();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Create Agency')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Agency Name',
+                border: OutlineInputBorder(),
+              ),
+              enabled: !_isLoading,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+              enabled: !_isLoading,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _isLoading ? null : _createAgency,
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Create Agency'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// EXAMPLE 4: Update Agency
+// ============================================================================
+
+/// Example function demonstrating how to update an agency.
+/// 
+/// This can be used in a form submission or edit button handler.
+Future<void> updateAgencyExample(
+  WidgetRef ref,
+  String agencyId,
+  String newName,
+  String? newDescription,
+) async {
+  try {
+    // Get the use case
+    final useCase = ref.read(updateAgencyUseCaseProvider);
+
+    // Execute the update
+    final updatedAgency = await useCase.call(
+      agencyId: agencyId,
+      name: newName,
+      description: newDescription,
+    );
+
+    // Show success message
+    print('Updated: ${updatedAgency.name}');
+
+    // Refresh the list and detail
+    ref.read(agenciesListProvider.notifier).loadAgencies();
+    ref.read(agencyDetailProvider(agencyId).notifier).loadAgency();
+  } catch (e) {
+    print('Error updating agency: $e');
+  }
+}
+
+// ============================================================================
+// EXAMPLE 5: Delete Agency
+// ============================================================================
+
+/// Example function demonstrating how to delete an agency.
+Future<void> deleteAgencyExample(
+  WidgetRef ref,
+  String agencyId,
+) async {
+  try {
+    // Get the use case
+    final useCase = ref.read(deleteAgencyUseCaseProvider);
+
+    // Execute the deletion
+    await useCase.call(agencyId: agencyId);
+
+    // Refresh the list
+    ref.read(agenciesListProvider.notifier).loadAgencies();
+
+    print('Agency deleted successfully');
+  } catch (e) {
+    print('Error deleting agency: $e');
+  }
+}
+
+// ============================================================================
+// EXAMPLE 6: Manage Agency Staff
+// ============================================================================
+
+/// Example widget demonstrating staff management operations.
+class ManageAgencyStaffExample extends ConsumerWidget {
+  final String agencyId;
+
+  const ManageAgencyStaffExample({
+    Key? key,
+    required this.agencyId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final staffState = ref.watch(agencyStaffListProvider(agencyId));
+
+    return Column(
+      children: [
+        // List current staff
+        if (staffState.isLoading)
+          const CircularProgressIndicator()
+        else if (staffState.staffs.isEmpty)
+          const Text('No staff members')
+        else
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: staffState.staffs.length,
+            itemBuilder: (context, index) {
+              final staff = staffState.staffs[index];
+              return ListTile(
+                title: Text(staff.fullName ?? 'Unknown'),
+                subtitle: Text(staff.role),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _removeStaff(context, ref, agencyId, staff.id),
+                ),
+              );
+            },
+          ),
+
+        // Add new staff button
+        ElevatedButton(
+          onPressed: () => _showAddStaffDialog(context, ref, agencyId),
+          child: const Text('Add Staff'),
+        ),
+      ],
+    );
+  }
+
+  /// Show dialog to add new staff member
+  void _showAddStaffDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String agencyId,
+  ) {
+    // Implement dialog for adding staff
+    // Use addAgencyStaffUseCaseProvider to execute the operation
+  }
+
+  /// Remove staff member from agency
+  Future<void> _removeStaff(
+    BuildContext context,
+    WidgetRef ref,
+    String agencyId,
+    String staffId,
+  ) async {
+    try {
+      final useCase = ref.read(removeAgencyStaffUseCaseProvider);
+      await useCase.call(agencyId: agencyId, staffId: staffId);
+
+      // Refresh the staff list
+      ref.read(agencyStaffListProvider(agencyId).notifier).loadStaffs();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Staff member removed')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+}
+
+// ============================================================================
+// NOTES FOR IMPLEMENTATION
+// ============================================================================
+
+/// When implementing these examples in your actual UI:
+/// 
+/// 1. Replace the import paths with your actual project structure
+/// 2. Uncomment the import statements once files are in place
+/// 3. Adapt widget names and styling to match your app design
+/// 4. Add proper navigation between screens
+/// 5. Implement proper form validation
+/// 6. Handle edge cases and error states appropriately
+/// 7. Add analytics or logging as needed
+/// 8. Test all user interactions thoroughly
+/// 
+/// Key points to remember:
+/// - Always use ref.watch() to reactively update UI on state changes
+/// - Use ref.read() to get current state without watching
+/// - Call .notifier on providers to execute state changes
+/// - Handle loading states with proper UI feedback
+/// - Show meaningful error messages to users
+/// - Refresh data after mutations (create, update, delete)

@@ -18,7 +18,7 @@ class HomePage extends ConsumerWidget {
               onPressed: () {
                 ref.read(authControllerProvider.notifier).logout();
               },
-              child: const Text("Logout"),
+              child: const Text('Logout'),
             ),
           ],
         ),
