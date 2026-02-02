@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rabadmin/features/agency/presentation/widgets/agency_widget.dart';
 
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
@@ -11,6 +12,7 @@ abstract class AppRoutes {
   static const login = '/login';
   static const home = '/';
   static const splash = '/splash';
+  static const myAgenicies = '/my-agencies';
 }
 
 /// Router provider (reactive)
@@ -64,6 +66,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.home,
         builder: (context, state) {
           return const HomePage();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.myAgenicies,
+        builder: (context, state) {
+          return const AgenciesListExample();
         },
       ),
     ],

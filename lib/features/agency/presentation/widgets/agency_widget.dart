@@ -1,13 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rabadmin/features/agency/presentation/controllers/agencies_list_notifier.dart';
 
-/// Widget stub for displaying agency information.
+// Import paths (adjust based on your file locations)
+// import 'package:rabadmin/features/agency/presentation/controllers/agencies_list_notifier.dart';
+// import 'package:rabadmin/features/agency/presentation/controllers/agency_detail_notifier.dart';
+// import 'package:rabadmin/core/providers/providers.dart';
+
+// ============================================================================
+// EXAMPLE 1: Display List of Agencies
+// ============================================================================
+
+/// Example widget that displays a list of all agencies.
 ///
-/// This widget will be implemented with specific agency display logic.
-class AgencyWidget extends StatelessWidget {
-  const AgencyWidget({Key? key}) : super(key: key);
+/// This demonstrates:
+/// - Using the agenciesListProvider to watch state changes
+/// - Handling loading state
+/// - Handling error state
+/// - Displaying agency data in a ListView
+class AgenciesListExample extends ConsumerStatefulWidget {
+  const AgenciesListExample({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<AgenciesListExample> createState() =>
+      _AgenciesListExampleState();
+}
+
+class _AgenciesListExampleState extends ConsumerState<AgenciesListExample> {
+  @override
+  void initState() {
+    super.initState();
+    // Load agencies when widget is first built
+    Future.microtask(() {
+      ref.read(agenciesListProvider.notifier).loadAgencies();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(child: Text('Agency Widget - To be implemented'));
+    // Watch the agencies list state
+    final state = ref.watch(agenciesListProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Agencies')),
+      body: Builder(
+        builder: (context) {
+          // Show loading indicator while fetching data
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Show error message if something went wrong
+          if (state.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Error: ${state.error}'),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Clear error and retry
+                      ref.read(agenciesListProvider.notifier)
+                        ..clearError()
+                        ..loadAgencies();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // Show empty state if no agencies
+          if (state.agencies.isEmpty) {
+            return const Center(child: Text('No agencies found'));
+          }
+
+          // Display list of agencies
+          return ListView.builder(
+            itemCount: state.agencies.length,
+            itemBuilder: (context, index) {
+              final agency = state.agencies[index];
+              return ListTile(
+                title: Text(agency.name),
+                subtitle: Text(agency.description ?? 'No description'),
+                trailing: Chip(
+                  label: Text(agency.isActive ? 'Active' : 'Inactive'),
+                  backgroundColor: agency.isActive ? Colors.green : Colors.grey,
+                ),
+                onTap: () {
+                  // Navigate to agency detail page
+                  // Navigator.push(context, MaterialPageRoute(...))
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
