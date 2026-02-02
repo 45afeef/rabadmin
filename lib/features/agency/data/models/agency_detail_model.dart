@@ -1,3 +1,5 @@
+import 'package:rabadmin/features/agency/domain/entities/agency_staff.dart';
+
 import '../../domain/entities/agency_detail.dart';
 import 'agency_staff_model.dart';
 
@@ -5,26 +7,26 @@ import 'agency_staff_model.dart';
 ///
 /// Extended model representing an agency with its staff members.
 /// Used when detailed agency information is retrieved from the API.
-class AgencyDetailModel extends AgencyDetail {
+class AgencyDetailModel {
+  final String id;
+  final String name;
+  final String? description;
+  final String? logo;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<AgencyStaffModel> staffs;
+
   const AgencyDetailModel({
-    required String id,
-    required String name,
-    String? description,
-    String? logo,
-    required bool isActive,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    List<AgencyStaffModel> staffs = const [],
-  }) : super(
-         id: id,
-         name: name,
-         description: description,
-         logo: logo,
-         isActive: isActive,
-         createdAt: createdAt,
-         updatedAt: updatedAt,
-         staffs: staffs,
-       );
+    required this.id,
+    required this.name,
+    this.description,
+    this.logo,
+    required this.isActive,
+    required this.createdAt,
+    required this.updatedAt,
+    this.staffs = const [],
+  });
 
   /// Create an AgencyDetailModel from a JSON object received from the API
   ///
@@ -137,7 +139,7 @@ class AgencyDetailModel extends AgencyDetail {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-    List<AgencyStaffModel>? staffs,
+    List<AgencyStaff>? staffs,
   }) {
     return AgencyDetailModel(
       id: id ?? this.id,
@@ -147,7 +149,7 @@ class AgencyDetailModel extends AgencyDetail {
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      staffs: staffs ?? (this.staffs as List<AgencyStaffModel>),
+      staffs: (this.staffs.cast<AgencyStaffModel>()),
     );
   }
 }

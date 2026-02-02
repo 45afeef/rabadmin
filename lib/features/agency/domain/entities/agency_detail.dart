@@ -8,23 +8,15 @@ class AgencyDetail extends Agency {
   final List<AgencyStaff> staffs;
 
   const AgencyDetail({
-    required String id,
-    required String name,
-    String? description,
-    String? logo,
-    required bool isActive,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required super.id,
+    required super.name,
+    super.description,
+    super.logo,
+    required super.isActive,
+    super.createdAt,
+    super.updatedAt,
     this.staffs = const [],
-  }) : super(
-         id: id,
-         name: name,
-         description: description,
-         logo: logo,
-         isActive: isActive,
-         createdAt: createdAt,
-         updatedAt: updatedAt,
-       );
+  });
 
   /// Create a copy of this agency detail with modified fields
   @override

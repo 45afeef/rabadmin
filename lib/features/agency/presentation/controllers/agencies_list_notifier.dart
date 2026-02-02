@@ -1,7 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:rabadmin/core/providers/providers.dart';
 
-import '../../domain/repositories/agency_repository.dart';
 import '../../domain/usecases/list_agencies_use_case.dart';
 import 'agency_state.dart';
 
@@ -50,11 +49,3 @@ class AgenciesListNotifier extends StateNotifier<AgencyListState> {
     state = const AgencyListState();
   }
 }
-
-/// Provider for accessing the agency repository.
-///
-/// This is a placeholder provider that should be defined in the core providers.
-/// Override this in your dependency injection setup.
-final agencyRepositoryProvider = Provider<AgencyRepository>((ref) {
-  throw UnimplementedError('agencyRepositoryProvider must be overridden');
-});

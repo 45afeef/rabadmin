@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rab_dio/rab_dio.dart';
+import 'package:rabadmin/core/network/auth_interceptor.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/datasources/auth_local_data_source.dart';
@@ -15,16 +16,23 @@ import '../../features/agency/data/datasources/agency_remote_data_source.dart';
 import '../../features/agency/data/repositories/agency_repository_impl.dart';
 import '../../features/agency/domain/repositories/agency_repository.dart';
 
-RabDio rab = RabDio(
-  dio: Dio(BaseOptions(baseUrl: dotenv.env['API_URL'] ?? '')),
-);
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio(BaseOptions(baseUrl: dotenv.env['API_URL'] ?? ''));
+  final localDataSource = ref.watch(authLocalDataSourceProvider);
+  dio.interceptors.add(AuthInterceptor(localDataSource));
+  return dio;
+});
 
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>(
   (ref) => HiveAuthLocalDataSource(),
 );
 
+final rabDioProvider = Provider<RabDio>((ref) {
+  return RabDio(dio: ref.watch(dioProvider));
+});
+
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>(
-  (ref) => GcpFastApiDataSource(rab.getLoginApi()),
+  (ref) => GcpFastApiDataSource(ref.read(rabDioProvider).getLoginApi()),
 );
 
 final authRepositoryProvider = Provider<AuthRepository>(
@@ -47,15 +55,15 @@ final validateTokenUseCaseProvider = Provider<ValidateTokenUseCase>(
 // =============================================================================
 
 /// Provider for the AgenciesApi client from rab_dio.
-/// 
+///
 /// Creates and manages the AgenciesApi instance for making HTTP requests
 /// to the agencies API endpoints.
 final agenciesApiProvider = Provider<AgenciesApi>(
-  (ref) => rab.getAgenciesApi(),
+  (ref) => ref.watch(rabDioProvider).getAgenciesApi(),
 );
 
 /// Provider for the agency remote data source.
-/// 
+///
 /// Creates the data source that handles all remote API communication
 /// for agency-related operations.
 final agencyRemoteDataSourceProvider = Provider<AgencyRemoteDataSource>(
@@ -63,10 +71,10 @@ final agencyRemoteDataSourceProvider = Provider<AgencyRemoteDataSource>(
 );
 
 /// Provider for the agency repository.
-/// 
+///
 /// Creates the main repository that serves as the bridge between
 /// the presentation layer and data layer for agency operations.
-/// 
+///
 /// This provider is used throughout the agency feature to access
 /// all agency-related business logic.
 final agencyRepositoryProvider = Provider<AgencyRepository>(

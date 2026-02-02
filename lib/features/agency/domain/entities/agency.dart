@@ -8,8 +8,8 @@ class Agency {
   final String? description;
   final String? logo;
   final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const Agency({
     required this.id,

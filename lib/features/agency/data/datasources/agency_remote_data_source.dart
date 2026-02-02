@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:rab_dio/rab_dio.dart'
     show
+        AgencyPublic,
         AgenciesApi,
         AgencyCreate,
         AgencyUpdate,
         AgencyStaffCreate,
-        AgencyStaffUpdate;
+        AgencyStaffUpdate,
+        StaffRole,
+        standardSerializers;
 
 import 'package:rabadmin/features/agency/data/models/agency_detail_model.dart';
 
@@ -128,14 +131,16 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
   @override
   Future<List<AgencyModel>> listAgencies() async {
     try {
-      final response = await api.agenciesListAgencies();
+      final response = await api.agenciesGetAgencies();
 
-      return response.data
-              ?.map(
-                (agency) =>
-                    AgencyModel.fromJson(agency as Map<String, dynamic>),
-              )
-              .toList() ??
+      return response.data?.map((AgencyPublic agency) {
+            final agencyJson = standardSerializers.serializeWith(
+              AgencyPublic.serializer,
+              agency,
+            );
+
+            return AgencyModel.fromJson(agencyJson as Map<String, dynamic>);
+          }).toList() ??
           [];
     } on DioException {
       rethrow;
@@ -172,11 +177,7 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
       // TODO: Verify field names match the actual rab_dio AgencyCreate model
       // The fields might be different (e.g., camelCase vs snake_case)
       final response = await api.agenciesCreateAgency(
-        agencyCreate: AgencyCreate(
-          (b) => b
-            ..name = name
-            ..description = description,
-        ),
+        agencyCreate: AgencyCreate((b) => b..agencyName = name),
       );
 
       if (response.data == null) {
@@ -200,11 +201,7 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
     try {
       final response = await api.agenciesUpdateAgency(
         agencyId: agencyId,
-        agencyUpdate: AgencyUpdate(
-          (b) => b
-            ..name = name
-            ..description = description,
-        ),
+        agencyUpdate: AgencyUpdate((b) => b..agencyName),
       );
 
       if (response.data == null) {
@@ -262,8 +259,8 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
         agencyId: agencyId,
         agencyStaffCreate: AgencyStaffCreate(
           (b) => b
-            ..user_id = userId
-            ..role = role,
+            ..userId = userId
+            ..role = StaffRole.valueOf(role),
         ),
       );
 
@@ -289,7 +286,9 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
       final response = await api.agenciesUpdateAgencyStaff(
         agencyId: agencyId,
         staffId: staffId,
-        agencyStaffUpdate: AgencyStaffUpdate((b) => b..role = role),
+        agencyStaffUpdate: AgencyStaffUpdate(
+          (b) => b..role = StaffRole.valueOf(role),
+        ),
       );
 
       if (response.data == null) {

@@ -6,22 +6,14 @@ import '../../domain/entities/agency.dart';
 /// It includes additional methods for converting to/from JSON and domain entities.
 class AgencyModel extends Agency {
   const AgencyModel({
-    required String id,
-    required String name,
-    String? description,
-    String? logo,
-    required bool isActive,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) : super(
-         id: id,
-         name: name,
-         description: description,
-         logo: logo,
-         isActive: isActive,
-         createdAt: createdAt,
-         updatedAt: updatedAt,
-       );
+    required super.id,
+    required super.name,
+    super.description,
+    super.logo,
+    super.isActive = false,
+    super.createdAt,
+    super.updatedAt,
+  });
 
   /// Create an AgencyModel from a JSON object received from the API
   ///
@@ -40,14 +32,18 @@ class AgencyModel extends Agency {
   factory AgencyModel.fromJson(Map<String, dynamic> json) {
     return AgencyModel(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: json['agency_name'] as String,
       description: json['description'] as String?,
       logo: json['logo'] as String?,
       isActive: json['is_active'] as bool? ?? true,
-      createdAt: json['created_at'] is String
+      createdAt: json['created_at'] == null
+          ? null
+          : json['created_at'] is String
           ? DateTime.parse(json['created_at'] as String)
           : json['created_at'] as DateTime,
-      updatedAt: json['updated_at'] is String
+      updatedAt: json['created_at'] == null
+          ? null
+          : json['updated_at'] is String
           ? DateTime.parse(json['updated_at'] as String)
           : json['updated_at'] as DateTime,
     );
@@ -61,8 +57,8 @@ class AgencyModel extends Agency {
       'description': description,
       'logo': logo,
       'is_active': isActive,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 

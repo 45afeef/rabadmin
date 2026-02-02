@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
-// Removed unused import: flutter_riverpod.dart
 
+import '../../../../core/providers/providers.dart';
 import '../../domain/usecases/get_agency_use_case.dart';
-import 'agencies_list_notifier.dart';
 import 'agency_state.dart';
 
 /// Riverpod provider for managing a single agency's detail state.

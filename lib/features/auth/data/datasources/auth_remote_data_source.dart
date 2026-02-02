@@ -3,7 +3,7 @@ import 'package:rab_dio/rab_dio.dart' show LoginApi;
 
 abstract class AuthRemoteDataSource {
   Future<String> login({required String username, required String password});
-  Future<void> validateToken({required String token});
+  Future<void> validateToken();
 }
 
 class GcpFastApiDataSource extends AuthRemoteDataSource {
@@ -30,15 +30,9 @@ class GcpFastApiDataSource extends AuthRemoteDataSource {
   }
 
   @override
-  Future<void> validateToken({required String token}) async {
+  Future<void> validateToken() async {
     try {
-      // TODO: Make the header available in rab_dio package
-      // Create a header with the token
-      Map<String, String> headers = {'Authorization': 'Bearer $token'};
-
-      // Use the loginTestToken method to validate the token
-      // This method requires the token to be in the headers
-      final response = await api.loginTestToken(headers: headers);
+      final response = await api.loginTestToken();
 
       if (response.statusCode != 200) {
         throw Exception('Token validation failed');

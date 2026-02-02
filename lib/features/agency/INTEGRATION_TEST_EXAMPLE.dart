@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 // Integration Test Example
 //
 // This file demonstrates how to test the agency feature integration
