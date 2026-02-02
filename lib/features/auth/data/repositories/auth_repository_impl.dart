@@ -9,7 +9,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
   @override
-  Future<String> login({
+  Future<void> login({
     required String email,
     required String password,
   }) async {
@@ -18,22 +18,18 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
     await localDataSource.saveToken(token);
-    return token;
   }
 
   @override
-  Future<String?> validateToken() async {
-    final token = await localDataSource.getToken();
-    if (token == null) return null;
-
+  Future<bool> validateToken() async {
     try {
       // Validate token with the API
-      await remoteDataSource.validateToken(token: token);
-      return token;
+      await remoteDataSource.validateToken();
+      return true;
     } catch (e) {
       // Token is invalid or expired
       await localDataSource.deleteToken();
-      return null;
+      return false;
     }
   }
 

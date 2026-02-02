@@ -5,7 +5,7 @@ class ValidateTokenUseCase {
 
   ValidateTokenUseCase(this.repository);
 
-  Future<String?> call() {
+  Future<bool> call() {
     return repository.validateToken();
   }
 }

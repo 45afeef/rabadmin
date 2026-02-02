@@ -19,25 +19,22 @@ class AuthController extends StateNotifier<AuthState> {
     : super(AuthState.unauthenticated());
 
   Future<void> login({required String email, required String password}) async {
-    state = state.copyWith(isLoading: true, error: null, token: null);
+    state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final token = await loginUseCase(email: email, password: password);
+      await loginUseCase(email: email, password: password);
 
-      state = AuthState.authenticated(token);
+      state = AuthState.authenticated();
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+      state = AuthState.unauthenticated();
     }
   }
 
   Future<void> validateExistingToken() async {
     try {
-      final token = await validateTokenUseCase();
-      if (token != null) {
-        state = AuthState.authenticated(token);
-      } else {
-        state = AuthState.unauthenticated();
-      }
+      final isValid = await validateTokenUseCase();
+      state = isValid ? AuthState.authenticated() : AuthState.unauthenticated();
     } catch (e) {
       state = AuthState.unauthenticated();
     }
