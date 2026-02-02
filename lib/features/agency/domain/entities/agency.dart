@@ -1,47 +1,33 @@
 /// Domain entity representing an agency.
 ///
-/// This entity contains the core business logic data for an agency.
-/// It's independent of any external framework or data source.
 class Agency {
   final String id;
-  final String name;
-  final String? description;
-  final String? logo;
-  final bool isActive;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String agencyName;
+  final String? contactEmail;
+  final String? locationId;
 
   const Agency({
     required this.id,
-    required this.name,
-    this.description,
-    this.logo,
-    required this.isActive,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.agencyName,
+    this.contactEmail,
+    this.locationId,
   });
 
   /// Create a copy of this agency with modified fields
   Agency copyWith({
     String? id,
-    String? name,
-    String? description,
-    String? logo,
-    bool? isActive,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? agencyName,
+    String? contactEmail,
+    String? locationId,
   }) {
     return Agency(
       id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      logo: logo ?? this.logo,
-      isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      agencyName: agencyName ?? this.agencyName,
+      contactEmail: contactEmail ?? this.contactEmail,
+      locationId: locationId ?? this.locationId,
     );
   }
 
   @override
-  String toString() => 'Agency(id: $id, name: $name, isActive: $isActive)';
+  String toString() => 'Agency(id: $id, agencyName: $agencyName)';
 }

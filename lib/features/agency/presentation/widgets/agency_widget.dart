@@ -82,12 +82,8 @@ class _AgenciesListExampleState extends ConsumerState<AgenciesListExample> {
             itemBuilder: (context, index) {
               final agency = state.agencies[index];
               return ListTile(
-                title: Text(agency.name),
-                subtitle: Text(agency.description ?? 'No description'),
-                trailing: Chip(
-                  label: Text(agency.isActive ? 'Active' : 'Inactive'),
-                  backgroundColor: agency.isActive ? Colors.green : Colors.grey,
-                ),
+                title: Text(agency.agencyName),
+                subtitle: Text(agency.contactEmail ?? 'No email'),
                 onTap: () {
                   // Navigate to agency detail page
                   // Navigator.push(context, MaterialPageRoute(...))
