@@ -1,9 +1,8 @@
 // Removed unused import: flutter_riverpod.dart
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:rabadmin/core/providers/providers.dart';
 
+import '../../../../core/providers/providers.dart';
 import '../../domain/usecases/list_agency_staffs_use_case.dart';
-import 'agencies_list_notifier.dart';
 import 'agency_state.dart';
 
 /// Riverpod provider for managing agency staff list state.

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rabadmin/features/agency/presentation/widgets/agency_widget.dart';
+import 'package:go_router/go_router.dart';
 
+import '../core/providers/app_initialization.dart';
+import '../features/agency/presentation/widgets/agency_widget.dart';
+import '../features/auth/presentation/controllers/auth_controller.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
-import '../features/auth/presentation/controllers/auth_controller.dart';
-import '../core/providers/app_initialization.dart';
 
 abstract class AppRoutes {
   static const login = '/login';

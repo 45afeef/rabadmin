@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rabadmin/app/router.dart';
-import 'package:rabadmin/features/auth/presentation/controllers/auth_controller.dart';
+
+import '../../../../app/router.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});

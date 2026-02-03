@@ -10,8 +10,7 @@ import 'package:rab_dio/rab_dio.dart'
         StaffRole,
         standardSerializers;
 
-import 'package:rabadmin/features/agency/data/models/agency_detail_model.dart';
-
+import '../models/agency_detail_model.dart';
 import '../models/agency_model.dart';
 import '../models/agency_staff_model.dart';
 

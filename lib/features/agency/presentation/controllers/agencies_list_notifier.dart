@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:rabadmin/core/providers/providers.dart';
 
+import '../../../../core/providers/providers.dart';
 import '../../domain/usecases/list_agencies_use_case.dart';
 import 'agency_state.dart';
 

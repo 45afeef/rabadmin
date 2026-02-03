@@ -22,7 +22,7 @@ import 'agency_form.dart';
 /// - Handling error state
 /// - Displaying agency data in a ListView
 class AgenciesListExample extends ConsumerStatefulWidget {
-  const AgenciesListExample({Key? key}) : super(key: key);
+  const AgenciesListExample({super.key});
 
   @override
   ConsumerState<AgenciesListExample> createState() =>
