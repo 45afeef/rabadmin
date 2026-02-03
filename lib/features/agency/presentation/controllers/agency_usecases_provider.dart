@@ -7,7 +7,6 @@ import '../../domain/usecases/delete_agency_use_case.dart';
 import '../../domain/usecases/add_agency_staff_use_case.dart';
 import '../../domain/usecases/update_agency_staff_use_case.dart';
 import '../../domain/usecases/remove_agency_staff_use_case.dart';
-import 'agencies_list_notifier.dart';
 
 /// Provides the CreateAgencyUseCase instance.
 final createAgencyUseCaseProvider = Provider((ref) {

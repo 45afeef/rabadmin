@@ -82,3 +82,22 @@ class AgencyStaffListState {
     );
   }
 }
+
+/// State class for agency create operations.
+///
+/// Manages the state of loading, data, and errors for a single agency creation.
+class AgencyCreateState {
+  final bool isLoading;
+  final Agency? agency;
+  final String? error;
+
+  const AgencyCreateState({this.isLoading = false, this.agency, this.error});
+
+  AgencyCreateState copyWith({bool? isLoading, Agency? agency, String? error}) {
+    return AgencyCreateState(
+      isLoading: isLoading ?? this.isLoading,
+      agency: agency ?? this.agency,
+      error: error,
+    );
+  }
+}

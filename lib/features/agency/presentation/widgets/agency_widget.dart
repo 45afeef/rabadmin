@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rabadmin/features/agency/presentation/controllers/agencies_list_notifier.dart';
+
+import '../controllers/agencies_list_notifier.dart';
+import "../controllers/agency_create_notifier.dart";
+import 'agency_form.dart';
 
 // Import paths (adjust based on your file locations)
 // import 'package:rabadmin/features/agency/presentation/controllers/agencies_list_notifier.dart';
@@ -92,6 +95,34 @@ class _AgenciesListExampleState extends ConsumerState<AgenciesListExample> {
             },
           );
         },
+      ),
+
+      bottomSheet: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              // Open up the bottom sheet to show agencies create form
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    padding: EdgeInsets.all(16),
+                    child: AgencyForm(
+                      onSubmit: (agency) {
+                        ref
+                            .read(agencyCreateProvider.notifier)
+                            .createAgency(agency);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
       ),
     );
   }
