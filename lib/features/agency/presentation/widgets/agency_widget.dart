@@ -96,33 +96,28 @@ class _AgenciesListExampleState extends ConsumerState<AgenciesListExample> {
           );
         },
       ),
-
-      bottomSheet: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // Open up the bottom sheet to show agencies create form
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return Container(
-                    padding: EdgeInsets.all(16),
-                    child: AgencyForm(
-                      onSubmit: (agency) {
-                        ref
-                            .read(agencyCreateProvider.notifier)
-                            .createAgency(agency);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  );
-                },
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          final agencyCreationProvider = ref.read(
+            agencyCreateProvider.notifier,
+          );
+          // Open up the bottom sheet to show agencies create form
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Container(
+                padding: EdgeInsets.all(16),
+                child: AgencyForm(
+                  onSubmit: (agency) {
+                    agencyCreationProvider.createAgency(agency);
+                    Navigator.pop(context);
+                  },
+                ),
               );
             },
-          ),
-        ),
+          );
+        },
       ),
     );
   }

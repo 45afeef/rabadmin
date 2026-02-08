@@ -48,9 +48,7 @@ class _AgencyFormState extends State<AgencyForm> {
     final agency = Agency(
       id: widget.initialAgency?.id ?? UniqueKey().toString(),
       agencyName: _agencyNameController.text.trim(),
-      contactEmail: _emailController.text.trim().isEmpty
-          ? null
-          : _emailController.text.trim(),
+      contactEmail: _emailController.text.trim(),
       locationId: _locationIdController.text.trim().isEmpty
           ? null
           : _locationIdController.text.trim(),

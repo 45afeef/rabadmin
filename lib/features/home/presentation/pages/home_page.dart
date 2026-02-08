@@ -14,6 +14,7 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(title: const Text('Home Page')),
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             const Center(child: Text('Welcome to the Home Page!')),
             const SizedBox(height: 10),
@@ -27,6 +28,9 @@ class HomePage extends ConsumerWidget {
               onPressed: () => context.push(AppRoutes.myAgenicies),
               child: const Text('Agencies List'),
             ),
+            Text('You can search and filter STAY here'),
+            Text('You can search and filter CAB here'),
+            Text('Location, rate, PAX, amenities'),
           ],
         ),
       ),

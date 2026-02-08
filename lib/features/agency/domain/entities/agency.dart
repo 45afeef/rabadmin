@@ -3,13 +3,13 @@
 class Agency {
   final String id;
   final String agencyName;
-  final String? contactEmail;
+  final String contactEmail;
   final String? locationId;
 
   const Agency({
     required this.id,
     required this.agencyName,
-    this.contactEmail,
+    required this.contactEmail,
     this.locationId,
   });
 

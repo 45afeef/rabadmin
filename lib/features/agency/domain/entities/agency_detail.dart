@@ -9,7 +9,7 @@ class AgencyDetail extends Agency {
   const AgencyDetail({
     required super.id,
     required super.agencyName,
-    super.contactEmail,
+    required super.contactEmail,
     super.locationId,
     required this.createdBy,
     this.createdAt,
@@ -36,6 +36,5 @@ class AgencyDetail extends Agency {
   }
 
   @override
-  String toString() =>
-      'AgencyDetail(id: $id, agencyName: $agencyName)';
+  String toString() => 'AgencyDetail(id: $id, agencyName: $agencyName)';
 }

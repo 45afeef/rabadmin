@@ -6,7 +6,7 @@ class AgencyDetailModel extends AgencyDetail {
   const AgencyDetailModel({
     required super.id,
     required super.agencyName,
-    super.contactEmail,
+    required super.contactEmail,
     super.locationId,
     required super.createdBy,
     super.createdAt,
@@ -29,7 +29,7 @@ class AgencyDetailModel extends AgencyDetail {
     return AgencyDetailModel(
       id: json['id'] as String,
       agencyName: json['agency_name'] as String,
-      contactEmail: json['contact_email'] as String?,
+      contactEmail: json['contact_email'] as String,
       locationId: json['location_id'] as String?,
       createdBy: json['created_by'] as String,
       createdAt: json['created_at'] != null

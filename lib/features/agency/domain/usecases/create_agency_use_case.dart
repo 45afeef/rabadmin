@@ -18,6 +18,6 @@ class CreateAgencyUseCase {
   ///
   /// Returns the created [Agency] object.
   /// Throws an exception if creation fails.
-  Future<Agency> call({required String name, String? description}) =>
-      repository.createAgency(name: name, description: description);
+  Future<Agency> call({required String name, required String email}) =>
+      repository.createAgency(name: name, email: email);
 }

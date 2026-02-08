@@ -34,7 +34,7 @@ abstract class AgencyRepository {
   ///
   /// Returns the created [Agency] object.
   /// Throws an exception if creation fails.
-  Future<Agency> createAgency({required String name, String? description});
+  Future<Agency> createAgency({required String name, required String email});
 
   /// Update an existing agency.
   ///

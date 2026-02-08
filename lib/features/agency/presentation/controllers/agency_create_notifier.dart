@@ -7,9 +7,7 @@ import 'agency_usecases_provider.dart';
 
 /// Riverpod provider for managing agency creation state.
 final agencyCreateProvider =
-    StateNotifierProvider.autoDispose<AgencyCreateNotifier, AgencyCreateState>((
-      ref,
-    ) {
+    StateNotifierProvider<AgencyCreateNotifier, AgencyCreateState>((ref) {
       final useCase = ref.watch(createAgencyUseCaseProvider);
       return AgencyCreateNotifier(useCase);
     });
@@ -32,7 +30,7 @@ class AgencyCreateNotifier extends StateNotifier<AgencyCreateState> {
     try {
       final createdAgency = await useCase.call(
         name: agency.agencyName,
-        description: agency.contactEmail,
+        email: agency.contactEmail,
       );
       state = state.copyWith(isLoading: false, agency: createdAgency);
     } catch (e) {

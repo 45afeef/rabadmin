@@ -37,12 +37,12 @@ class AgencyRepositoryImpl implements AgencyRepository {
   @override
   Future<Agency> createAgency({
     required String name,
-    String? description,
+    required String email,
   }) async {
     try {
       final model = await remoteDataSource.createAgency(
         name: name,
-        description: description,
+        email: email,
       );
       return model.toDomain();
     } catch (e) {

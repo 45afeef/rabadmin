@@ -41,7 +41,10 @@ abstract class AgencyRemoteDataSource {
   ///
   /// Returns the created [AgencyModel].
   /// Throws a [DioException] if the API call fails.
-  Future<AgencyModel> createAgency({required String name, String? description});
+  Future<AgencyModel> createAgency({
+    required String name,
+    required String email,
+  });
 
   /// Update an existing agency via the remote API.
   ///
@@ -168,7 +171,7 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
   @override
   Future<AgencyModel> createAgency({
     required String name,
-    String? description,
+    required String email,
   }) async {
     try {
       // Use the rab_dio generated model for the API request
@@ -176,7 +179,11 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
       // TODO: Verify field names match the actual rab_dio AgencyCreate model
       // The fields might be different (e.g., camelCase vs snake_case)
       final response = await api.agenciesCreateAgency(
-        agencyCreate: AgencyCreate((b) => b..agencyName = name),
+        agencyCreate: AgencyCreate(
+          (b) => b
+            ..agencyName = name
+            ..contactEmail = email,
+        ),
       );
 
       if (response.data == null) {
