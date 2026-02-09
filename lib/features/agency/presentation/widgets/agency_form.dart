@@ -17,7 +17,6 @@ class _AgencyFormState extends State<AgencyForm> {
 
   late final TextEditingController _agencyNameController;
   late final TextEditingController _emailController;
-  late final TextEditingController _locationIdController;
 
   @override
   void initState() {
@@ -29,16 +28,12 @@ class _AgencyFormState extends State<AgencyForm> {
     _emailController = TextEditingController(
       text: widget.initialAgency?.contactEmail ?? '',
     );
-    _locationIdController = TextEditingController(
-      text: widget.initialAgency?.locationId ?? '',
-    );
   }
 
   @override
   void dispose() {
     _agencyNameController.dispose();
     _emailController.dispose();
-    _locationIdController.dispose();
     super.dispose();
   }
 
@@ -49,9 +44,6 @@ class _AgencyFormState extends State<AgencyForm> {
       id: widget.initialAgency?.id ?? UniqueKey().toString(),
       agencyName: _agencyNameController.text.trim(),
       contactEmail: _emailController.text.trim(),
-      locationId: _locationIdController.text.trim().isEmpty
-          ? null
-          : _locationIdController.text.trim(),
     );
 
     widget.onSubmit(agency);
@@ -87,12 +79,6 @@ class _AgencyFormState extends State<AgencyForm> {
               }
               return null;
             },
-          ),
-          const SizedBox(height: 16),
-
-          TextFormField(
-            controller: _locationIdController,
-            decoration: const InputDecoration(labelText: 'Location ID'),
           ),
           const SizedBox(height: 24),
 
