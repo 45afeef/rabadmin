@@ -86,7 +86,7 @@ class _AgenciesListExampleState extends ConsumerState<AgenciesListExample> {
               final agency = state.agencies[index];
               return ListTile(
                 title: Text(agency.agencyName),
-                subtitle: Text(agency.contactEmail ?? 'No email'),
+                subtitle: Text(agency.contactEmail),
                 onTap: () {
                   // Navigate to agency detail page
                   // Navigator.push(context, MaterialPageRoute(...))
