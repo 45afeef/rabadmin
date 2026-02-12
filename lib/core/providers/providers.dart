@@ -51,6 +51,18 @@ final validateTokenUseCaseProvider = Provider<ValidateTokenUseCase>(
 );
 
 // =============================================================================
+// USERS FEATURE PROVIDERS
+// =============================================================================
+
+/// Provider for the UsersApi client from rab_dio.
+///
+/// Creates and manages the UsersApi instance for making HTTP requests
+/// to the users API endpoints.
+final usersApiProvider = Provider<UsersApi>(
+  (ref) => ref.watch(rabDioProvider).getUsersApi(),
+);
+
+// =============================================================================
 // AGENCY FEATURE PROVIDERS
 // =============================================================================
 

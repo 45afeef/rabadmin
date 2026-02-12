@@ -25,7 +25,7 @@ class HomePage extends ConsumerWidget {
               child: const Text('Logout'),
             ),
             ElevatedButton(
-              onPressed: () => context.push(AppRoutes.myAgenicies),
+              onPressed: () => context.push(AppRoutes.agencies),
               child: const Text('Agencies List'),
             ),
             Text('You can search and filter STAY here'),

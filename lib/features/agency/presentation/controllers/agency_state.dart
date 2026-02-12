@@ -101,3 +101,38 @@ class AgencyCreateState {
     );
   }
 }
+
+/// State class for add staff operations.
+///
+/// Manages the state of loading, data, and errors for adding staff to an agency.
+class AddStaffState {
+  final bool isLoading;
+  final AgencyStaff? staff;
+  final String? error;
+  final List<Map<String, dynamic>> availableUsers;
+  final bool isLoadingUsers;
+
+  const AddStaffState({
+    this.isLoading = false,
+    this.staff,
+    this.error,
+    this.availableUsers = const [],
+    this.isLoadingUsers = false,
+  });
+
+  AddStaffState copyWith({
+    bool? isLoading,
+    AgencyStaff? staff,
+    String? error,
+    List<Map<String, dynamic>>? availableUsers,
+    bool? isLoadingUsers,
+  }) {
+    return AddStaffState(
+      isLoading: isLoading ?? this.isLoading,
+      staff: staff ?? this.staff,
+      error: error,
+      availableUsers: availableUsers ?? this.availableUsers,
+      isLoadingUsers: isLoadingUsers ?? this.isLoadingUsers,
+    );
+  }
+}
