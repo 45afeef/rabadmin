@@ -73,7 +73,9 @@ class _AgencyFormState extends State<AgencyForm> {
             decoration: const InputDecoration(labelText: 'Contact Email'),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
-              if (value == null || value.isEmpty) return null;
+              if (value == null || value.trim().isEmpty) {
+                return "Email is required";
+              }
               if (!value.contains('@')) {
                 return 'Enter a valid email';
               }

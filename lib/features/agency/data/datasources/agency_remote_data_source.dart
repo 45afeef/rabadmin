@@ -183,8 +183,6 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
     try {
       // Use the rab_dio generated model for the API request
       // Note: AgencyCreate uses built_value builders, so we use the builder pattern
-      // TODO: Verify field names match the actual rab_dio AgencyCreate model
-      // The fields might be different (e.g., camelCase vs snake_case)
       final response = await api.agenciesCreateAgency(
         agencyCreate: AgencyCreate(
           (b) => b
@@ -197,7 +195,12 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
         throw Exception('Failed to create agency');
       }
 
-      return AgencyModel.fromJson(response.data as Map<String, dynamic>);
+      final agencyJson = standardSerializers.serializeWith(
+        AgencyPublic.serializer,
+        response.data,
+      );
+
+      return AgencyModel.fromJson(agencyJson as Map<String, dynamic>);
     } on DioException {
       rethrow;
     } catch (e) {
@@ -286,7 +289,13 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
         throw Exception('Failed to add staff');
       }
 
-      return AgencyStaffModel.fromJson(response.data as Map<String, dynamic>);
+      // Serialize the response data using the standard serializers and convert to model
+      final staffJson = standardSerializers.serializeWith(
+        AgencyStaffPublic.serializer,
+        response.data,
+      );
+
+      return AgencyStaffModel.fromJson(staffJson as Map<String, dynamic>);
     } on DioException {
       rethrow;
     } catch (e) {

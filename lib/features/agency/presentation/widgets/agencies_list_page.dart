@@ -124,12 +124,37 @@ class _AgenciesListPageState extends ConsumerState<AgenciesListPage> {
         return Container(
           padding: const EdgeInsets.all(16),
           child: AgencyForm(
-            onSubmit: (agency) {
-              ref.read(agencyCreateProvider.notifier).createAgency(agency);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Agency created successfully')),
-              );
+            onSubmit: (agency) async {
+              await ref
+                  .read(agencyCreateProvider.notifier)
+                  .createAgency(agency);
+
+              if (context.mounted) Navigator.pop(context);
+              // Check if creation was successful
+              final createState = ref.read(agencyCreateProvider);
+              if (createState.error != null) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: const Duration(seconds: 5),
+                      content: Text('Error: ${createState.error}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+                return;
+              }
+
+              // Success case
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Agency created successfully'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+
               // Refresh the list
               Future.delayed(const Duration(milliseconds: 500), () {
                 ref.read(agenciesListProvider.notifier).loadAgencies();
