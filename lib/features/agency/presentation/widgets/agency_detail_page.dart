@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/providers/providers.dart';
+import '../../domain/usecases/remove_agency_staff_use_case.dart';
 import '../controllers/agency_detail_notifier.dart';
 import '../controllers/agency_staff_list_notifier.dart';
 
@@ -112,16 +114,18 @@ class _AgencyDetailPageState extends ConsumerState<AgencyDetailPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
-                        context.push('/agencies/${widget.agencyId}/add-staff').then((_) {
-                          // Reload staff list after returning from add staff page
-                          ref
-                              .read(
-                                agencyStaffListProvider(
-                                  widget.agencyId,
-                                ).notifier,
-                              )
-                              .loadStaffs();
-                        });
+                        context
+                            .push('/agencies/${widget.agencyId}/add-staff')
+                            .then((_) {
+                              // Reload staff list after returning from add staff page
+                              ref
+                                  .read(
+                                    agencyStaffListProvider(
+                                      widget.agencyId,
+                                    ).notifier,
+                                  )
+                                  .loadStaffs();
+                            });
                       },
                       icon: const Icon(Icons.add),
                       label: const Text('Add Staff'),
@@ -159,23 +163,31 @@ class _AgencyDetailPageState extends ConsumerState<AgencyDetailPage> {
                         child: ListTile(
                           leading: CircleAvatar(
                             child: Text(
-                              staff.userId.substring(0, 1).toUpperCase(),
+                              staff.fullName?.substring(0, 1).toUpperCase() ??
+                                  staff.userId.substring(0, 1).toUpperCase(),
                             ),
                           ),
-                          title: Text('User: ${staff.userId}'),
-                          subtitle: Text(
-                            'Role: ${staff.role?.name ?? "Unknown"}',
-                          ),
+                          title: Text(staff.fullName ?? staff.userId),
+                          subtitle: Text(staff.role.name),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete_outline),
                             color: Colors.red,
                             onPressed: () {
-                              // TODO: Implement remove staff functionality
+                              // TODO: Update remove staff functionality to use notifier instead of direct use case call
+                              final repository = ref.watch(
+                                agencyRepositoryProvider,
+                              );
+                              RemoveAgencyStaffUseCase
+                              removeAgencyStaffUseCase =
+                                  RemoveAgencyStaffUseCase(repository);
+                              removeAgencyStaffUseCase(
+                                agencyId: widget.agencyId,
+                                staffId: staff.id,
+                              );
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text(
-                                    'Remove staff feature coming soon',
-                                  ),
+                                  content: Text('Staff removed successfully'),
                                 ),
                               );
                             },
