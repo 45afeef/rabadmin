@@ -7,6 +7,12 @@ import 'package:rab_dio/rab_dio.dart';
 import '../../features/agency/data/datasources/agency_remote_data_source.dart';
 import '../../features/agency/data/repositories/agency_repository_impl.dart';
 import '../../features/agency/domain/repositories/agency_repository.dart';
+// Users wrappers for agency feature
+import '../../features/agency/data/datasources/users_remote_data_source.dart';
+import '../../features/agency/data/repositories/users_repository_impl.dart';
+import '../../features/agency/domain/repositories/users_repository.dart';
+import '../../features/agency/domain/usecases/get_available_users_use_case.dart';
+import '../../features/agency/domain/usecases/create_user_use_case.dart';
 // Auth feature imports
 import '../../features/auth/data/datasources/auth_local_data_source.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -60,6 +66,24 @@ final validateTokenUseCaseProvider = Provider<ValidateTokenUseCase>(
 /// to the users API endpoints.
 final usersApiProvider = Provider<UsersApi>(
   (ref) => ref.watch(rabDioProvider).getUsersApi(),
+);
+
+/// Provider for the Users remote data source (wraps `UsersApi`).
+final usersRemoteDataSourceProvider = Provider<UsersRemoteDataSource>(
+  (ref) => UsersRemoteDataSourceImpl(ref.read(usersApiProvider)),
+);
+
+/// Provider for the UsersRepository used by agency feature.
+final usersRepositoryProvider = Provider<UsersRepository>(
+  (ref) => UsersRepositoryImpl(ref.read(usersRemoteDataSourceProvider)),
+);
+
+/// Use cases for users operations (created for agency feature)
+final getAvailableUsersUseCaseProvider = Provider<GetAvailableUsersUseCase>(
+  (ref) => GetAvailableUsersUseCase(ref.read(usersRepositoryProvider)),
+);
+final createUserUseCaseProvider = Provider<CreateUserUseCase>(
+  (ref) => CreateUserUseCase(ref.read(usersRepositoryProvider)),
 );
 
 // =============================================================================

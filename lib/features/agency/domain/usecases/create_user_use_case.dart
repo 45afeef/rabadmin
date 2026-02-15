@@ -1,8 +1,15 @@
+import '../entities/user_entity.dart';
+import '../repositories/users_repository.dart';
+
 /// Use case for creating a new user.
 ///
 /// This use case handles the creation of new users that can then
 /// be assigned as staff to an agency.
+
 class CreateUserUseCase {
+  final UsersRepository repository;
+  CreateUserUseCase(this.repository);
+
   /// Execute the create user operation
   ///
   /// Parameters:
@@ -14,14 +21,15 @@ class CreateUserUseCase {
   ///
   /// Returns a map containing the created user data.
   /// Throws an exception if the operation fails.
-  Future<Map<String, dynamic>> call({
-    required String firstName,
-    required String lastName,
-    required String email,
+  Future<UserEntity> call({
+    required String fullName,
     required String password,
     String? phone,
-  }) {
-    // This will be injected with the actual API calls in the notifier
-    throw UnimplementedError('This will be implemented in the notifier');
+  }) async {
+    return await repository.createUser(
+      fullName: fullName,
+      password: password,
+      phone: phone,
+    );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:rab_dio/rab_dio.dart' show UserCreate, UsersApi;
 
 import '../../../../core/providers/providers.dart';
 import '../../domain/usecases/add_agency_staff_use_case.dart';
+import 'agency_usecases_provider.dart';
+import '../../domain/usecases/create_user_use_case.dart';
+import '../../domain/usecases/get_available_users_use_case.dart';
 import 'agency_state.dart';
 
 /// Riverpod provider for managing the add staff to agency state.
@@ -11,43 +13,53 @@ import 'agency_state.dart';
 /// and managing available users list.
 final addStaffProvider = StateNotifierProvider.family
     .autoDispose<AddStaffNotifier, AddStaffState, String>((ref, agencyId) {
-      final repository = ref.watch(agencyRepositoryProvider);
-      final usersApi = ref.watch(usersApiProvider);
-      final useCase = AddAgencyStaffUseCase(repository);
-      return AddStaffNotifier(useCase, usersApi, agencyId);
+      final addStaffUseCase = ref.watch(addAgencyStaffUseCaseProvider);
+      final getUsersUseCase = ref.watch(getAvailableUsersUseCaseProvider);
+      final createUserUseCase = ref.watch(createUserUseCaseProvider);
+      return AddStaffNotifier(
+        addStaffUseCase,
+        getUsersUseCase,
+        createUserUseCase,
+        agencyId,
+      );
     });
 
 /// Notifier for managing add staff to agency state.
 ///
 /// Handles all state transitions and side effects related to adding staff.
 class AddStaffNotifier extends StateNotifier<AddStaffState> {
-  final AddAgencyStaffUseCase useCase;
-  final UsersApi usersApi;
+  final AddAgencyStaffUseCase addStaffUseCase;
+  final GetAvailableUsersUseCase getUsersUseCase;
+  final CreateUserUseCase createUserUseCase;
   final String agencyId;
 
-  AddStaffNotifier(this.useCase, this.usersApi, this.agencyId)
-    : super(const AddStaffState());
+  AddStaffNotifier(
+    this.addStaffUseCase,
+    this.getUsersUseCase,
+    this.createUserUseCase,
+    this.agencyId,
+  ) : super(const AddStaffState());
 
   /// Load available users that can be assigned as staff
   Future<void> loadAvailableUsers() async {
     state = state.copyWith(isLoadingUsers: true, error: null);
     try {
-      final response = await usersApi.usersReadUsers();
+      final users = await getUsersUseCase.call();
+      final availableUsers = users
+          .map(
+            (u) => {
+              'id': u.id,
+              'full_name': u.fullName,
+              'email': u.email,
+              'phone_number': u.phone,
+            },
+          )
+          .toList();
 
-      if (response.data != null) {
-        final usersData = response.data as List<dynamic>;
-        final availableUsers =
-            usersData
-                    .map((user) => user is Map<String, dynamic> ? user : {})
-                    .toList()
-                as List<Map<String, dynamic>>;
-        state = state.copyWith(
-          availableUsers: availableUsers,
-          isLoadingUsers: false,
-        );
-      } else {
-        state = state.copyWith(isLoadingUsers: false);
-      }
+      state = state.copyWith(
+        availableUsers: availableUsers,
+        isLoadingUsers: false,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoadingUsers: false,
@@ -67,27 +79,14 @@ class AddStaffNotifier extends StateNotifier<AddStaffState> {
   }) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      // Create the user
-      final userCreate = UserCreate(
-        (b) => b
-          ..fullName = '$firstName $lastName'
-          ..password = password
-          ..phoneNumber = phone ?? '',
+      final fullName = '$firstName $lastName';
+      final created = await createUserUseCase.call(
+        fullName: fullName,
+        password: password,
+        phone: phone,
       );
-
-      final userResponse = await usersApi.usersCreateUser(
-        userCreate: userCreate,
-      );
-
-      if (userResponse.data != null) {
-        final userData = userResponse.data as Map<String, dynamic>;
-        final userId = userData['id'] as String;
-
-        // Add the created user as staff
-        await addUserAsStaff(userId: userId, role: role);
-      } else {
-        throw Exception('Failed to create user');
-      }
+      final userId = created.id;
+      await addUserAsStaff(userId: userId, role: role);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -103,7 +102,7 @@ class AddStaffNotifier extends StateNotifier<AddStaffState> {
   }) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final staff = await useCase.call(
+      final staff = await addStaffUseCase.call(
         agencyId: agencyId,
         userId: userId,
         role: role,

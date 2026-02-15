@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:rab_dio/rab_dio.dart'
     show
-        AgencyPublic,
         AgenciesApi,
         AgencyCreate,
-        AgencyUpdate,
+        AgencyDetail,
+        AgencyPublic,
         AgencyStaffCreate,
         AgencyStaffUpdate,
+        AgencyUpdate,
         StaffRole,
-        standardSerializers;
+        standardSerializers,
+        AgencyStaffPublic;
 
 import '../models/agency_detail_model.dart';
 import '../models/agency_model.dart';
@@ -160,7 +162,12 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
         throw Exception('Agency not found');
       }
 
-      return AgencyDetailModel.fromJson(response.data as Map<String, dynamic>);
+      final agencyJson = standardSerializers.serializeWith(
+        AgencyDetail.serializer,
+        response.data as AgencyDetail,
+      );
+
+      return AgencyDetailModel.fromJson(agencyJson as Map<String, dynamic>);
     } on DioException {
       rethrow;
     } catch (e) {
@@ -213,8 +220,12 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
       if (response.data == null) {
         throw Exception('Failed to update agency');
       }
+      final agencyJson = standardSerializers.serializeWith(
+        AgencyPublic.serializer,
+        response.data,
+      );
 
-      return AgencyModel.fromJson(response.data as Map<String, dynamic>);
+      return AgencyModel.fromJson(agencyJson as Map<String, dynamic>);
     } on DioException {
       rethrow;
     } catch (e) {
@@ -240,12 +251,13 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
     try {
       final response = await api.agenciesListAgencyStaffs(agencyId: agencyId);
 
-      return response.data
-              ?.map(
-                (staff) =>
-                    AgencyStaffModel.fromJson(staff as Map<String, dynamic>),
-              )
-              .toList() ??
+      return response.data?.map((staff) {
+            final staffJson = standardSerializers.serializeWith(
+              AgencyStaffPublic.serializer,
+              staff,
+            );
+            return AgencyStaffModel.fromJson(staffJson as Map<String, dynamic>);
+          }).toList() ??
           [];
     } on DioException {
       rethrow;
@@ -300,8 +312,12 @@ class AgenciesRemoteDataSource implements AgencyRemoteDataSource {
       if (response.data == null) {
         throw Exception('Failed to update staff');
       }
+      final staffJson = standardSerializers.serializeWith(
+        AgencyStaffPublic.serializer,
+        response.data,
+      );
 
-      return AgencyStaffModel.fromJson(response.data as Map<String, dynamic>);
+      return AgencyStaffModel.fromJson(staffJson as Map<String, dynamic>);
     } on DioException {
       rethrow;
     } catch (e) {
