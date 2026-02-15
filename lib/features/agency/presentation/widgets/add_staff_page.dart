@@ -167,6 +167,17 @@ class _CreateNewUserTabState extends ConsumerState<_CreateNewUserTab> {
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value?.isEmpty ?? true) {
+                  return 'Phone number is required';
+                }
+                // Basic phone number validation
+                final phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
+                if (!phoneRegex.hasMatch(value!)) {
+                  return 'Enter a valid phone number';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
@@ -222,9 +233,7 @@ class _CreateNewUserTabState extends ConsumerState<_CreateNewUserTab> {
                               email:
                                   '${firstName.toLowerCase()}.${lastName.toLowerCase()}@agency.local',
                               password: _passwordController.text,
-                              phone: _phoneController.text.isEmpty
-                                  ? null
-                                  : _phoneController.text,
+                              phone: _phoneController.text,
                               role: _selectedRole!,
                             );
                       }

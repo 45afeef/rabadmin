@@ -9,7 +9,7 @@ abstract class UsersRemoteDataSource {
   Future<UserModel> createUser({
     required String fullName,
     required String password,
-    String? phone,
+    required String phone,
   });
 }
 
@@ -42,13 +42,13 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
   Future<UserModel> createUser({
     required String fullName,
     required String password,
-    String? phone,
+    required String phone,
   }) async {
     final userCreate = UserCreate(
       (b) => b
         ..fullName = fullName
         ..password = password
-        ..phoneNumber = phone ?? '',
+        ..phoneNumber = phone,
     );
 
     final response = await usersApi.usersCreateUser(userCreate: userCreate);

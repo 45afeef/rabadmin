@@ -10,7 +10,7 @@ class UsersRepositoryImpl implements UsersRepository {
   Future<UserEntity> createUser({
     required String fullName,
     required String password,
-    String? phone,
+    required String phone,
   }) async {
     final model = await remoteDataSource.createUser(
       fullName: fullName,

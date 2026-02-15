@@ -24,7 +24,7 @@ class CreateUserUseCase {
   Future<UserEntity> call({
     required String fullName,
     required String password,
-    String? phone,
+    required String phone,
   }) async {
     return await repository.createUser(
       fullName: fullName,

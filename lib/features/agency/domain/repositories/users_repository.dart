@@ -5,6 +5,6 @@ abstract class UsersRepository {
   Future<UserEntity> createUser({
     required String fullName,
     required String password,
-    String? phone,
+    required String phone,
   });
 }

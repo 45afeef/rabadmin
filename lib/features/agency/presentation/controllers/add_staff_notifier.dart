@@ -75,7 +75,7 @@ class AddStaffNotifier extends StateNotifier<AddStaffState> {
     required String email,
     required String password,
     required String role,
-    String? phone,
+    required String phone,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
