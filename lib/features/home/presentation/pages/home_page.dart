@@ -28,6 +28,10 @@ class HomePage extends ConsumerWidget {
               onPressed: () => context.push(AppRoutes.agencies),
               child: const Text('Agencies List'),
             ),
+            ElevatedButton(
+              onPressed: () => context.push(AppRoutes.serviceProviders),
+              child: const Text('Service Providers'),
+            ),
             Text('You can search and filter STAY here'),
             Text('You can search and filter CAB here'),
             Text('Location, rate, PAX, amenities'),

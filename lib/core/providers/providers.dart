@@ -22,19 +22,16 @@ import '../../features/auth/domain/usecases/login_use_case.dart';
 import '../../features/auth/domain/usecases/validate_token_use_case.dart';
 import '../network/auth_interceptor.dart';
 
-final dioProvider = Provider<Dio>((ref) {
-  final dio = Dio(BaseOptions(baseUrl: dotenv.env['API_URL'] ?? ''));
-  final localDataSource = ref.watch(authLocalDataSourceProvider);
-  dio.interceptors.add(AuthInterceptor(localDataSource));
-  return dio;
-});
-
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>(
   (ref) => HiveAuthLocalDataSource(),
 );
 
 final rabDioProvider = Provider<RabDio>((ref) {
-  return RabDio(dio: ref.watch(dioProvider));
+  final dio = Dio(BaseOptions(baseUrl: dotenv.env['API_URL'] ?? ''));
+  final localDataSource = ref.watch(authLocalDataSourceProvider);
+  dio.interceptors.add(AuthInterceptor(localDataSource));
+
+  return RabDio(dio: dio);
 });
 
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>(
