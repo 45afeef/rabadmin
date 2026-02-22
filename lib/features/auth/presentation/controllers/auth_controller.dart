@@ -1,21 +1,25 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show Provider;
 import 'auth_state.dart';
 import '../../domain/usecases/login_use_case.dart';
 import '../../domain/usecases/validate_token_use_case.dart';
+import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/providers/providers.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
   (ref) => AuthController(
     ref.read(loginUseCaseProvider),
     ref.read(validateTokenUseCaseProvider),
+    ref.read(authRepositoryProvider),
   ),
 );
 
 class AuthController extends StateNotifier<AuthState> {
   final LoginUseCase loginUseCase;
   final ValidateTokenUseCase validateTokenUseCase;
+  final AuthRepository repository;
 
-  AuthController(this.loginUseCase, this.validateTokenUseCase)
+  AuthController(this.loginUseCase, this.validateTokenUseCase, this.repository)
     : super(AuthState.unauthenticated());
 
   Future<void> login({required String email, required String password}) async {
@@ -23,8 +27,11 @@ class AuthController extends StateNotifier<AuthState> {
 
     try {
       await loginUseCase(email: email, password: password);
+      // ask the repository for the stored user ID (it will have been saved
+      // during the login call when the token was decoded).
+      final userId = await repository.getCurrentUserId();
 
-      state = AuthState.authenticated();
+      state = AuthState.authenticated(userId: userId);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
       state = AuthState.unauthenticated();
@@ -34,7 +41,12 @@ class AuthController extends StateNotifier<AuthState> {
   Future<void> validateExistingToken() async {
     try {
       final isValid = await validateTokenUseCase();
-      state = isValid ? AuthState.authenticated() : AuthState.unauthenticated();
+      if (isValid) {
+        final userId = await repository.getCurrentUserId();
+        state = AuthState.authenticated(userId: userId);
+      } else {
+        state = AuthState.unauthenticated();
+      }
     } catch (e) {
       state = AuthState.unauthenticated();
     }
