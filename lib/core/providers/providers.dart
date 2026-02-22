@@ -6,7 +6,9 @@ import 'package:rab_dio/rab_dio.dart';
 // Service Provider feature imports
 import '../../features/service_providers/data/datasources/service_provider_remote_data_source_impl.dart';
 import '../../features/service_providers/data/repositories/service_provider_repository_impl.dart';
+import '../../features/service_providers/domain/entities/cab_entity.dart';
 import '../../features/service_providers/domain/entities/cab_provider_entity.dart';
+import '../../features/service_providers/domain/entities/driver_entity.dart';
 import '../../features/service_providers/domain/repositories/service_provider_repository.dart';
 
 // Agency feature imports
@@ -128,6 +130,7 @@ final serviceProviderRemoteDataSourceProvider =
     Provider<ServiceProviderRemoteDataSourceImpl>((ref) {
       return ServiceProviderRemoteDataSourceImpl(
         ref.watch(rabDioProvider).getProvidersApi(),
+        ref.watch(rabDioProvider).getProvidersCabApi(),
       );
     });
 
@@ -146,4 +149,26 @@ final cabProvidersListProvider = FutureProvider<List<CabProviderEntity>>((
 ) async {
   final repository = ref.watch(serviceProviderRepositoryProvider);
   return repository.listCabProviders();
+});
+
+/// Provider for listing Cabs for a specific provider.
+///
+/// Takes the provider ID as parameter.
+final cabsListProvider = FutureProvider.family<List<CabEntity>, String>((
+  ref,
+  providerId,
+) async {
+  final repository = ref.watch(serviceProviderRepositoryProvider);
+  return repository.listCabs(providerId);
+});
+
+/// Provider for listing Drivers for a specific provider.
+///
+/// Takes the provider ID as parameter.
+final driversListProvider = FutureProvider.family<List<DriverEntity>, String>((
+  ref,
+  providerId,
+) async {
+  final repository = ref.watch(serviceProviderRepositoryProvider);
+  return repository.listDrivers(providerId);
 });

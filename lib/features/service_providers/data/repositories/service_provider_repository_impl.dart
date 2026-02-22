@@ -1,9 +1,13 @@
+import '../../domain/entities/cab_entity.dart';
 import '../../domain/entities/cab_provider_entity.dart';
+import '../../domain/entities/driver_entity.dart';
 import '../../domain/repositories/service_provider_repository.dart';
 import '../datasources/service_provider_remote_data_source.dart';
+import '../models/cab_model.dart';
 import '../models/cab_provider_model.dart';
 
 import '../../../auth/domain/repositories/auth_repository.dart';
+import '../models/driver_model.dart';
 
 class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   final ServiceProviderRemoteDataSource remoteDataSource;
@@ -63,6 +67,60 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   Future<void> deleteCabProvider(String providerId) =>
       remoteDataSource.deleteCabProvider(providerId);
 
+  // ===== CABS =====
+  @override
+  Future<List<CabEntity>> listCabs(String providerId) async {
+    final models = await remoteDataSource.listCabs(providerId);
+    return models.map((model) => _mapCabModelToEntity(model)).toList();
+  }
+
+  @override
+  Future<CabEntity> createCab(
+    String providerId, {
+    required String vehicleType,
+    required String vehicleNumber,
+    required double minimumRate,
+    required double kmForMinimumRate,
+    required double perKmRate,
+    required int capacity,
+    required String name,
+    required String companyModel,
+    required String color,
+  }) async {
+    final model = await remoteDataSource.createCab(
+      providerId,
+      vehicleType: vehicleType,
+      vehicleNumber: vehicleNumber,
+      minimumRate: minimumRate,
+      kmForMinimumRate: kmForMinimumRate,
+      perKmRate: perKmRate,
+      capacity: capacity,
+      name: name,
+      companyModel: companyModel,
+      color: color,
+    );
+    return _mapCabModelToEntity(model);
+  }
+
+  // ===== DRIVERS =====
+  @override
+  Future<List<DriverEntity>> listDrivers(String providerId) async {
+    final models = await remoteDataSource.listDrivers(providerId);
+    return models.map((model) => _mapDriverModelToEntity(model)).toList();
+  }
+
+  @override
+  Future<DriverEntity> createDriver({
+    required String providerId,
+    required String profileId,
+  }) async {
+    final model = await remoteDataSource.createDriver(
+      providerId: providerId,
+      profileId: profileId,
+    );
+    return _mapDriverModelToEntity(model);
+  }
+
   // ===== MAPPERS =====
   CabProviderEntity _mapCabProviderModelToEntity(CabProviderModel model) {
     return CabProviderEntity(
@@ -72,6 +130,31 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       ownerId: model.ownerId,
+    );
+  }
+
+  CabEntity _mapCabModelToEntity(CabModel model) {
+    return CabEntity(
+      id: model.id,
+      providerId: model.providerId,
+      vehicleType: model.vehicleType,
+      vehicleNumber: model.vehicleNumber,
+      minimumRate: model.minimumRate,
+      kmForMinimumRate: model.kmForMinimumRate,
+      perKmRate: model.perKmRate,
+      capacity: model.capacity,
+      name: model.name,
+      companyModel: model.companyModel,
+      color: model.color,
+    );
+  }
+
+  DriverEntity _mapDriverModelToEntity(DriverModel model) {
+    return DriverEntity(
+      id: model.id,
+      userId: model.userId,
+      providerId: model.providerId,
+      profileId: model.profileId,
     );
   }
 }

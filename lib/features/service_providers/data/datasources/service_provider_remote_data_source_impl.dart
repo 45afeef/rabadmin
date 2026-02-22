@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart' show DioException;
 import 'package:one_of/any_of.dart';
 import 'package:rab_dio/rab_dio.dart';
+import '../models/cab_model.dart';
 import '../models/cab_provider_model.dart';
+import '../models/driver_model.dart';
 import 'service_provider_remote_data_source.dart';
 
 class ServiceProviderRemoteDataSourceImpl
     extends ServiceProviderRemoteDataSource {
   final ProvidersApi providersApi;
+  final ProvidersCabApi providersCabApi;
 
-  ServiceProviderRemoteDataSourceImpl(this.providersApi);
+  ServiceProviderRemoteDataSourceImpl(this.providersApi, this.providersCabApi);
 
   // ===== CAB PROVIDERS =====
   @override
@@ -107,6 +110,95 @@ class ServiceProviderRemoteDataSourceImpl
 
   @override
   Future<void> deleteCabProvider(String providerId) async {
+    // TODO: implement using providersApi
+    throw UnimplementedError();
+  }
+
+  // // ===== CABS =====
+  @override
+  Future<List<CabModel>> listCabs(String providerId) async {
+    try {
+      final response = await providersCabApi.providersCabListCabs(
+        providerId: providerId,
+      );
+
+      final cabs = response.data?.map((c) {
+        final cabJson = standardSerializers.serializeWith(
+          CabPublic.serializer,
+          c,
+        );
+
+        return CabModel.fromJson(cabJson as Map<String, dynamic>);
+      }).toList();
+      return cabs ?? [];
+    } on DioException catch (e) {
+      throw Exception('Failed to list cabs: ${e.response?.data ?? e.message}');
+    } catch (e) {
+      throw Exception('Failed to list cabs: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<CabModel> createCab(
+    String providerId, {
+    required String vehicleType,
+    required String vehicleNumber,
+    required double minimumRate,
+    required double kmForMinimumRate,
+    required double perKmRate,
+    required int capacity,
+    required String name,
+    required String companyModel,
+    required String color,
+  }) async {
+    try {
+      // Use the rab_dio generated model for the API request
+      // Note: CabCreate uses built_value builders, so we use the builder pattern
+      final response = await providersCabApi.providersCabCreateCab(
+        providerId: providerId,
+        cabCreate: CabCreate(
+          (b) => b
+            ..vehicleType = vehicleType
+            ..vehicleNumber = vehicleNumber
+            ..minimumRate = minimumRate
+            ..kmForMinimumRate = kmForMinimumRate
+            ..perKmRate = perKmRate
+            ..capacity = capacity
+            ..name = name
+            ..companyModel = companyModel
+            ..color = color,
+        ),
+      );
+
+      if (response.data == null) {
+        throw Exception('Failed to create cab');
+      }
+
+      final cabJson = standardSerializers.serializeWith(
+        CabPublic.serializer,
+        response.data,
+      );
+
+      return CabModel.fromJson(cabJson as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw Exception('Failed to create cab: ${e.response?.data ?? e.message}');
+    } catch (e) {
+      throw Exception('Failed to create cab: ${e.toString()}');
+    }
+  }
+
+  // // ===== DRIVERS =====
+  @override
+  Future<List<DriverModel>> listDrivers(String providerId) async {
+    // TODO: implement using providersApi
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DriverModel> createDriver({
+    required String providerId,
+    required String profileId,
+  }) async {
     // TODO: implement using providersApi
     throw UnimplementedError();
   }
