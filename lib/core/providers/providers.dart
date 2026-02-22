@@ -3,6 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rab_dio/rab_dio.dart';
 
+// Service Provider feature imports
+import '../../features/service_providers/data/datasources/service_provider_remote_data_source_impl.dart';
+import '../../features/service_providers/data/repositories/service_provider_repository_impl.dart';
+import '../../features/service_providers/domain/entities/cab_provider_entity.dart';
+import '../../features/service_providers/domain/repositories/service_provider_repository.dart';
+
 // Agency feature imports
 import '../../features/agency/data/datasources/agency_remote_data_source.dart';
 import '../../features/agency/data/repositories/agency_repository_impl.dart';
@@ -113,3 +119,31 @@ final agencyRemoteDataSourceProvider = Provider<AgencyRemoteDataSource>(
 final agencyRepositoryProvider = Provider<AgencyRepository>(
   (ref) => AgencyRepositoryImpl(ref.read(agencyRemoteDataSourceProvider)),
 );
+// =============================================================================
+// SERVICE PROVIDER FEATURE PROVIDERS
+// =============================================================================
+
+/// Provider for the Service Provider remote data source.
+final serviceProviderRemoteDataSourceProvider =
+    Provider<ServiceProviderRemoteDataSourceImpl>((ref) {
+      return ServiceProviderRemoteDataSourceImpl(
+        ref.watch(rabDioProvider).getProvidersApi(),
+      );
+    });
+
+/// Provider for the Service Provider repository.
+final serviceProviderRepositoryProvider = Provider<ServiceProviderRepository>((
+  ref,
+) {
+  final dataSource = ref.watch(serviceProviderRemoteDataSourceProvider);
+  final authRepo = ref.watch(authRepositoryProvider);
+  return ServiceProviderRepositoryImpl(dataSource, authRepo);
+});
+
+/// Provider for listing all Cab Service Providers.
+final cabProvidersListProvider = FutureProvider<List<CabProviderEntity>>((
+  ref,
+) async {
+  final repository = ref.watch(serviceProviderRepositoryProvider);
+  return repository.listCabProviders();
+});

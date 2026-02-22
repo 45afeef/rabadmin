@@ -14,6 +14,8 @@ import '../features/home/presentation/pages/home_page.dart';
 import '../features/service_providers/presentation/pages/service_providers_home_page.dart';
 import '../features/service_providers/presentation/pages/cab_providers_list_page.dart';
 import '../features/service_providers/presentation/pages/stay_providers_list_page.dart';
+import '../features/service_providers/presentation/pages/create_cab_provider_page.dart';
+import '../features/service_providers/presentation/pages/cab_provider_detail_page.dart';
 
 abstract class AppRoutes {
   static const login = '/login';
@@ -26,7 +28,14 @@ abstract class AppRoutes {
   // service provider feature
   static const serviceProviders = '/service-providers';
   static const cabProviders = '/service-providers/cab';
+  static const cabProviderDetail = '/service-providers/cab/:providerId';
+  static const createCabProvider = '/service-providers/cab/create';
   static const stayProviders = '/service-providers/stay';
+
+  // helper to generate detail path with actual provider ID
+  static String cabProviderDetailPath(String id) {
+    return cabProviderDetail.replaceFirst(':providerId', id);
+  }
 }
 
 /// Router provider (reactive)
@@ -106,6 +115,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.cabProviders,
         builder: (context, state) => const CabProvidersListPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.createCabProvider,
+        builder: (context, state) => const CreateCabProviderPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.cabProviderDetail,
+        builder: (context, state) {
+          final id = state.pathParameters['providerId']!;
+          return CabProviderDetailPage(providerId: id);
+        },
       ),
       GoRoute(
         path: AppRoutes.stayProviders,
