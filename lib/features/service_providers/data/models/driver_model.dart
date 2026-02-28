@@ -3,16 +3,16 @@ import '../../domain/entities/driver_entity.dart';
 class DriverModel extends DriverEntity {
   DriverModel({
     required super.id,
-    required super.userId,
+    super.userId,
     required super.profileId,
     required super.providerId,
   });
 
   factory DriverModel.fromJson(Map<String, dynamic> json) => DriverModel(
     id: json['id'],
-    userId: json['userId'],
-    profileId: json['profileId'],
-    providerId: json['providerId'],
+    userId: json['user_id'],
+    profileId: json['profile_id'],
+    providerId: json['provider_id'],
   );
 
   Map<String, dynamic> toJson() {

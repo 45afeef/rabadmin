@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:rab_dio/rab_dio.dart'
     show UserCreate, UserPublic, UsersApi, standardSerializers;
 
@@ -51,15 +52,26 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
         ..phoneNumber = phone,
     );
 
-    final response = await usersApi.usersCreateUser(userCreate: userCreate);
-    if (response.data != null) {
-      final userData = standardSerializers.serializeWith(
-        UserPublic.serializer,
-        response.data,
-      );
+    try {
+      final response = await usersApi.usersCreateUser(userCreate: userCreate);
 
-      return UserModel.fromMap(userData as Map<String, dynamic>);
+      if (response.data != null) {
+        final userData = standardSerializers.serializeWith(
+          UserPublic.serializer,
+          response.data,
+        );
+
+        return UserModel.fromMap(userData as Map<String, dynamic>);
+      }
+    } on DioException catch (e) {
+      String newMessage = e.response == null
+          ? e.message.toString()
+          : "${e.response!.data['detail'][0]["loc"][1]} ${e.response!.data['detail'][0]["msg"]}";
+      throw Exception(newMessage);
+    } catch (e) {
+      rethrow;
     }
+
     throw Exception('Failed to create user');
   }
 }

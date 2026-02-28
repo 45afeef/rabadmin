@@ -35,4 +35,9 @@ abstract class ServiceProviderRepository {
     required String providerId,
     required String profileId,
   });
+  Future<DriverEntity> createDriverWithProfile({
+    required String providerId,
+    required String name,
+    required String phoneNumber,
+  });
 }

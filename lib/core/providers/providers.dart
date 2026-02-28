@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rab_dio/rab_dio.dart';
 
 // Service Provider feature imports
+import '../../features/profile/data/datasources/profile_remote_datasource.dart';
+import '../../features/profile/data/datasources/profile_remote_datasource_impl.dart';
+import '../../features/profile/data/repository/profile_repository_impl.dart';
+import '../../features/profile/domain/repository/profile_repository.dart';
 import '../../features/service_providers/data/datasources/service_provider_remote_data_source_impl.dart';
 import '../../features/service_providers/data/repositories/service_provider_repository_impl.dart';
 import '../../features/service_providers/domain/entities/cab_entity.dart';
@@ -92,6 +96,28 @@ final createUserUseCaseProvider = Provider<CreateUserUseCase>(
 );
 
 // =============================================================================
+// PROFILE FEATURE PROVIDERS
+// =============================================================================
+
+/// Provider for the ProfileApi client from rab_dio.
+///
+/// Creates and manages the ProfileApi instance for making HTTP requests
+/// to the profile API endpoints.
+final profileApiProvider = Provider<ProfileApi>(
+  (ref) => ref.watch(rabDioProvider).getProfileApi(),
+);
+
+/// Provider for the Profile remote data source (wraps `ProfileApi`).
+final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>(
+  (ref) => ProfileRemoteDataSourceImpl(ref.read(profileApiProvider)),
+);
+
+/// Provider for the ProfileRepository used by profile feature.
+final profileRepositoryProvider = Provider<ProfileRepository>(
+  (ref) => ProfileRepositoryImpl(ref.read(profileRemoteDataSourceProvider)),
+);
+
+// =============================================================================
 // AGENCY FEATURE PROVIDERS
 // =============================================================================
 
@@ -140,7 +166,13 @@ final serviceProviderRepositoryProvider = Provider<ServiceProviderRepository>((
 ) {
   final dataSource = ref.watch(serviceProviderRemoteDataSourceProvider);
   final authRepo = ref.watch(authRepositoryProvider);
-  return ServiceProviderRepositoryImpl(dataSource, authRepo);
+  final profileRepo = ref.watch(profileRepositoryProvider);
+
+  return ServiceProviderRepositoryImpl(
+    remoteDataSource: dataSource,
+    authRepository: authRepo,
+    profileRepository: profileRepo,
+  );
 });
 
 /// Provider for listing all Cab Service Providers.

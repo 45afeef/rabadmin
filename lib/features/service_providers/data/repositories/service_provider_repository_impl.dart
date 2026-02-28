@@ -1,3 +1,5 @@
+
+import '../../../profile/domain/repository/profile_repository.dart';
 import '../../domain/entities/cab_entity.dart';
 import '../../domain/entities/cab_provider_entity.dart';
 import '../../domain/entities/driver_entity.dart';
@@ -11,10 +13,15 @@ import '../models/driver_model.dart';
 
 class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   final ServiceProviderRemoteDataSource remoteDataSource;
+  final ProfileRepository profileRepository;
   // TODO : ideally the repository should not have to know about auth at all and should just throw an UnauthenticatedException if the user is not authenticated; the use case or controller can then catch this and handle it appropriately (e.g. by showing a login prompt). For now we have to pull the user ID in the repository to satisfy the API requirements, but this is a bit of a leaky abstraction and something we may want to refactor in the future.
   final AuthRepository authRepository;
 
-  ServiceProviderRepositoryImpl(this.remoteDataSource, this.authRepository);
+  ServiceProviderRepositoryImpl({
+    required this.remoteDataSource,
+    required this.authRepository,
+    required this.profileRepository,
+  });
 
   // ===== CAB PROVIDERS =====
   @override
@@ -119,6 +126,29 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
       profileId: profileId,
     );
     return _mapDriverModelToEntity(model);
+  }
+
+  // helper method to create a driver and his profile in one step; this is not part of the repository interface since it's a bit of a higher level operation that involves both the service provider and profile repositories, but it can be useful for simplifying the flow in the UI when we need to create a new driver along with their profile.
+  @override
+  Future<DriverEntity> createDriverWithProfile({
+    required String providerId,
+    required String name,
+    required String phoneNumber,
+  }) async {
+    final createdBy = await authRepository.getCurrentUserId();
+    if (createdBy == null) {
+      throw Exception('User must be authenticated to create a driver');
+    }
+
+    // first create the profile
+    final profile = await profileRepository.createProfile(
+      name: name,
+      createdByUserId: createdBy,
+      phoneNumber: phoneNumber,
+    );
+
+    // then create the driver using the new profile ID
+    return await createDriver(providerId: providerId, profileId: profile.id!);
   }
 
   // ===== MAPPERS =====

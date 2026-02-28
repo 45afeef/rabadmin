@@ -71,7 +71,7 @@ class CabProviderDetailPage extends ConsumerWidget {
                   children: [
                     for (var d in drivers)
                       ListTile(
-                        title: Text(d.userId),
+                        title: Text(d.userId ?? 'No Associated User'),
                         subtitle: Text(d.profileId),
                       ),
                   ],

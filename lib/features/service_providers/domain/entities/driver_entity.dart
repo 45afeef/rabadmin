@@ -1,12 +1,12 @@
 class DriverEntity {
   final String? id;
-  final String userId;
+  final String? userId;
   final String profileId;
   final String providerId;
 
   DriverEntity({
     this.id,
-    required this.userId,
+    this.userId,
     required this.profileId,
     required this.providerId,
   });

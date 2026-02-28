@@ -9,9 +9,9 @@ import 'service_provider_remote_data_source.dart';
 class ServiceProviderRemoteDataSourceImpl
     extends ServiceProviderRemoteDataSource {
   final ProvidersApi providersApi;
-  final ProvidersCabApi providersCabApi;
+  final ProvidersCabApi cabApi;
 
-  ServiceProviderRemoteDataSourceImpl(this.providersApi, this.providersCabApi);
+  ServiceProviderRemoteDataSourceImpl(this.providersApi, this.cabApi);
 
   // ===== CAB PROVIDERS =====
   @override
@@ -118,7 +118,7 @@ class ServiceProviderRemoteDataSourceImpl
   @override
   Future<List<CabModel>> listCabs(String providerId) async {
     try {
-      final response = await providersCabApi.providersCabListCabs(
+      final response = await cabApi.providersCabListCabs(
         providerId: providerId,
       );
 
@@ -154,7 +154,7 @@ class ServiceProviderRemoteDataSourceImpl
     try {
       // Use the rab_dio generated model for the API request
       // Note: CabCreate uses built_value builders, so we use the builder pattern
-      final response = await providersCabApi.providersCabCreateCab(
+      final response = await cabApi.providersCabCreateCab(
         providerId: providerId,
         cabCreate: CabCreate(
           (b) => b
@@ -199,7 +199,28 @@ class ServiceProviderRemoteDataSourceImpl
     required String providerId,
     required String profileId,
   }) async {
-    // TODO: implement using providersApi
-    throw UnimplementedError();
+    try {
+      final response = await cabApi.providersCabCreateDriver(
+        providerId: providerId,
+        driverCreate: DriverCreate((b) => b..profileId = profileId),
+      );
+
+      if (response.data == null) {
+        throw Exception('Failed to create cab');
+      }
+
+      final driverJson = standardSerializers.serializeWith(
+        DriverPublic.serializer,
+        response.data,
+      );
+
+      return DriverModel.fromJson(driverJson as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw Exception(
+        'Failed to create driver: ${e.response?.data ?? e.message}',
+      );
+    } catch (e) {
+      throw Exception('Failed to create driver: ${e.toString()}');
+    }
   }
 }
