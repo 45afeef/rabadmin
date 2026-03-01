@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "rabadmin - offline",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--no-pub"]
+        },
+        {
+            "name": "rabadmin - Online",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "rabadmin (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "rabadmin (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

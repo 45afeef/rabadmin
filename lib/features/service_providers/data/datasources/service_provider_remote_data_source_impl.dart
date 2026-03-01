@@ -190,8 +190,27 @@ class ServiceProviderRemoteDataSourceImpl
   // // ===== DRIVERS =====
   @override
   Future<List<DriverModel>> listDrivers(String providerId) async {
-    // TODO: implement using providersApi
-    throw UnimplementedError();
+    try {
+      final response = await cabApi.providersCabListDrivers(
+        providerId: providerId,
+      );
+
+      final drivers = response.data?.map((d) {
+        final driverJson = standardSerializers.serializeWith(
+          DriverPublic.serializer,
+          d,
+        );
+
+        return DriverModel.fromJson(driverJson as Map<String, dynamic>);
+      }).toList();
+      return drivers ?? [];
+    } on DioException catch (e) {
+      throw Exception(
+        'Failed to list drivers: ${e.response?.data ?? e.message}',
+      );
+    } catch (e) {
+      throw Exception('Failed to list drivers: ${e.toString()}');
+    }
   }
 
   @override
