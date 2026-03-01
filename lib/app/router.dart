@@ -15,9 +15,13 @@ import '../features/service_providers/presentation/pages/service_providers_home_
 import '../features/service_providers/presentation/pages/cab_providers_list_page.dart';
 import '../features/service_providers/presentation/pages/stay_providers_list_page.dart';
 import '../features/service_providers/presentation/pages/create_cab_provider_page.dart';
+import '../features/service_providers/presentation/pages/create_stay_provider_page.dart';
 import '../features/service_providers/presentation/pages/cab_provider_detail_page.dart';
+import '../features/service_providers/presentation/pages/stay_provider_detail_page.dart';
 import '../features/service_providers/presentation/pages/create_cab_page.dart';
 import '../features/service_providers/presentation/pages/create_driver_page.dart';
+import '../features/service_providers/presentation/pages/create_stay_unit_page.dart';
+import '../features/service_providers/presentation/pages/add_amenity_page.dart';
 
 abstract class AppRoutes {
   static const login = '/login';
@@ -36,7 +40,13 @@ abstract class AppRoutes {
   static const createDriver =
       '/service-providers/cab/:providerId/drivers/create';
   static const stayProviders = '/service-providers/stay';
-
+  static const stayProviderDetail = '/service-providers/stay/:providerId';
+  static const createStayProvider = '/service-providers/stay/create';
+  static const createStayUnit =
+      '/service-providers/stay/:providerId/units/create';
+  static const addAmenity =
+      '/service-providers/stay/:providerId/units/:unitId/amenities/add';
+  
   // helper to generate detail path with actual provider ID
   static String cabProviderDetailPath(String id) {
     return cabProviderDetail.replaceFirst(':providerId', id);
@@ -159,6 +169,32 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.stayProviders,
         builder: (context, state) => const StayProvidersListPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.createStayProvider,
+        builder: (context, state) => const CreateStayProviderPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.stayProviderDetail,
+        builder: (context, state) {
+          final id = state.pathParameters['providerId']!;
+          return StayProviderDetailPage(providerId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.createStayUnit,
+        builder: (context, state) {
+          final id = state.pathParameters['providerId']!;
+          return CreateStayUnitPage(providerId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.addAmenity,
+        builder: (context, state) {
+          final providerId = state.pathParameters['providerId']!;
+          final unitId = state.pathParameters['unitId']!;
+          return AddAmenityPage(providerId: providerId, unitId: unitId);
+        },
       ),
     ],
   );

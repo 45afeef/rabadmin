@@ -4,7 +4,7 @@ class CabProviderModel extends CabProviderEntity {
   CabProviderModel({
     required super.id,
     required super.name,
-    required super.createdBy,
+    super.createdBy,
     super.ownerId,
     super.createdAt,
     super.updatedAt,
@@ -16,14 +16,14 @@ class CabProviderModel extends CabProviderEntity {
     id: json['id'],
     name: json['provider_name'],
     // TODO : Fix 4 of this :  These fields are required models and entities but may be missing from the API response, so we provide defaults.
-    createdBy: json['createdBy'] ?? 'unknown',
-    ownerId: json['ownerId'] ?? 'unknown',
-    createdAt: DateTime.parse(
-      json['createdAt'] ?? DateTime.now().toIso8601String(),
-    ),
-    updatedAt: DateTime.parse(
-      json['updatedAt'] ?? DateTime.now().toIso8601String(),
-    ),
+    createdBy: json['created_by'] as String?,
+    ownerId: json['owner_id'] as String?,
+    createdAt: json['created_at'] != null
+        ? DateTime.parse(json['created_at'])
+        : null,
+    updatedAt: json['updated_at'] != null
+        ? DateTime.parse(json['updated_at'])
+        : null,
   );
 
   @override

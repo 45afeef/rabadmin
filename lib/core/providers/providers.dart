@@ -13,6 +13,7 @@ import '../../features/service_providers/data/repositories/service_provider_repo
 import '../../features/service_providers/domain/entities/cab_entity.dart';
 import '../../features/service_providers/domain/entities/cab_provider_entity.dart';
 import '../../features/service_providers/domain/entities/driver_entity.dart';
+import '../../features/service_providers/domain/entities/stay_unit_entity.dart';
 import '../../features/service_providers/domain/repositories/service_provider_repository.dart';
 
 // Agency feature imports
@@ -157,6 +158,7 @@ final serviceProviderRemoteDataSourceProvider =
       return ServiceProviderRemoteDataSourceImpl(
         ref.watch(rabDioProvider).getProvidersApi(),
         ref.watch(rabDioProvider).getProvidersCabApi(),
+        ref.watch(rabDioProvider).getProvidersStayApi(),
       );
     });
 
@@ -183,6 +185,12 @@ final cabProvidersListProvider = FutureProvider<List<CabProviderEntity>>((
   return repository.listCabProviders();
 });
 
+/// Provider for listing all Stay Service Providers.
+final stayProvidersListProvider = FutureProvider<List<dynamic>>((ref) async {
+  final repository = ref.watch(serviceProviderRepositoryProvider);
+  return repository.listStayProviders();
+});
+
 /// Provider for listing Cabs for a specific provider.
 ///
 /// Takes the provider ID as parameter.
@@ -204,3 +212,15 @@ final driversListProvider = FutureProvider.family<List<DriverEntity>, String>((
   final repository = ref.watch(serviceProviderRepositoryProvider);
   return repository.listDrivers(providerId);
 });
+
+/// Provider for listing Stay Units for a specific provider.
+///
+/// Takes the provider ID as parameter.
+final stayUnitsListProvider =
+    FutureProvider.family<List<StayUnitEntity>, String>((
+      ref,
+      providerId,
+    ) async {
+      final repository = ref.watch(serviceProviderRepositoryProvider);
+      return repository.listStayUnits(providerId);
+    });

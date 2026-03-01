@@ -1,8 +1,10 @@
-
 import '../../../profile/domain/repository/profile_repository.dart';
 import '../../domain/entities/cab_entity.dart';
 import '../../domain/entities/cab_provider_entity.dart';
 import '../../domain/entities/driver_entity.dart';
+import '../../domain/entities/stay_amenity_entity.dart';
+import '../../domain/entities/stay_provider_entity.dart';
+import '../../domain/entities/stay_unit_entity.dart';
 import '../../domain/repositories/service_provider_repository.dart';
 import '../datasources/service_provider_remote_data_source.dart';
 import '../models/cab_model.dart';
@@ -10,6 +12,9 @@ import '../models/cab_provider_model.dart';
 
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../models/driver_model.dart';
+import '../models/stay_amenity_model.dart';
+import '../models/stay_provider_model.dart';
+import '../models/stay_unit_model.dart';
 
 class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   final ServiceProviderRemoteDataSource remoteDataSource;
@@ -73,6 +78,63 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   @override
   Future<void> deleteCabProvider(String providerId) =>
       remoteDataSource.deleteCabProvider(providerId);
+
+  // ===== STAY PROVIDERS =====
+  @override
+  Future<List<StayProviderEntity>> listStayProviders() async {
+    final models = await remoteDataSource.listStayProviders();
+    return models.map((model) => _mapStayProviderModelToEntity(model)).toList();
+  }
+
+  @override
+  Future<StayProviderEntity> getStayProvider(String providerId) async {
+    final model = await remoteDataSource.getStayProvider(providerId);
+    return _mapStayProviderModelToEntity(model);
+  }
+
+  @override
+  Future<StayProviderEntity> createStayProvider({
+    required String providerName,
+    String? locationId,
+    String? propertyType,
+    int? roomCount,
+  }) async {
+    final createdBy = await authRepository.getCurrentUserId();
+    if (createdBy == null) {
+      throw Exception('User must be authenticated to create a provider');
+    }
+
+    final model = await remoteDataSource.createStayProvider(
+      providerName: providerName,
+      createdBy: createdBy,
+      locationId: locationId,
+      propertyType: propertyType,
+      roomCount: roomCount,
+    );
+    return _mapStayProviderModelToEntity(model);
+  }
+
+  @override
+  Future<StayProviderEntity> updateStayProvider(
+    String providerId, {
+    String? providerName,
+    String? locationId,
+    String? propertyType,
+    int? roomCount,
+  }) async {
+    final model = await remoteDataSource.updateStayProvider(
+      providerId,
+      providerName: providerName,
+      locationId: locationId,
+      propertyType: propertyType,
+      roomCount: roomCount,
+    );
+    return _mapStayProviderModelToEntity(model);
+  }
+
+  @override
+  Future<void> deleteStayProvider(String providerId) =>
+      remoteDataSource.deleteStayProvider(providerId);
 
   // ===== CABS =====
   @override
@@ -151,6 +213,64 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
     return await createDriver(providerId: providerId, profileId: profile.id!);
   }
 
+  // ===== STAY UNITS =====
+  @override
+  Future<List<StayUnitEntity>> listStayUnits(
+    String providerId, {
+    int? minPrice,
+    int? maxPrice,
+    String? amenity,
+    int? limit,
+    int? offset,
+  }) async {
+    final models = await remoteDataSource.listStayUnits(
+      providerId,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      amenity: amenity,
+      limit: limit,
+      offset: offset,
+    );
+    return models.map((model) => _mapStayUnitModelToEntity(model)).toList();
+  }
+
+  @override
+  Future<StayUnitEntity> createStayUnit(
+    String providerId, {
+    required String name,
+    String? description,
+    int? roomRate,
+    int? perHeadRate,
+    int? maxOccupancy,
+  }) async {
+    final model = await remoteDataSource.createStayUnit(
+      providerId,
+      name: name,
+      description: description,
+      roomRate: roomRate,
+      perHeadRate: perHeadRate,
+      maxOccupancy: maxOccupancy,
+    );
+    return _mapStayUnitModelToEntity(model);
+  }
+
+  // ===== STAY AMENITIES =====
+  @override
+  Future<StayAmenityEntity> addAmenity(
+    String providerId,
+    String unitId, {
+    required String amenity,
+    required String amenityScope,
+  }) async {
+    final model = await remoteDataSource.addAmenity(
+      providerId,
+      unitId,
+      amenity: amenity,
+      amenityScope: amenityScope,
+    );
+    return _mapStayAmenityModelToEntity(model);
+  }
+
   // ===== MAPPERS =====
   CabProviderEntity _mapCabProviderModelToEntity(CabProviderModel model) {
     return CabProviderEntity(
@@ -160,6 +280,18 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       ownerId: model.ownerId,
+    );
+  }
+
+  StayProviderEntity _mapStayProviderModelToEntity(StayProviderModel model) {
+    return StayProviderEntity(
+      id: model.id,
+      name: model.name,
+      createdBy: model.createdBy,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+      ownerId: model.ownerId,
+      roomCount: model.roomCount,
     );
   }
 
@@ -185,6 +317,30 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
       userId: model.userId,
       providerId: model.providerId,
       profileId: model.profileId,
+    );
+  }
+
+  StayUnitEntity _mapStayUnitModelToEntity(StayUnitModel model) {
+    return StayUnitEntity(
+      id: model.id,
+      name: model.name,
+      description: model.description,
+      roomRate: model.roomRate,
+      perHeadRate: model.perHeadRate,
+      maxOccupancy: model.maxOccupancy,
+      providerId: model.providerId,
+    );
+  }
+
+  StayAmenityEntity _mapStayAmenityModelToEntity(StayAmenityModel model) {
+    return StayAmenityEntity(
+      id: model.id,
+      stayServiceProviderId: model.stayServiceProviderId,
+      stayUnitId: model.stayUnitId,
+      amenityScope: model.amenityScope,
+      amenity: model.amenity,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
     );
   }
 }
