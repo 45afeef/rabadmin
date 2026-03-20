@@ -117,7 +117,7 @@ class _CreateCabPageState extends ConsumerState<CreateCabPage> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedVehicleType,
+                initialValue: _selectedVehicleType,
                 decoration: const InputDecoration(
                   labelText: 'Vehicle Type',
                   border: OutlineInputBorder(),

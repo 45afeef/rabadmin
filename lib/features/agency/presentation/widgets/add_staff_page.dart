@@ -181,7 +181,7 @@ class _CreateNewUserTabState extends ConsumerState<_CreateNewUserTab> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedRole,
+              initialValue: _selectedRole,
               decoration: const InputDecoration(
                 labelText: 'Staff Role',
                 border: OutlineInputBorder(),
@@ -329,7 +329,7 @@ class _AssignExistingUserTabState
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DropdownButtonFormField<String>(
-            value: _selectedUserId,
+            initialValue: _selectedUserId,
             decoration: const InputDecoration(
               labelText: 'Select User',
               border: OutlineInputBorder(),
@@ -349,7 +349,7 @@ class _AssignExistingUserTabState
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            value: _selectedRole,
+            initialValue: _selectedRole,
             decoration: const InputDecoration(
               labelText: 'Staff Role',
               border: OutlineInputBorder(),

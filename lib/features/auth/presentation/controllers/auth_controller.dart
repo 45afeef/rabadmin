@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show Provider;
 import 'auth_state.dart';
 import '../../domain/usecases/login_use_case.dart';
 import '../../domain/usecases/validate_token_use_case.dart';

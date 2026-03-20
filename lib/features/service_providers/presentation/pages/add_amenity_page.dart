@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rabadmin/core/providers/providers.dart';
+import '../../../../core/providers/providers.dart';
 
 class AddAmenityPage extends ConsumerStatefulWidget {
   final String providerId;
@@ -92,7 +92,7 @@ class _AddAmenityPageState extends ConsumerState<AddAmenityPage> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedScope,
+                initialValue: _selectedScope,
                 decoration: const InputDecoration(
                   labelText: 'Amenity Scope',
                   border: OutlineInputBorder(),

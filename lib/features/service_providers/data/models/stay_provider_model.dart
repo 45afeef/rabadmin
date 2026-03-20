@@ -48,7 +48,7 @@ class StayProviderModel extends StayProviderEntity {
   }) {
     return StayProviderModel(
       id: id ?? this.id,
-      name: providerName ?? this.name,
+      name: providerName ?? name,
       roomCount: roomCount ?? this.roomCount,
       createdAt: super.createdAt,
       updatedAt: updatedAt ?? super.updatedAt,
