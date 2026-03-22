@@ -66,7 +66,7 @@ abstract class ServiceProviderRemoteDataSource {
     String providerId, {
     int? minPrice,
     int? maxPrice,
-    String? amenity,
+    List<String>? amenities,
     int? limit,
     int? offset,
   });

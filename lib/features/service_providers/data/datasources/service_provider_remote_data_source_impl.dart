@@ -1,6 +1,8 @@
-import 'package:dio/dio.dart' show DioException;
+import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
 import 'package:one_of/any_of.dart';
 import 'package:rab_dio/rab_dio.dart';
+
 import '../models/cab_model.dart';
 import '../models/cab_provider_model.dart';
 import '../models/driver_model.dart';
@@ -236,9 +238,8 @@ class ServiceProviderRemoteDataSourceImpl
   @override
   Future<List<CabModel>> listCabs(String providerId) async {
     try {
-      final response = await cabApi.providersCabListCabs(
-        providerId: providerId,
-      );
+      Response<BuiltList<CabPublic>> response = await cabApi
+          .providersCabListCabs(providerId: providerId);
 
       final cabs = response.data?.map((c) {
         final cabJson = standardSerializers.serializeWith(
@@ -367,7 +368,7 @@ class ServiceProviderRemoteDataSourceImpl
     String providerId, {
     int? minPrice,
     int? maxPrice,
-    String? amenity,
+    List<String>? amenities,
     int? limit,
     int? offset,
   }) async {
@@ -376,7 +377,7 @@ class ServiceProviderRemoteDataSourceImpl
         providerId: providerId,
         minPrice: minPrice ?? 0,
         maxPrice: maxPrice ?? 1000000,
-        amenity: amenity,
+        amenities: amenities?.toBuiltList(),
         limit: limit,
         offset: offset,
       );

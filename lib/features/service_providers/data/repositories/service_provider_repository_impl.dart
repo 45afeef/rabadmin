@@ -219,7 +219,7 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
     String providerId, {
     int? minPrice,
     int? maxPrice,
-    String? amenity,
+    List<String>? amenities,
     int? limit,
     int? offset,
   }) async {
@@ -227,7 +227,7 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
       providerId,
       minPrice: minPrice,
       maxPrice: maxPrice,
-      amenity: amenity,
+      amenities: amenities,
       limit: limit,
       offset: offset,
     );
