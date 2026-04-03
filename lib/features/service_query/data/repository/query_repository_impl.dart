@@ -1,11 +1,11 @@
 import '../../domain/entity/public_stay_unit_entity.dart';
-import '../../domain/repository/service_query_repository.dart';
-import '../datasource/service_data_source.dart';
+import '../../domain/repository/query_repository.dart';
+import '../datasource/query_data_source.dart';
 
-class ServiceQueryRepositoryImpl implements ServiceQueryRepository {
-  final ServiceDataSource _dataSource;
+class QueryRepositoryImpl implements QueryRepository {
+  final QueryDataSource _dataSource;
 
-  ServiceQueryRepositoryImpl(this._dataSource);
+  QueryRepositoryImpl(this._dataSource);
 
   @override
   Future<List<PublicStayUnitEntity>> queryStayUnits({

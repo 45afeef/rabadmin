@@ -1,6 +1,6 @@
 import '../models/public_stay_unit_model.dart';
 
-abstract class ServiceDataSource {
+abstract class QueryDataSource {
   Future<List<PublicStayUnitModel>> queryStayUnits({
     String? location,
     DateTime? checkIn,

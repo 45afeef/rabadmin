@@ -17,10 +17,10 @@ import '../../features/service_providers/domain/entities/stay_unit_entity.dart';
 import '../../features/service_providers/domain/repositories/service_provider_repository.dart';
 
 // Service Query feature imports
-import '../../features/service_query/data/datasource/service_data_source.dart';
-import '../../features/service_query/data/datasource/service_remote_data_source.dart';
-import '../../features/service_query/data/repository/service_query_repository_impl.dart';
-import '../../features/service_query/domain/repository/service_query_repository.dart';
+import '../../features/service_query/data/datasource/query_data_source.dart';
+import '../../features/service_query/data/datasource/query_remote_data_source.dart';
+import '../../features/service_query/data/repository/query_repository_impl.dart';
+import '../../features/service_query/domain/repository/query_repository.dart';
 import '../../features/service_query/domain/usecases/query_stay_units_use_case.dart';
 import '../../features/service_query/presentation/controllers/stay_query_controller.dart';
 import '../../features/service_query/presentation/state/stay_query_state.dart';
@@ -244,15 +244,13 @@ final queryApiProvider = Provider<QueryApi>(
 );
 
 /// Provider for the Service Query remote data source.
-final serviceQueryRemoteDataSourceProvider = Provider<ServiceDataSource>(
-  (ref) => ServiceRemoteDataSource(ref.read(queryApiProvider)),
+final serviceQueryRemoteDataSourceProvider = Provider<QueryDataSource>(
+  (ref) => QueryRemoteDataSource(ref.read(queryApiProvider)),
 );
 
 /// Provider for the Service Query repository.
-final serviceQueryRepositoryProvider = Provider<ServiceQueryRepository>(
-  (ref) => ServiceQueryRepositoryImpl(
-    ref.read(serviceQueryRemoteDataSourceProvider),
-  ),
+final serviceQueryRepositoryProvider = Provider<QueryRepository>(
+  (ref) => QueryRepositoryImpl(ref.read(serviceQueryRemoteDataSourceProvider)),
 );
 
 /// Provider for the Query Stay Units use case.

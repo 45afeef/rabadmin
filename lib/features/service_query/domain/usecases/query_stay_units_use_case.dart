@@ -1,8 +1,8 @@
-import '../repository/service_query_repository.dart';
+import '../repository/query_repository.dart';
 import '../entity/public_stay_unit_entity.dart';
 
 class QueryStayUnitsUseCase {
-  final ServiceQueryRepository repository;
+  final QueryRepository repository;
 
   QueryStayUnitsUseCase(this.repository);
 

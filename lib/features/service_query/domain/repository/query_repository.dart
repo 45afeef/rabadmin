@@ -1,6 +1,6 @@
 import '../entity/public_stay_unit_entity.dart';
 
-abstract class ServiceQueryRepository {
+abstract class QueryRepository {
   Future<List<PublicStayUnitEntity>> queryStayUnits({
     String? location,
     DateTime? checkIn,

@@ -4,12 +4,12 @@ import 'package:rab_dio/rab_dio.dart'
     show QueryApi, StayUnitPublic, UnitsList, standardSerializers;
 
 import '../models/public_stay_unit_model.dart';
-import 'service_data_source.dart';
+import 'query_data_source.dart';
 
-class ServiceRemoteDataSource implements ServiceDataSource {
+class QueryRemoteDataSource implements QueryDataSource {
   final QueryApi _queryApi;
 
-  ServiceRemoteDataSource(this._queryApi);
+  QueryRemoteDataSource(this._queryApi);
 
   @override
   Future<List<PublicStayUnitModel>> queryStayUnits({
