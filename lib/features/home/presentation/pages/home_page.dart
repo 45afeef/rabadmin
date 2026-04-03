@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../service_query/presentation/widgets/query_stay_widget.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -13,8 +14,7 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Home Page')),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: ListView(
           children: [
             const Center(child: Text('Welcome to the Home Page!')),
             const SizedBox(height: 10),
@@ -35,6 +35,7 @@ class HomePage extends ConsumerWidget {
             Text('You can search and filter STAY here'),
             Text('You can search and filter CAB here'),
             Text('Location, rate, PAX, amenities'),
+            StayQueryWidget(),
           ],
         ),
       ),

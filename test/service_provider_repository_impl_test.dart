@@ -5,6 +5,9 @@ import 'package:rabadmin/features/profile/domain/repository/profile_repository.d
 import 'package:rabadmin/features/service_providers/data/datasources/service_provider_remote_data_source.dart';
 import 'package:rabadmin/features/service_providers/data/models/cab_model.dart';
 import 'package:rabadmin/features/service_providers/data/models/driver_model.dart';
+import 'package:rabadmin/features/service_providers/data/models/stay_amenity_model.dart';
+import 'package:rabadmin/features/service_providers/data/models/stay_provider_model.dart';
+import 'package:rabadmin/features/service_providers/data/models/stay_unit_model.dart';
 import 'package:rabadmin/features/service_providers/data/repositories/service_provider_repository_impl.dart';
 import 'package:rabadmin/features/service_providers/data/models/cab_provider_model.dart';
 
@@ -75,7 +78,6 @@ class _FakeRemote implements ServiceProviderRemoteDataSource {
     required String providerId,
     required String profileId,
   }) {
-    
     // TODO: implement createDriver
     throw UnimplementedError();
   }
@@ -89,6 +91,85 @@ class _FakeRemote implements ServiceProviderRemoteDataSource {
   @override
   Future<List<DriverModel>> listDrivers(String providerId) {
     // TODO: implement listDrivers
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StayAmenityModel> addAmenity(
+    String providerId,
+    String unitId, {
+    required String amenity,
+    required String amenityScope,
+  }) {
+    // TODO: implement addAmenity
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StayProviderModel> createStayProvider({
+    required String providerName,
+    required String createdBy,
+    String? locationId,
+    String? propertyType,
+    int? roomCount,
+  }) {
+    // TODO: implement createStayProvider
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StayUnitModel> createStayUnit(
+    String providerId, {
+    required String name,
+    String? description,
+    int? roomRate,
+    int? perHeadRate,
+    int? maxOccupancy,
+  }) {
+    // TODO: implement createStayUnit
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteStayProvider(String providerId) {
+    // TODO: implement deleteStayProvider
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StayProviderModel> getStayProvider(String providerId) {
+    // TODO: implement getStayProvider
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<StayProviderModel>> listStayProviders() {
+    // TODO: implement listStayProviders
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<StayUnitModel>> listStayUnits(
+    String providerId, {
+    int? minPrice,
+    int? maxPrice,
+    List<String>? amenities,
+    int? limit,
+    int? offset,
+  }) {
+    // TODO: implement listStayUnits
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StayProviderModel> updateStayProvider(
+    String providerId, {
+    String? providerName,
+    String? locationId,
+    String? propertyType,
+    int? roomCount,
+  }) {
+    // TODO: implement updateStayProvider
     throw UnimplementedError();
   }
 }
@@ -118,7 +199,6 @@ class _FakeAuth implements AuthRepository {
 class _FakeProfile implements ProfileRepository {
   @override
   Future<ProfileEntity> createProfile({
-    
     required String name,
     required String createdByUserId,
     required String phoneNumber,

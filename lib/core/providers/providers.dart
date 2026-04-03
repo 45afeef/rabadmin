@@ -16,6 +16,15 @@ import '../../features/service_providers/domain/entities/driver_entity.dart';
 import '../../features/service_providers/domain/entities/stay_unit_entity.dart';
 import '../../features/service_providers/domain/repositories/service_provider_repository.dart';
 
+// Service Query feature imports
+import '../../features/service_query/data/datasource/service_data_source.dart';
+import '../../features/service_query/data/datasource/service_remote_data_source.dart';
+import '../../features/service_query/data/repository/service_query_repository_impl.dart';
+import '../../features/service_query/domain/repository/service_query_repository.dart';
+import '../../features/service_query/domain/usecases/query_stay_units_use_case.dart';
+import '../../features/service_query/presentation/controllers/stay_query_controller.dart';
+import '../../features/service_query/presentation/state/stay_query_state.dart';
+
 // Agency feature imports
 import '../../features/agency/data/datasources/agency_remote_data_source.dart';
 import '../../features/agency/data/repositories/agency_repository_impl.dart';
@@ -224,3 +233,35 @@ final stayUnitsListProvider =
       final repository = ref.watch(serviceProviderRepositoryProvider);
       return repository.listStayUnits(providerId);
     });
+
+// =============================================================================
+// SERVICE QUERY FEATURE PROVIDERS
+// =============================================================================
+
+/// Provider for the QueryApi client from rab_dio.
+final queryApiProvider = Provider<QueryApi>(
+  (ref) => ref.watch(rabDioProvider).getQueryApi(),
+);
+
+/// Provider for the Service Query remote data source.
+final serviceQueryRemoteDataSourceProvider = Provider<ServiceDataSource>(
+  (ref) => ServiceRemoteDataSource(ref.read(queryApiProvider)),
+);
+
+/// Provider for the Service Query repository.
+final serviceQueryRepositoryProvider = Provider<ServiceQueryRepository>(
+  (ref) => ServiceQueryRepositoryImpl(
+    ref.read(serviceQueryRemoteDataSourceProvider),
+  ),
+);
+
+/// Provider for the Query Stay Units use case.
+final queryStayUnitsUseCaseProvider = Provider<QueryStayUnitsUseCase>(
+  (ref) => QueryStayUnitsUseCase(ref.read(serviceQueryRepositoryProvider)),
+);
+
+/// Provider for the Stay Query State Notifier.
+final stayQueryControllerProvider =
+    NotifierProvider<StayQueryNotifier, StayQueryState>(
+      () => StayQueryNotifier(),
+    );
