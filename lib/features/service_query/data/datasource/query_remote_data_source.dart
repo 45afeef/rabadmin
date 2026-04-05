@@ -6,10 +6,15 @@ import 'package:rab_dio/rab_dio.dart'
         StayProviderPublic,
         StayUnitPublic,
         UnitsList,
-        standardSerializers;
+        standardSerializers,
+        CabPublic,
+        DriverPublic,
+        VehicleType;
 
 import '../models/public_stay_provider_model.dart';
 import '../models/public_stay_unit_model.dart';
+import '../models/cab_model.dart';
+import '../models/driver_model.dart';
 import 'query_data_source.dart';
 
 class QueryRemoteDataSource implements QueryDataSource {
@@ -69,8 +74,6 @@ class QueryRemoteDataSource implements QueryDataSource {
         amenities: amenities?.toBuiltList(),
       );
 
-      print('API Response: ${response.data}');
-
       return response.data!.data.map((provider) {
         final providerJson = standardSerializers.serializeWith(
           StayProviderPublic.serializer,
@@ -84,6 +87,78 @@ class QueryRemoteDataSource implements QueryDataSource {
       throw Exception('Network error: ${e.message}');
     } catch (e) {
       throw Exception('Error fetching stay providers: $e');
+    }
+  }
+
+  @override
+  Future<List<CabModel>> queryCabs({
+    String? providerId,
+    String? vehicleType,
+    double? radiusKm,
+    int? minCapacity,
+    int? maxCapacity,
+    int? minMinimumRate,
+    int? maxMinimumRate,
+    int? minPerKmRate,
+    int? maxPerKmRate,
+    int? minKmForMinimumRate,
+    int? maxKmForMinimumRate,
+  }) async {
+    try {
+      final response = await _queryApi.queryQueryCabs(
+        providerId: providerId,
+        vehicleType: vehicleType != null
+            ? VehicleType.valueOf(vehicleType)
+            : null,
+        radiusKm: radiusKm,
+        minCapacity: minCapacity,
+        maxCapacity: maxCapacity,
+        minMinimumRate: minMinimumRate,
+        maxMinimumRate: maxMinimumRate,
+        minPerKmRate: minPerKmRate,
+        maxPerKmRate: maxPerKmRate,
+        minKmForMinimumRate: minKmForMinimumRate,
+        maxKmForMinimumRate: maxKmForMinimumRate,
+      );
+
+      return response.data!.data.map((cab) {
+        final cabJson = standardSerializers.serializeWith(
+          CabPublic.serializer,
+          cab,
+        );
+        return CabModel.fromJson(cabJson as Map<String, dynamic>);
+      }).toList();
+    } on DioException catch (e) {
+      throw Exception('Network error: ${e.message}');
+    } catch (e) {
+      throw Exception('Error fetching cabs: $e');
+    }
+  }
+
+  @override
+  Future<List<DriverModel>> queryDrivers({
+    String? providerId,
+    double? radiusKm,
+    int? minCapacity,
+  }) async {
+    try {
+      final response = await _queryApi.queryQueryDrivers(
+        providerId: providerId,
+        radiusKm: radiusKm,
+        minCapacity: minCapacity,
+      );
+
+      return response.data!.data.map((driver) {
+        final driverJson = standardSerializers.serializeWith(
+          DriverPublic.serializer,
+          driver,
+        );
+        return DriverModel.fromJson(driverJson as Map<String, dynamic>);
+      }).toList();
+    } on DioException catch (e) {
+      throw Exception('Network error: ${e.message}');
+    } catch (e) {
+      throw Exception('Error fetching drivers: $e');
     }
   }
 }

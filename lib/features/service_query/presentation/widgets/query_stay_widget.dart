@@ -233,6 +233,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
             ] else if (state is StayProviderQueryLoaded) ...[
               ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.providers.length,
                 itemBuilder: (context, index) {
                   final provider = state.providers[index];

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../service_query/presentation/widgets/query_cab_widget.dart';
+import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
 
 class HomePage extends ConsumerWidget {
@@ -36,6 +38,8 @@ class HomePage extends ConsumerWidget {
             Text('You can search and filter CAB here'),
             Text('Location, rate, PAX, amenities'),
             StayQueryWidget(),
+            CabQueryWidget(),
+            DriverQueryWidget(),
           ],
         ),
       ),
