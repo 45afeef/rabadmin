@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/providers.dart';
-import '../state/stay_query_state.dart';
+import '../state/stayprovider_query_state.dart';
 
 class StayQueryWidget extends ConsumerStatefulWidget {
   const StayQueryWidget({super.key});
@@ -77,8 +77,8 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
   void _performQuery() {
     ref
-        .read(stayQueryControllerProvider.notifier)
-        .queryStayUnits(
+        .read(stayProviderQueryControllerProvider.notifier)
+        .queryStayProviders(
           location: location,
           checkIn: checkIn,
           checkOut: checkOut,
@@ -90,7 +90,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(stayQueryControllerProvider);
+    final state = ref.watch(stayProviderQueryControllerProvider);
 
     return Card(
       elevation: 3,
@@ -228,22 +228,24 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
             ),
 
             /// RESULTS
-            if (state is StayQueryLoading) ...[
+            if (state is StayProviderQueryLoading) ...[
               CircularProgressIndicator(),
-            ] else if (state is StayQueryLoaded) ...[
+            ] else if (state is StayProviderQueryLoaded) ...[
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: state.units.length,
+                itemCount: state.providers.length,
                 itemBuilder: (context, index) {
-                  final unit = state.units[index];
+                  final provider = state.providers[index];
                   return ListTile(
-                    title: Text(unit.name),
-                    subtitle: Text(unit.description),
-                    trailing: Text('\$${unit.roomRate}'),
+                    title: Text(provider.name),
+                    subtitle: Text(
+                      '${provider.propertyType} : ${provider.optimalOccupancy}-${provider.maxOccupancy} pax',
+                    ),
+                    trailing: Text('${provider.roomCount} rooms'),
                   );
                 },
               ),
-            ] else if (state is StayQueryError) ...[
+            ] else if (state is StayProviderQueryError) ...[
               Text('Error: ${state.message}'),
             ],
           ],

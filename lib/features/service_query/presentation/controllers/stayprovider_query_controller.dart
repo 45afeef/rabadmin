@@ -1,0 +1,38 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/providers/providers.dart';
+import '../../domain/usecases/query_stay_provider_use_case.dart';
+import '../state/stayprovider_query_state.dart';
+
+class StayProviderQueryNotifier extends Notifier<StayProviderQueryState> {
+  late final QueryStayProvidersUseCase _providerUseCase;
+
+  @override
+  StayProviderQueryState build() {
+    _providerUseCase = ref.read(queryStayProvidersUseCaseProvider);
+    return StayProviderQueryInitial();
+  }
+
+  Future<void> queryStayProviders({
+    String? location,
+    DateTime? checkIn,
+    DateTime? checkOut,
+    int? pax,
+    int? maxRate,
+    List<String>? amenities,
+  }) async {
+    state = StayProviderQueryInitial();
+    try {
+      final providers = await _providerUseCase.call(
+        location: location,
+        checkIn: checkIn,
+        checkOut: checkOut,
+        pax: pax,
+        maxRate: maxRate,
+        amenities: amenities,
+      );
+      state = StayProviderQueryLoaded(providers);
+    } catch (e) {
+      state = StayProviderQueryError(e.toString());
+    }
+  }
+}

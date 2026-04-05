@@ -21,9 +21,12 @@ import '../../features/service_query/data/datasource/query_data_source.dart';
 import '../../features/service_query/data/datasource/query_remote_data_source.dart';
 import '../../features/service_query/data/repository/query_repository_impl.dart';
 import '../../features/service_query/domain/repository/query_repository.dart';
+import '../../features/service_query/domain/usecases/query_stay_provider_use_case.dart';
 import '../../features/service_query/domain/usecases/query_stay_units_use_case.dart';
-import '../../features/service_query/presentation/controllers/stay_query_controller.dart';
-import '../../features/service_query/presentation/state/stay_query_state.dart';
+import '../../features/service_query/presentation/controllers/stayprovider_query_controller.dart';
+import '../../features/service_query/presentation/controllers/stayunit_query_controller.dart';
+import '../../features/service_query/presentation/state/stayprovider_query_state.dart';
+import '../../features/service_query/presentation/state/stayunit_query_state.dart';
 
 // Agency feature imports
 import '../../features/agency/data/datasources/agency_remote_data_source.dart';
@@ -258,8 +261,19 @@ final queryStayUnitsUseCaseProvider = Provider<QueryStayUnitsUseCase>(
   (ref) => QueryStayUnitsUseCase(ref.read(serviceQueryRepositoryProvider)),
 );
 
-/// Provider for the Stay Query State Notifier.
-final stayQueryControllerProvider =
-    NotifierProvider<StayQueryNotifier, StayQueryState>(
-      () => StayQueryNotifier(),
+/// Provider for the Query Stay Providers use case.
+final queryStayProvidersUseCaseProvider = Provider<QueryStayProvidersUseCase>(
+  (ref) => QueryStayProvidersUseCase(ref.read(serviceQueryRepositoryProvider)),
+);
+
+/// Provider for the Stay Unit Query State Notifier.
+final stayunitQueryControllerProvider =
+    NotifierProvider<StayUnitQueryNotifier, UnitQueryState>(
+      () => StayUnitQueryNotifier(),
+    );
+
+/// Provider for the Stay Provider Query State Notifier.
+final stayProviderQueryControllerProvider =
+    NotifierProvider<StayProviderQueryNotifier, StayProviderQueryState>(
+      () => StayProviderQueryNotifier(),
     );

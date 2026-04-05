@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/providers.dart';
 import '../../domain/usecases/query_stay_units_use_case.dart';
-import '../state/stay_query_state.dart';
+import '../state/stayunit_query_state.dart';
 
-class StayQueryNotifier extends Notifier<StayQueryState> {
-  late final QueryStayUnitsUseCase _useCase;
+class StayUnitQueryNotifier extends Notifier<UnitQueryState> {
+  late final QueryStayUnitsUseCase _unitUseCase;
 
   @override
-  StayQueryState build() {
-    _useCase = ref.read(queryStayUnitsUseCaseProvider);
-    return StayQueryInitial();
+  UnitQueryState build() {
+    _unitUseCase = ref.read(queryStayUnitsUseCaseProvider);
+    return StayUnitQueryInitial();
   }
 
   Future<void> queryStayUnits({
@@ -20,9 +20,9 @@ class StayQueryNotifier extends Notifier<StayQueryState> {
     int? maxRate,
     List<String>? amenities,
   }) async {
-    state = StayQueryLoading();
+    state = StayUnitQueryLoading();
     try {
-      final units = await _useCase.call(
+      final units = await _unitUseCase.call(
         location: location,
         checkIn: checkIn,
         checkOut: checkOut,
@@ -30,9 +30,9 @@ class StayQueryNotifier extends Notifier<StayQueryState> {
         maxRate: maxRate,
         amenities: amenities,
       );
-      state = StayQueryLoaded(units);
+      state = StayUnitQueryLoaded(units);
     } catch (e) {
-      state = StayQueryError(e.toString());
+      state = StayUnitQueryError(e.toString());
     }
   }
 }
