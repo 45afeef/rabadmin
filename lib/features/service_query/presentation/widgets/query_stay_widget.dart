@@ -13,34 +13,194 @@ class StayQueryWidget extends ConsumerStatefulWidget {
 
 class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   bool showAdvanced = false;
-  bool splitGender = false;
 
   int adults = 2;
   int kids = 0;
-  int men = 0;
-  int women = 0;
-  int rooms = 1;
 
   Set<String> selectedFilters = {};
 
   String? location;
   DateTime? checkIn;
   DateTime? checkOut;
-  int? maxRate;
 
   final List<String> popular = ["Pool", "WiFi", "Hot Water"];
   final List<String> nature = ["Near Forest", "Natural Pool", "Trekking"];
   final List<String> special = ["Event Friendly", "Dormitory", "Tent"];
   final List<String> vibe = ["Quiet", "Adventure", "Luxury", "Budget"];
 
-  Widget buildChips(List<String> items) {
+  void _performQuery() {
+    ref
+        .read(stayProviderQueryControllerProvider.notifier)
+        .queryStayProviders(
+          location: location,
+          checkIn: checkIn,
+          checkOut: checkOut,
+          pax: adults + kids,
+          amenities: selectedFilters.toList(),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(stayProviderQueryControllerProvider);
+
+    const accent = Color(0xFF5A67D8); // soft indigo
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// 📍 LOCATION
+        TextField(
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.search),
+            hintText: "Where are you going?",
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+          ),
+          onChanged: (v) => location = v,
+        ),
+
+        const SizedBox(height: 16),
+
+        /// 📅 DATE + 👨‍👩‍👧 GUESTS
+        Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () async {
+                  final picked = await showDateRangePicker(
+                    context: context,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      checkIn = picked.start;
+                      checkOut = picked.end;
+                    });
+                  }
+                },
+                child: _pill(
+                  icon: Icons.calendar_today,
+                  text: checkIn != null
+                      ? "${checkIn!.day}/${checkIn!.month} - ${checkOut!.day}/${checkOut!.month}"
+                      : "Select dates",
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => showAdvanced = !showAdvanced),
+                child: _pill(
+                  icon: Icons.people,
+                  text: "$adults Adults, $kids Kids",
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        /// 🌿 FILTERS (VISIBLE FIRST – EXPERIENCE DRIVEN)
+        const Text(
+          "What are you looking for?",
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+
+        const SizedBox(height: 10),
+
+        _buildChips(popular, accent),
+        _buildChips(nature, accent),
+        _buildChips(vibe, accent),
+
+        const SizedBox(height: 10),
+
+        /// ⚙️ ADVANCED
+        TextButton(
+          onPressed: () => setState(() => showAdvanced = !showAdvanced),
+          child: const Text("More options"),
+        ),
+
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 250),
+          crossFadeState: showAdvanced
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          firstChild: Column(
+            children: [
+              _stepper("Adults", adults, (v) => setState(() => adults = v)),
+              _stepper("Kids", kids, (v) => setState(() => kids = v)),
+
+              const SizedBox(height: 10),
+
+              _buildChips(special, accent),
+            ],
+          ),
+          secondChild: const SizedBox(),
+        ),
+
+        const SizedBox(height: 20),
+
+        /// 🔍 SEARCH BUTTON (SOFT, PREMIUM)
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: accent,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 0,
+            ),
+            onPressed: _performQuery,
+            child: const Text("Search stays"),
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        _buildBody(state),
+      ],
+    );
+  }
+
+  /// 🧱 PILL UI
+  Widget _pill({required IconData icon, required String text}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 18),
+          const SizedBox(width: 8),
+          Expanded(child: Text(text)),
+        ],
+      ),
+    );
+  }
+
+  /// 🏷 CHIP GROUP
+  Widget _buildChips(List<String> items, Color accent) {
     return Wrap(
       spacing: 8,
+      runSpacing: 6,
       children: items.map((item) {
         final selected = selectedFilters.contains(item);
         return FilterChip(
           label: Text(item),
           selected: selected,
+          selectedColor: accent.withOpacity(0.2),
           onSelected: (_) {
             setState(() {
               selected
@@ -53,7 +213,8 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     );
   }
 
-  Widget stepper(String label, int value, Function(int) onChanged) {
+  /// 🔢 STEPPER
+  Widget _stepper(String label, int value, Function(int) onChanged) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -61,12 +222,12 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
         Row(
           children: [
             IconButton(
-              icon: Icon(Icons.remove),
+              icon: const Icon(Icons.remove),
               onPressed: value > 0 ? () => onChanged(value - 1) : null,
             ),
             Text(value.toString()),
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () => onChanged(value + 1),
             ),
           ],
@@ -75,183 +236,53 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     );
   }
 
-  void _performQuery() {
-    ref
-        .read(stayProviderQueryControllerProvider.notifier)
-        .queryStayProviders(
-          location: location,
-          checkIn: checkIn,
-          checkOut: checkOut,
-          pax: adults + kids,
-          maxRate: maxRate,
-          amenities: selectedFilters.toList(),
-        );
-  }
+  Widget _buildBody(StayProviderQueryState state) {
+    if (state is StayProviderQueryLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is StayProviderQueryLoaded) {
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: state.providers.length,
+        itemBuilder: (context, index) {
+          final p = state.providers[index];
 
-  @override
-  Widget build(BuildContext context) {
-    final state = ref.watch(stayProviderQueryControllerProvider);
-
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            /// 🔹 PRIMARY ROW
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.location_on),
-                hintText: "Where are you going?",
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) => location = value.isEmpty ? null : value,
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 10,
+                  color: Colors.black.withOpacity(0.05),
+                ),
+              ],
             ),
-            SizedBox(height: 10),
-
-            Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.calendar_today),
-                      hintText: "Dates",
-                      border: OutlineInputBorder(),
-                    ),
-                    readOnly: true,
-                    onTap: () async {
-                      final picked = await showDateRangePicker(
-                        context: context,
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(Duration(days: 365)),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          checkIn = picked.start;
-                          checkOut = picked.end;
-                        });
-                      }
-                    },
-                    controller: TextEditingController(
-                      text: checkIn != null && checkOut != null
-                          ? '${checkIn!.toLocal().toString().split(' ')[0]} - ${checkOut!.toLocal().toString().split(' ')[0]}'
-                          : null,
-                    ),
+                Text(
+                  p.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => showAdvanced = !showAdvanced),
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text("$adults Adults, $kids Kids"),
-                    ),
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax",
+                  style: const TextStyle(color: Colors.black54),
                 ),
               ],
             ),
-
-            SizedBox(height: 10),
-
-            /// 🔽 ADVANCED FILTERS
-            if (showAdvanced) ...[
-              Divider(),
-
-              /// Guests
-              stepper("Adults", adults, (v) => setState(() => adults = v)),
-              stepper("Kids", kids, (v) => setState(() => kids = v)),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Split by Gender"),
-                  Switch(
-                    value: splitGender,
-                    onChanged: (v) => setState(() => splitGender = v),
-                  ),
-                ],
-              ),
-
-              if (splitGender) ...[
-                stepper("Men", men, (v) => setState(() => men = v)),
-                stepper("Women", women, (v) => setState(() => women = v)),
-              ],
-
-              Divider(),
-
-              /// Rooms
-              stepper("Rooms", rooms, (v) => setState(() => rooms = v)),
-
-              Divider(),
-
-              /// Max Rate
-              TextField(
-                decoration: InputDecoration(
-                  labelText: "Max Rate",
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) => maxRate = int.tryParse(value),
-              ),
-
-              Divider(),
-
-              /// Filters
-              Align(alignment: Alignment.centerLeft, child: Text("Popular")),
-              buildChips(popular),
-
-              Align(alignment: Alignment.centerLeft, child: Text("Nature")),
-              buildChips(nature),
-
-              Align(alignment: Alignment.centerLeft, child: Text("Special")),
-              buildChips(special),
-
-              Align(alignment: Alignment.centerLeft, child: Text("Vibe")),
-              buildChips(vibe),
-            ],
-
-            SizedBox(height: 10),
-
-            /// 🔍 SEARCH BUTTON
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _performQuery,
-                child: Text("Search"),
-              ),
-            ),
-
-            /// RESULTS
-            if (state is StayProviderQueryLoading) ...[
-              CircularProgressIndicator(),
-            ] else if (state is StayProviderQueryLoaded) ...[
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.providers.length,
-                itemBuilder: (context, index) {
-                  final provider = state.providers[index];
-                  return ListTile(
-                    title: Text(provider.name),
-                    subtitle: Text(
-                      '${provider.propertyType} : ${provider.optimalOccupancy}-${provider.maxOccupancy} pax',
-                    ),
-                    trailing: Text('${provider.roomCount} rooms'),
-                  );
-                },
-              ),
-            ] else if (state is StayProviderQueryError) ...[
-              Text('Error: ${state.message}'),
-            ],
-          ],
-        ),
-      ),
-    );
+          );
+        },
+      );
+    } else if (state is StayProviderQueryError) {
+      return Text(state.message);
+    }
+    return const SizedBox();
   }
 }

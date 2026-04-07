@@ -30,136 +30,238 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final driverQueryState = ref.watch(driverQueryControllerProvider);
+    final state = ref.watch(driverQueryControllerProvider);
 
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            /// 🔹 PRIMARY ROW - Location and Capacity
-            TextField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.location_on),
-                hintText: "Search location",
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) => location = value.isEmpty ? null : value,
-            ),
-            const SizedBox(height: 10),
-
-            TextField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.people),
-                hintText: "Minimum capacity needed",
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) => minCapacity = int.tryParse(value),
-            ),
-
-            const SizedBox(height: 10),
-
-            /// 🔽 ADVANCED FILTERS
-            if (showAdvanced) ...[
-              const Divider(),
-
-              /// Radius slider
-              Row(
-                children: [
-                  const Text("Search Radius:"),
-                  Expanded(
-                    child: Slider(
-                      value: radiusKm,
-                      min: 0.1,
-                      max: 50.0,
-                      divisions: 50,
-                      label: "${radiusKm.toStringAsFixed(1)} km",
-                      onChanged: (value) => setState(() => radiusKm = value),
-                    ),
-                  ),
-                  Text("${radiusKm.toStringAsFixed(1)} km"),
-                ],
-              ),
-
-              const Divider(),
-
-              /// Provider ID
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: "Provider ID (Optional)",
-                  border: OutlineInputBorder(),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.black, Colors.green.shade900],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Column(
+        children: [
+          /// 🧭 HEADER
+          Row(
+            children: const [
+              Icon(Icons.tune, color: Colors.greenAccent),
+              SizedBox(width: 8),
+              Text(
+                "Driver Control Panel",
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-                onChanged: (value) => providerId = value.isEmpty ? null : value,
               ),
             ],
+          ),
 
-            const SizedBox(height: 10),
+          const SizedBox(height: 16),
 
-            /// Toggle Advanced Filters
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () => setState(() => showAdvanced = !showAdvanced),
+          /// 🔹 QUICK SEARCH PANEL
+          _buildPanel(
+            child: Column(
+              children: [
+                _inputField(
+                  icon: Icons.location_on,
+                  hint: "Search location",
+                  onChanged: (v) => location = v,
+                ),
+                const SizedBox(height: 10),
+                _inputField(
+                  icon: Icons.people,
+                  hint: "Minimum capacity",
+                  isNumber: true,
+                  onChanged: (v) => minCapacity = int.tryParse(v),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          /// 🔽 ADVANCED TOGGLE (PILL STYLE)
+          GestureDetector(
+            onTap: () => setState(() => showAdvanced = !showAdvanced),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.greenAccent),
+              ),
+              child: Center(
                 child: Text(
-                  showAdvanced ? "Hide Filters" : "Show More Filters",
+                  showAdvanced
+                      ? "Hide Advanced Controls"
+                      : "Show Advanced Controls",
+                  style: const TextStyle(color: Colors.greenAccent),
                 ),
               ),
             ),
+          ),
 
-            const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
-            /// 🔍 SEARCH BUTTON
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _performQuery,
-                child: const Text("Search Drivers"),
+          /// 🧠 ADVANCED PANEL
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 300),
+            crossFadeState: showAdvanced
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: _buildPanel(
+              child: Column(
+                children: [
+                  /// Radius
+                  Row(
+                    children: [
+                      const Text(
+                        "Radius",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      Expanded(
+                        child: Slider(
+                          activeColor: Colors.greenAccent,
+                          value: radiusKm,
+                          min: 0.1,
+                          max: 50,
+                          onChanged: (v) => setState(() => radiusKm = v),
+                        ),
+                      ),
+                      Text(
+                        "${radiusKm.toStringAsFixed(1)} km",
+                        style: const TextStyle(color: Colors.greenAccent),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  _inputField(
+                    hint: "Provider ID (optional)",
+                    onChanged: (v) => providerId = v,
+                  ),
+                ],
               ),
             ),
+            secondChild: const SizedBox(),
+          ),
 
-            /// RESULTS
-            _buildBody(driverQueryState),
-          ],
-        ),
+          const SizedBox(height: 16),
+
+          /// 🚀 SEARCH BUTTON (GLOW STYLE)
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.greenAccent,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                textStyle: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onPressed: _performQuery,
+              child: const Text("EXECUTE SEARCH"),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          /// 📊 RESULTS PANEL
+          _buildBody(state),
+        ],
       ),
     );
   }
 
+  /// 🧱 PANEL CONTAINER
+  Widget _buildPanel({required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.greenAccent.withOpacity(0.4)),
+      ),
+      child: child,
+    );
+  }
+
+  /// 🔤 INPUT STYLE
+  Widget _inputField({
+    IconData? icon,
+    required String hint,
+    bool isNumber = false,
+    required Function(String) onChanged,
+  }) {
+    return TextField(
+      style: const TextStyle(color: Colors.white),
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      decoration: InputDecoration(
+        prefixIcon: icon != null ? Icon(icon, color: Colors.greenAccent) : null,
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.white38),
+        filled: true,
+        fillColor: Colors.black54,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      onChanged: onChanged,
+    );
+  }
+
+  /// 📊 RESULTS
   Widget _buildBody(DriverQueryState state) {
     if (state is DriverQueryInitial) {
-      return const Center(child: Text('Press button to query drivers'));
+      return const Center(
+        child: Text(
+          'Run a query to see drivers',
+          style: TextStyle(color: Colors.white54),
+        ),
+      );
     } else if (state is DriverQueryLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.greenAccent),
+      );
     } else if (state is DriverQueryLoaded) {
       return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: state.drivers.length,
         itemBuilder: (context, index) {
-          final driver = state.drivers[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 4),
+          final d = state.drivers[index];
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.greenAccent.withOpacity(0.3)),
+            ),
             child: ListTile(
-              leading: const Icon(Icons.person, color: Colors.green),
-              title: Text('Driver ${driver.id}'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Profile: ${driver.profileId}'),
-                  if (driver.userId != null) Text('User ID: ${driver.userId}'),
-                  Text('Provider: ${driver.providerId}'),
-                ],
+              leading: const Icon(Icons.person, color: Colors.greenAccent),
+              title: Text(
+                'Driver ${d.id}',
+                style: const TextStyle(color: Colors.white),
               ),
-              trailing: const Icon(Icons.phone),
+              subtitle: Text(
+                'Provider: ${d.providerId}',
+                style: const TextStyle(color: Colors.white70),
+              ),
+              trailing: const Icon(Icons.chevron_right, color: Colors.white54),
             ),
           );
         },
       );
     } else if (state is DriverQueryError) {
-      return Center(child: Text('Error: ${state.message}'));
+      return Center(
+        child: Text(
+          state.message,
+          style: const TextStyle(color: Colors.redAccent),
+        ),
+      );
     }
     return const SizedBox();
   }
