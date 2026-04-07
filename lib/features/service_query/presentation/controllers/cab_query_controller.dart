@@ -25,7 +25,7 @@ class CabQueryNotifier extends Notifier<CabQueryState> {
     int? minKmForMinimumRate,
     int? maxKmForMinimumRate,
   }) async {
-    state = CabQueryInitial();
+    state = CabQueryLoading();
     try {
       final cabs = await _cabsUseCase.call(
         providerId: providerId,

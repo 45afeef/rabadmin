@@ -17,7 +17,7 @@ class DriverQueryNotifier extends Notifier<DriverQueryState> {
     double? radiusKm,
     int? minCapacity,
   }) async {
-    state = DriverQueryInitial();
+    state = DriverQueryLoading();
     try {
       final drivers = await _driversUseCase.call(
         providerId: providerId,

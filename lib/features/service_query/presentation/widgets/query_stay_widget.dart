@@ -29,6 +29,8 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   final List<String> vibe = ["Quiet", "Adventure", "Luxury", "Budget"];
 
   void _performQuery() {
+    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+
     ref
         .read(stayProviderQueryControllerProvider.notifier)
         .queryStayProviders(
@@ -44,7 +46,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   Widget build(BuildContext context) {
     final state = ref.watch(stayProviderQueryControllerProvider);
 
-    const accent = Color(0xFF5A67D8); // soft indigo
+    const accent = Color(0xFF5A67D8);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,9 +117,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
         const SizedBox(height: 10),
 
-        _buildChips(popular, accent),
-        _buildChips(nature, accent),
-        _buildChips(vibe, accent),
+        _buildChips([...popular, ...nature, ...vibe], accent),
 
         const SizedBox(height: 10),
 
@@ -136,18 +136,15 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
             children: [
               _stepper("Adults", adults, (v) => setState(() => adults = v)),
               _stepper("Kids", kids, (v) => setState(() => kids = v)),
-
-              const SizedBox(height: 10),
-
               _buildChips(special, accent),
             ],
           ),
           secondChild: const SizedBox(),
         ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
 
-        /// 🔍 SEARCH BUTTON (SOFT, PREMIUM)
+        /// 🚀 SEARCH BUTTON WITH LOADING STATE
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -158,9 +155,8 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              elevation: 0,
             ),
-            onPressed: _performQuery,
+            onPressed: state is StayProviderQueryLoading ? null : _performQuery,
             child: const Text("Search stays"),
           ),
         ),
@@ -193,14 +189,21 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   /// 🏷 CHIP GROUP
   Widget _buildChips(List<String> items, Color accent) {
     return Wrap(
-      spacing: 8,
-      runSpacing: 6,
+      spacing: 4,
+      runSpacing: 3,
       children: items.map((item) {
         final selected = selectedFilters.contains(item);
         return FilterChip(
-          label: Text(item),
+          label: Text(
+            item,
+            style: TextStyle(
+              color: selected ? accent : Colors.black87,
+              fontWeight: selected ? FontWeight.bold : FontWeight.w200,
+              fontSize: 10,
+            ),
+          ),
           selected: selected,
-          selectedColor: accent.withOpacity(0.2),
+          selectedColor: accent.withValues(alpha: 0.2),
           onSelected: (_) {
             setState(() {
               selected
@@ -256,7 +259,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               boxShadow: [
                 BoxShadow(
                   blurRadius: 10,
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                 ),
               ],
             ),
@@ -271,9 +274,18 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax",
-                  style: const TextStyle(color: Colors.black54),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax",
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    Text(
+                      " ${p.roomCount} rooms",
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  ],
                 ),
               ],
             ),

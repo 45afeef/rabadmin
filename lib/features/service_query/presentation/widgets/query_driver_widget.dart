@@ -19,6 +19,8 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
   int? minCapacity;
 
   void _performQuery() {
+    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+
     ref
         .read(driverQueryControllerProvider.notifier)
         .queryDrivers(
@@ -161,8 +163,8 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 textStyle: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: _performQuery,
-              child: const Text("EXECUTE SEARCH"),
+              onPressed: state is DriverQueryLoading ? null : _performQuery,
+              child: const Text("Find Drivers"),
             ),
           ),
 
@@ -180,9 +182,9 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
+        color: Colors.black.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.greenAccent.withOpacity(0.4)),
+        border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.4)),
       ),
       child: child,
     );
@@ -238,7 +240,7 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
             decoration: BoxDecoration(
               color: Colors.black87,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.greenAccent.withOpacity(0.3)),
+              border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
             ),
             child: ListTile(
               leading: const Icon(Icons.person, color: Colors.greenAccent),

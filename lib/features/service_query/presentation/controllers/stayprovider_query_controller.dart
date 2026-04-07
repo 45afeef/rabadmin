@@ -20,7 +20,7 @@ class StayProviderQueryNotifier extends Notifier<StayProviderQueryState> {
     int? maxRate,
     List<String>? amenities,
   }) async {
-    state = StayProviderQueryInitial();
+    state = StayProviderQueryLoading();
     try {
       final providers = await _providerUseCase.call(
         location: location,

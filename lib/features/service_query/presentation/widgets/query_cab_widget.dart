@@ -23,6 +23,8 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
   final List<String> vehicleTypes = ["SEDAN", "SUV", "HATCHBACK", "VAN"];
 
   void _performQuery() {
+    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+
     ref
         .read(cabQueryControllerProvider.notifier)
         .queryCabs(
@@ -72,7 +74,14 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
           children: vehicleTypes.map((type) {
             final selected = vehicleType == type;
             return ChoiceChip(
-              label: Text(type),
+              label: Text(
+                type,
+                style: TextStyle(
+                  color: selected ? accent : Colors.black87,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.w200,
+                  fontSize: 10,
+                ),
+              ),
               selected: selected,
               selectedColor: accent,
               labelStyle: TextStyle(
@@ -175,7 +184,7 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
-            onPressed: _performQuery,
+            onPressed: state is CabQueryLoading ? null : _performQuery,
             child: const Text("Find Cabs", style: TextStyle(fontSize: 16)),
           ),
         ),
@@ -207,7 +216,7 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
               ],
             ),
             child: Row(
