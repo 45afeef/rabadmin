@@ -258,10 +258,6 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Provider: ${d.providerId}',
-                    style: const TextStyle(color: Colors.white70),
-                  ),
                   if (d.primaryPhoneNumber != null)
                     Row(
                       children: [
@@ -368,7 +364,6 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
                     ),
                 ],
               ),
-              trailing: const Icon(Icons.chevron_right, color: Colors.white54),
             ),
           );
         },
