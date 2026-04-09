@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/providers/providers.dart';
 import '../state/driver_query_state.dart';
 
@@ -262,14 +263,108 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
                     style: const TextStyle(color: Colors.white70),
                   ),
                   if (d.primaryPhoneNumber != null)
-                    Text(
-                      'Phone: ${d.primaryPhoneNumber}',
-                      style: const TextStyle(color: Colors.white70),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Phone: ${d.primaryPhoneNumber}',
+                            style: const TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.call,
+                            color: Colors.greenAccent,
+                            size: 20,
+                          ),
+                          onPressed: () => launchUrl(
+                            Uri.parse('tel:${d.primaryPhoneNumber}'),
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'Call',
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.chat,
+                            color: Colors.green,
+                            size: 20,
+                          ),
+                          onPressed: () => launchUrl(
+                            Uri.parse(
+                              'https://wa.me/${d.primaryPhoneNumber!.replaceAll(RegExp(r'[^\d]'), '')}',
+                            ),
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'WhatsApp',
+                        ),
+                      ],
+                    ),
+                  if (d.secondaryPhoneNumber != null)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Secondary Phone: ${d.secondaryPhoneNumber}',
+                            style: const TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.call,
+                            color: Colors.greenAccent,
+                            size: 20,
+                          ),
+                          onPressed: () => launchUrl(
+                            Uri.parse('tel:${d.secondaryPhoneNumber}'),
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'Call',
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.chat,
+                            color: Colors.green,
+                            size: 20,
+                          ),
+                          onPressed: () => launchUrl(
+                            Uri.parse(
+                              'https://wa.me/${d.secondaryPhoneNumber!.replaceAll(RegExp(r'[^\d]'), '')}',
+                            ),
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'WhatsApp',
+                        ),
+                      ],
                     ),
                   if (d.primaryEmail != null)
-                    Text(
-                      'Email: ${d.primaryEmail}',
-                      style: const TextStyle(color: Colors.white70),
+                    InkWell(
+                      onTap: () =>
+                          launchUrl(Uri.parse('mailto:${d.primaryEmail}')),
+                      child: Text(
+                        'Email: ${d.primaryEmail}',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  if (d.secondaryEmail != null)
+                    InkWell(
+                      onTap: () =>
+                          launchUrl(Uri.parse('mailto:${d.secondaryEmail}')),
+                      child: Text(
+                        'Secondary Email: ${d.secondaryEmail}',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                 ],
               ),
