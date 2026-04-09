@@ -19,6 +19,7 @@ class StayProviderQueryNotifier extends Notifier<StayProviderQueryState> {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) async {
     state = StayProviderQueryLoading();
     try {
@@ -29,6 +30,7 @@ class StayProviderQueryNotifier extends Notifier<StayProviderQueryState> {
         pax: pax,
         maxRate: maxRate,
         amenities: amenities,
+        roomCount: roomCount,
       );
       state = StayProviderQueryLoaded(providers);
     } catch (e) {

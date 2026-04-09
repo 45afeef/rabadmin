@@ -240,17 +240,38 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
             decoration: BoxDecoration(
               color: Colors.black87,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: Colors.greenAccent.withValues(alpha: 0.3),
+              ),
             ),
             child: ListTile(
               leading: const Icon(Icons.person, color: Colors.greenAccent),
               title: Text(
-                'Driver ${d.id}',
+                d.fullName ??
+                    ((d.firstName?.isNotEmpty == true ||
+                            d.lastName?.isNotEmpty == true)
+                        ? '${d.firstName ?? ''} ${d.lastName ?? ''}'.trim()
+                        : 'Driver ${d.id}'),
                 style: const TextStyle(color: Colors.white),
               ),
-              subtitle: Text(
-                'Provider: ${d.providerId}',
-                style: const TextStyle(color: Colors.white70),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Provider: ${d.providerId}',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                  if (d.primaryPhoneNumber != null)
+                    Text(
+                      'Phone: ${d.primaryPhoneNumber}',
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                  if (d.primaryEmail != null)
+                    Text(
+                      'Email: ${d.primaryEmail}',
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                ],
               ),
               trailing: const Icon(Icons.chevron_right, color: Colors.white54),
             ),

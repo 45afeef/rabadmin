@@ -11,6 +11,7 @@ abstract class QueryRepository {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   });
 
   Future<List<PublicStayProviderEntity>> queryStayProviders({
@@ -20,6 +21,7 @@ abstract class QueryRepository {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   });
 
   Future<List<CabEntity>> queryCabs({

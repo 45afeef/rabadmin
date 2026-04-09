@@ -13,13 +13,16 @@ class QueryStayProvidersUseCase {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) {
     return repository.queryStayProviders(
+      locationId: location,
       checkIn: checkIn,
       checkOut: checkOut,
       pax: pax,
       maxRate: maxRate,
       amenities: amenities,
+      roomCount: roomCount,
     );
   }
 }

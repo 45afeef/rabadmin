@@ -32,6 +32,7 @@ class QueryRemoteDataSource implements QueryDataSource {
     int? minRate,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) async {
     try {
       Response<UnitsList> response = await _queryApi.queryListStayUnits(
@@ -40,6 +41,7 @@ class QueryRemoteDataSource implements QueryDataSource {
         maxPrice: maxRate,
         amenities: amenities?.toBuiltList(),
         paxCount: pax,
+        roomCount: roomCount,
       );
 
       return response.data!.data.map((unit) {
@@ -64,6 +66,7 @@ class QueryRemoteDataSource implements QueryDataSource {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) async {
     try {
       final response = await _queryApi.queryListStayProviders(
@@ -72,6 +75,7 @@ class QueryRemoteDataSource implements QueryDataSource {
         limit: 10,
         paxCount: pax! > 0 ? pax : null,
         amenities: amenities?.toBuiltList(),
+        roomCount: roomCount,
       );
 
       return response.data!.data.map((provider) {

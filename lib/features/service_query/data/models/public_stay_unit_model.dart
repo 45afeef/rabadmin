@@ -11,6 +11,7 @@ class PublicStayUnitModel extends PublicStayUnitEntity {
     required super.providerId,
     super.location,
     super.amenities,
+    super.roomCount,
   });
 
   factory PublicStayUnitModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +27,7 @@ class PublicStayUnitModel extends PublicStayUnitEntity {
       amenities: (json['amenities'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      roomCount: json['room_count'] as int?,
     );
   }
 }

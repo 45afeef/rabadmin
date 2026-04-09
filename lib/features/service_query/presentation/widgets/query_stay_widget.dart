@@ -22,6 +22,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   String? location;
   DateTime? checkIn;
   DateTime? checkOut;
+  int? roomCount;
 
   final List<String> popular = ["Pool", "WiFi", "Hot Water"];
   final List<String> nature = ["Near Forest", "Natural Pool", "Trekking"];
@@ -39,6 +40,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
           checkOut: checkOut,
           pax: adults + kids,
           amenities: selectedFilters.toList(),
+          roomCount: roomCount,
         );
   }
 
@@ -137,6 +139,16 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               _stepper("Adults", adults, (v) => setState(() => adults = v)),
               _stepper("Kids", kids, (v) => setState(() => kids = v)),
               _buildChips(special, accent),
+              const SizedBox(height: 10),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: "Minimum Room Count",
+                  hintText: "e.g. 2",
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (v) => roomCount = int.tryParse(v),
+              ),
             ],
           ),
           secondChild: const SizedBox(),

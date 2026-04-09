@@ -18,6 +18,7 @@ class QueryRepositoryImpl implements QueryRepository {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) {
     return _dataSource.queryStayUnits(
       location: location,
@@ -26,6 +27,7 @@ class QueryRepositoryImpl implements QueryRepository {
       pax: pax,
       maxRate: maxRate,
       amenities: amenities,
+      roomCount: roomCount,
     );
   }
 
@@ -37,6 +39,7 @@ class QueryRepositoryImpl implements QueryRepository {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) {
     return _dataSource.queryStayProviders(
       locationId: locationId,
@@ -45,6 +48,7 @@ class QueryRepositoryImpl implements QueryRepository {
       pax: pax,
       maxRate: maxRate,
       amenities: amenities,
+      roomCount: roomCount,
     );
   }
 

@@ -2,10 +2,27 @@ import '../../domain/entities/driver_entity.dart';
 
 class DriverModel extends DriverEntity {
   DriverModel({
-    required super.id,
+    super.id,
     super.userId,
     required super.profileId,
     required super.providerId,
+    super.firstName,
+    super.middleName,
+    super.lastName,
+    super.fullName,
+    super.primaryPhoneNumber,
+    super.secondaryPhoneNumber,
+    super.primaryEmail,
+    super.secondaryEmail,
+    super.profilePicture,
+    super.bio,
+    super.address,
+    super.city,
+    super.state,
+    super.zipCode,
+    super.country,
+    super.createdAt,
+    super.updatedAt,
   });
 
   factory DriverModel.fromJson(Map<String, dynamic> json) => DriverModel(
@@ -13,6 +30,27 @@ class DriverModel extends DriverEntity {
     userId: json['user_id'],
     profileId: json['profile_id'],
     providerId: json['provider_id'],
+    firstName: json['first_name'],
+    middleName: json['middle_name'],
+    lastName: json['last_name'],
+    fullName: json['full_name'],
+    primaryPhoneNumber: json['primary_phone_number'],
+    secondaryPhoneNumber: json['secondary_phone_number'],
+    primaryEmail: json['primary_email'],
+    secondaryEmail: json['secondary_email'],
+    profilePicture: json['profile_picture'],
+    bio: json['bio'],
+    address: json['address'],
+    city: json['city'],
+    state: json['state'],
+    zipCode: json['zip_code'],
+    country: json['country'],
+    createdAt: json['created_at'] != null
+        ? DateTime.parse(json['created_at'])
+        : null,
+    updatedAt: json['updated_at'] != null
+        ? DateTime.parse(json['updated_at'])
+        : null,
   );
 
   Map<String, dynamic> toJson() {
@@ -21,6 +59,23 @@ class DriverModel extends DriverEntity {
       'userId': userId,
       'profileId': profileId,
       'providerId': providerId,
+      'firstName': firstName,
+      'middleName': middleName,
+      'lastName': lastName,
+      'fullName': fullName,
+      'primaryPhoneNumber': primaryPhoneNumber,
+      'secondaryPhoneNumber': secondaryPhoneNumber,
+      'primaryEmail': primaryEmail,
+      'secondaryEmail': secondaryEmail,
+      'profilePicture': profilePicture,
+      'bio': bio,
+      'address': address,
+      'city': city,
+      'state': state,
+      'zipCode': zipCode,
+      'country': country,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
     };
   }
 
@@ -30,12 +85,46 @@ class DriverModel extends DriverEntity {
     String? userId,
     String? profileId,
     String? providerId,
+    String? firstName,
+    String? middleName,
+    String? lastName,
+    String? fullName,
+    String? primaryPhoneNumber,
+    String? secondaryPhoneNumber,
+    String? primaryEmail,
+    String? secondaryEmail,
+    String? profilePicture,
+    String? bio,
+    String? address,
+    String? city,
+    String? state,
+    String? zipCode,
+    String? country,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return DriverModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       profileId: profileId ?? this.profileId,
       providerId: providerId ?? this.providerId,
+      firstName: firstName ?? this.firstName,
+      middleName: middleName ?? this.middleName,
+      lastName: lastName ?? this.lastName,
+      fullName: fullName ?? this.fullName,
+      primaryPhoneNumber: primaryPhoneNumber ?? this.primaryPhoneNumber,
+      secondaryPhoneNumber: secondaryPhoneNumber ?? this.secondaryPhoneNumber,
+      primaryEmail: primaryEmail ?? this.primaryEmail,
+      secondaryEmail: secondaryEmail ?? this.secondaryEmail,
+      profilePicture: profilePicture ?? this.profilePicture,
+      bio: bio ?? this.bio,
+      address: address ?? this.address,
+      city: city ?? this.city,
+      state: state ?? this.state,
+      zipCode: zipCode ?? this.zipCode,
+      country: country ?? this.country,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

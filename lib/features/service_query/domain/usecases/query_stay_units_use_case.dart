@@ -13,6 +13,7 @@ class QueryStayUnitsUseCase {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   }) {
     return repository.queryStayUnits(
       location: location,
@@ -21,6 +22,7 @@ class QueryStayUnitsUseCase {
       pax: pax,
       maxRate: maxRate,
       amenities: amenities,
+      roomCount: roomCount,
     );
   }
 }

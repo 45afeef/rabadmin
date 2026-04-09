@@ -8,6 +8,7 @@ class PublicStayUnitEntity {
   String providerId;
   String? location;
   List<String>? amenities;
+  int? roomCount;
 
   PublicStayUnitEntity({
     required this.id,
@@ -19,5 +20,6 @@ class PublicStayUnitEntity {
     required this.providerId,
     this.location,
     this.amenities,
+    this.roomCount,
   });
 }

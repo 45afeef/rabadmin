@@ -11,6 +11,7 @@ abstract class QueryDataSource {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   });
 
   Future<List<PublicStayProviderModel>> queryStayProviders({
@@ -20,6 +21,7 @@ abstract class QueryDataSource {
     int? pax,
     int? maxRate,
     List<String>? amenities,
+    int? roomCount,
   });
 
   Future<List<CabModel>> queryCabs({
