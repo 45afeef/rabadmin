@@ -8,6 +8,13 @@ import '../../../service_query/presentation/widgets/query_cab_widget.dart';
 import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
 
+// Color constants for each section
+const List<Color> _appBarColors = [
+  Color(0xFF4FACFE), // Stay - Blue
+  Color(0xFFFF9966), // Cab - Orange
+  Color(0xFF43E97B), // Driver - Green
+];
+
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -16,6 +23,7 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  late PageController _pageController;
   int _currentIndex = 0;
 
   final List<Widget> _pages = const [
@@ -25,34 +33,79 @@ class _HomePageState extends ConsumerState<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Service Hub'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.business),
-            onPressed: () => context.push(AppRoutes.agencies),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                _appBarColors[_currentIndex],
+                _appBarColors[_currentIndex].withOpacity(0.8),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.people),
-            onPressed: () => context.push(AppRoutes.serviceProviders),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text(
+              'Service Hub',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.business, color: Colors.white),
+                onPressed: () => context.push(AppRoutes.agencies),
+              ),
+              IconButton(
+                icon: const Icon(Icons.people, color: Colors.white),
+                onPressed: () => context.push(AppRoutes.serviceProviders),
+              ),
+              IconButton(
+                icon: const Icon(Icons.logout, color: Colors.white),
+                onPressed: () {
+                  ref.read(authControllerProvider.notifier).logout();
+                },
+              ),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              ref.read(authControllerProvider.notifier).logout();
-            },
-          ),
-        ],
+        ),
       ),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: _pages[_currentIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() => _currentIndex = index);
+        },
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: (index) {
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        },
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
         backgroundColor: Colors.black,
