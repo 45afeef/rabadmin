@@ -23,7 +23,7 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
   final List<String> vehicleTypes = ["SEDAN", "SUV", "HATCHBACK", "VAN"];
 
   void _performQuery() {
-    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+    FocusScope.of(context).unfocus();
 
     ref
         .read(cabQueryControllerProvider.notifier)
@@ -216,7 +216,10 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 8,
+                ),
               ],
             ),
             child: Row(

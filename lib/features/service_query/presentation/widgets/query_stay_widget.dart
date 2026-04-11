@@ -30,7 +30,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   final List<String> vibe = ["Quiet", "Adventure", "Luxury", "Budget"];
 
   void _performQuery() {
-    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+    FocusScope.of(context).unfocus();
 
     ref
         .read(stayProviderQueryControllerProvider.notifier)
