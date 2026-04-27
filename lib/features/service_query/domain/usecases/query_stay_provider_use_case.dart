@@ -7,7 +7,7 @@ class QueryStayProvidersUseCase {
   QueryStayProvidersUseCase(this.repository);
 
   Future<List<PublicStayProviderEntity>> call({
-    String? location,
+    required String locationName,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,
@@ -16,7 +16,7 @@ class QueryStayProvidersUseCase {
     int? roomCount,
   }) {
     return repository.queryStayProviders(
-      locationId: location,
+      locationName: locationName,
       checkIn: checkIn,
       checkOut: checkOut,
       pax: pax,

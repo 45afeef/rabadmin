@@ -12,6 +12,9 @@ class StayQueryWidget extends ConsumerStatefulWidget {
 }
 
 class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
+  final _formKey = GlobalKey<FormState>();
+  final _locationController = TextEditingController();
+
   bool showAdvanced = false;
 
   int adults = 2;
@@ -32,10 +35,17 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   void _performQuery() {
     FocusScope.of(context).unfocus();
 
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter a location")));
+      return;
+    }
+
     ref
         .read(stayProviderQueryControllerProvider.notifier)
         .queryStayProviders(
-          location: location,
+          locationName: location!,
           checkIn: checkIn,
           checkOut: checkOut,
           pax: adults + kids,
@@ -50,137 +60,155 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
     const accent = Color(0xFF5A67D8);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        /// 📍 LOCATION
-        TextField(
-          decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.search),
-            hintText: "Where are you going?",
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide.none,
+    final isLocationValid = location != null && location!.trim().isNotEmpty;
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// 📍 LOCATION (VALIDATED)
+          TextFormField(
+            controller: _locationController,
+            autofocus: true,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search),
+              hintText: "Where are you going?",
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide.none,
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
             ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Location is required";
+              }
+              return null;
+            },
+            onChanged: (v) => location = v.trim(),
           ),
-          onChanged: (v) => location = v,
-        ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        /// 📅 DATE + 👨‍👩‍👧 GUESTS
-        Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () async {
-                  final picked = await showDateRangePicker(
-                    context: context,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      checkIn = picked.start;
-                      checkOut = picked.end;
-                    });
-                  }
-                },
-                child: _pill(
-                  icon: Icons.calendar_today,
-                  text: checkIn != null
-                      ? "${checkIn!.day}/${checkIn!.month} - ${checkOut!.day}/${checkOut!.month}"
-                      : "Select dates",
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => showAdvanced = !showAdvanced),
-                child: _pill(
-                  icon: Icons.people,
-                  text: "$adults Adults, $kids Kids",
-                ),
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
-        /// 🌿 FILTERS (VISIBLE FIRST – EXPERIENCE DRIVEN)
-        const Text(
-          "What are you looking for?",
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-
-        const SizedBox(height: 10),
-
-        _buildChips([...popular, ...nature, ...vibe], accent),
-
-        const SizedBox(height: 10),
-
-        /// ⚙️ ADVANCED
-        TextButton(
-          onPressed: () => setState(() => showAdvanced = !showAdvanced),
-          child: const Text("More options"),
-        ),
-
-        AnimatedCrossFade(
-          duration: const Duration(milliseconds: 250),
-          crossFadeState: showAdvanced
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-          firstChild: Column(
+          /// 📅 DATE + 👨‍👩‍👧 GUESTS
+          Row(
             children: [
-              _stepper("Adults", adults, (v) => setState(() => adults = v)),
-              _stepper("Kids", kids, (v) => setState(() => kids = v)),
-              _buildChips(special, accent),
-              const SizedBox(height: 10),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: "Minimum Room Count",
-                  hintText: "e.g. 2",
-                  border: OutlineInputBorder(),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    final picked = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        checkIn = picked.start;
+                        checkOut = picked.end;
+                      });
+                    }
+                  },
+                  child: _pill(
+                    icon: Icons.calendar_today,
+                    text: checkIn != null
+                        ? "${checkIn!.day}/${checkIn!.month} - ${checkOut!.day}/${checkOut!.month}"
+                        : "Select dates",
+                  ),
                 ),
-                keyboardType: TextInputType.number,
-                onChanged: (v) => roomCount = int.tryParse(v),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() => showAdvanced = !showAdvanced),
+                  child: _pill(
+                    icon: Icons.people,
+                    text: "$adults Adults, $kids Kids",
+                  ),
+                ),
               ),
             ],
           ),
-          secondChild: const SizedBox(),
-        ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        /// 🚀 SEARCH BUTTON WITH LOADING STATE
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: accent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            onPressed: state is StayProviderQueryLoading ? null : _performQuery,
-            child: const Text("Search stays"),
+          /// 🌿 FILTERS
+          const Text(
+            "What are you looking for?",
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
-        ),
 
-        const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
-        _buildBody(state),
-      ],
+          _buildChips([...popular, ...nature, ...vibe], accent),
+
+          const SizedBox(height: 10),
+
+          /// ⚙️ ADVANCED
+          TextButton(
+            onPressed: () => setState(() => showAdvanced = !showAdvanced),
+            child: const Text("More options"),
+          ),
+
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 250),
+            crossFadeState: showAdvanced
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: Column(
+              children: [
+                _stepper("Adults", adults, (v) => setState(() => adults = v)),
+                _stepper("Kids", kids, (v) => setState(() => kids = v)),
+                _buildChips(special, accent),
+                const SizedBox(height: 10),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: "Minimum Room Count",
+                    hintText: "e.g. 2",
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (v) => roomCount = int.tryParse(v),
+                ),
+              ],
+            ),
+            secondChild: const SizedBox(),
+          ),
+
+          const SizedBox(height: 16),
+
+          /// 🚀 SEARCH BUTTON
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accent,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              onPressed: state is StayProviderQueryLoading
+                  ? null
+                  : _performQuery,
+              child: const Text("Search stays"),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          _buildBody(state),
+        ],
+      ),
     );
   }
 
-  /// 🧱 PILL UI
   Widget _pill({required IconData icon, required String text}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
@@ -198,7 +226,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     );
   }
 
-  /// 🏷 CHIP GROUP
   Widget _buildChips(List<String> items, Color accent) {
     return Wrap(
       spacing: 4,
@@ -228,7 +255,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     );
   }
 
-  /// 🔢 STEPPER
   Widget _stepper(String label, int value, Function(int) onChanged) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

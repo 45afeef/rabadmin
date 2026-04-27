@@ -15,7 +15,7 @@ abstract class QueryRepository {
   });
 
   Future<List<PublicStayProviderEntity>> queryStayProviders({
-    String? locationId,
+    required String locationName,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,
