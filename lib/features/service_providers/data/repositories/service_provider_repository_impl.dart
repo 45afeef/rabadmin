@@ -95,7 +95,8 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   @override
   Future<StayProviderEntity> createStayProvider({
     required String providerName,
-    String? locationId,
+    required double latitude,
+    required double longitude,
     String? propertyType,
     int? roomCount,
   }) async {
@@ -107,9 +108,10 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
     final model = await remoteDataSource.createStayProvider(
       providerName: providerName,
       createdBy: createdBy,
-      locationId: locationId,
       propertyType: propertyType,
       roomCount: roomCount,
+      latitude: latitude,
+      longitude: longitude,
     );
     return _mapStayProviderModelToEntity(model);
   }

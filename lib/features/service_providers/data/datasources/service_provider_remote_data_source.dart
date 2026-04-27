@@ -26,7 +26,8 @@ abstract class ServiceProviderRemoteDataSource {
   Future<StayProviderModel> createStayProvider({
     required String providerName,
     required String createdBy,
-    String? locationId,
+    required double latitude,
+    required double longitude,
     String? propertyType,
     int? roomCount,
   });

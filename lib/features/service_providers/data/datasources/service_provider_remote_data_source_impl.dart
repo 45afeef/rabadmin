@@ -166,7 +166,8 @@ class ServiceProviderRemoteDataSourceImpl
   Future<StayProviderModel> createStayProvider({
     required String providerName,
     required String createdBy,
-    String? locationId,
+    required double latitude,
+    required double longitude,
     String? propertyType,
     int? roomCount,
   }) async {
@@ -181,9 +182,10 @@ class ServiceProviderRemoteDataSourceImpl
               ..ownerId =
                   createdBy // ownerId is required by the generated type; use createdBy as a placeholder
               ..providerType = StayProviderCreateProviderTypeEnum.STAY
-              ..locationId = locationId
               ..propertyType = propertyType
-              ..roomCount = roomCount;
+              ..roomCount = roomCount
+              ..latitude = latitude
+              ..longitude = longitude;
           }),
         );
       });

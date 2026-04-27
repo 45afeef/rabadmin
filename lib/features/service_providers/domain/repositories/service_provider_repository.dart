@@ -22,7 +22,8 @@ abstract class ServiceProviderRepository {
   Future<StayProviderEntity> getStayProvider(String providerId);
   Future<StayProviderEntity> createStayProvider({
     required String providerName,
-    String? locationId,
+    required double latitude,
+    required double longitude,
     String? propertyType,
     int? roomCount,
   });
