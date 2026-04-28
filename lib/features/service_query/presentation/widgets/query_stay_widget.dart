@@ -17,7 +17,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
   bool showAdvanced = false;
 
-  int adults = 2;
+  int adults = 0;
   int kids = 0;
 
   Set<String> selectedFilters = {};
@@ -75,7 +75,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               prefixIcon: const Icon(Icons.search),
               hintText: "Where are you going?",
               filled: true,
-              fillColor: Colors.grey.shade100,
+              fillColor: Colors.white.withValues(alpha: 0.18),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
@@ -130,7 +130,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                   child: _pill(
                     icon: Icons.people,
                     text: "$adults Adults, $kids Kids",
-                    isActive: adults != 2 || kids != 0,
+                    isActive: adults != 0 || kids != 0,
                   ),
                 ),
               ),
@@ -184,21 +184,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
           const SizedBox(height: 16),
 
-          // Show selected filters summary (huge UX win)
-          if (selectedFilters.isNotEmpty)
-            Wrap(
-              spacing: 6,
-              children: selectedFilters.map((f) {
-                return Chip(
-                  label: Text(f),
-                  deleteIcon: const Icon(Icons.close, size: 16),
-                  onDeleted: () {
-                    setState(() => selectedFilters.remove(f));
-                  },
-                );
-              }).toList(),
-            ),
-
           /// 🚀 SEARCH BUTTON
           SizedBox(
             width: double.infinity,
@@ -206,9 +191,11 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: accent,
                 foregroundColor: Colors.white,
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                 ),
               ),
               onPressed: state is StayProviderQueryLoading
@@ -216,14 +203,17 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                   : _performQuery,
               child: state is StayProviderQueryLoading
                   ? const SizedBox(
-                      height: 20,
-                      width: 20,
+                      height: 18,
+                      width: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         color: Colors.white,
                       ),
                     )
-                  : const Text("Search stays"),
+                  : const Text(
+                      "Search stays",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
             ),
           ),
 
@@ -238,39 +228,23 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   Widget _pill({
     required IconData icon,
     required String text,
-    bool isActive = false,
+    required bool isActive,
   }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Colors.grey.shade100,
+        color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isActive ? const Color(0xFF5A67D8) : Colors.transparent,
-          width: 1.5,
-        ),
-        boxShadow: isActive
-            ? [
-                BoxShadow(
-                  color: const Color(0xFF5A67D8).withValues(alpha: 0.15),
-                  blurRadius: 8,
-                ),
-              ]
-            : [],
       ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 18,
-            color: isActive ? const Color(0xFF5A67D8) : null,
-          ),
+          Icon(icon, size: 18, color: Colors.black87),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
+                color: Colors.black87,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
               ),
             ),
@@ -282,8 +256,8 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
   Widget _buildChips(List<String> items, Color accent) {
     return Wrap(
-      spacing: 6,
-      runSpacing: 6,
+      spacing: 4,
+      runSpacing: 3,
       children: items.map((item) {
         final selected = selectedFilters.contains(item);
 
@@ -291,20 +265,18 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
           label: Text(
             item,
             style: TextStyle(
-              color: selected ? Colors.white : Colors.black87,
-              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+              color: selected ? accent : Colors.black87,
+              fontSize: 10,
+              fontWeight: selected ? FontWeight.bold : FontWeight.w200,
             ),
           ),
           selected: selected,
-          backgroundColor: Colors.grey.shade100,
-          selectedColor: accent,
-          checkmarkColor: Colors.white,
+          backgroundColor: Color.fromARGB(102, 0, 186, 254),
+          selectedColor: Colors.white,
           side: BorderSide(
             color: selected ? accent : Colors.transparent,
             width: 1.2,
           ),
-          elevation: selected ? 2 : 0,
-          pressElevation: 2,
           onSelected: (_) {
             setState(() {
               selected
@@ -345,23 +317,23 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     } else if (state is StayProviderQueryLoaded) {
       if (state.providers.isEmpty) {
         return Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: Column(
-              children: [
-                Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
-                const SizedBox(height: 10),
-                const Text(
-                  "No stays found",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          child: Column(
+            children: [
+              Icon(Icons.search_off, size: 48, color: Colors.white54),
+              const SizedBox(height: 10),
+              const Text(
+                "No stays found",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  "Try adjusting filters or changing location",
-                  style: TextStyle(color: Colors.grey.shade600),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Try changing filters or location",
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+              ),
+            ],
           ),
         );
       }
@@ -381,7 +353,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               boxShadow: [
                 BoxShadow(
                   blurRadius: 10,
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: Colors.black.withValues(alpha: 0.08),
                 ),
               ],
             ),

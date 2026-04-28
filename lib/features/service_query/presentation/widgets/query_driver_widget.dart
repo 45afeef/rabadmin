@@ -181,7 +181,7 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
     );
   }
 
-  /// INPUT FIELD
+  // INPUT FIELD
   Widget _inputField({
     IconData? icon,
     required String hint,
@@ -194,10 +194,10 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
         prefixIcon: icon != null ? Icon(icon, size: 20) : null,
         hintText: hint,
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.25),
+        fillColor: Colors.white.withValues(alpha: 0.18),
         contentPadding: const EdgeInsets.symmetric(vertical: 14),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
         ),
       ),
