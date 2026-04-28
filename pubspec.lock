@@ -741,7 +741,7 @@ packages:
     description:
       path: dart_sdk
       ref: master
-      resolved-ref: a26a8359436cfb2385a1cf389a0665f870a53788
+      resolved-ref: "71c0b1fb2113523a59a5dd74ab2b02480135db55"
       url: "https://github.com/45afeef/rab_client.git"
     source: git
     version: "1.0.0"

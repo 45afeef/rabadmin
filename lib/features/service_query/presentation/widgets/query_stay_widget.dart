@@ -119,6 +119,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                     text: checkIn != null
                         ? "${checkIn!.day}/${checkIn!.month} - ${checkOut!.day}/${checkOut!.month}"
                         : "Select dates",
+                    isActive: checkIn != null,
                   ),
                 ),
               ),
@@ -129,6 +130,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                   child: _pill(
                     icon: Icons.people,
                     text: "$adults Adults, $kids Kids",
+                    isActive: adults != 2 || kids != 0,
                   ),
                 ),
               ),
@@ -182,6 +184,21 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
           const SizedBox(height: 16),
 
+          // Show selected filters summary (huge UX win)
+          if (selectedFilters.isNotEmpty)
+            Wrap(
+              spacing: 6,
+              children: selectedFilters.map((f) {
+                return Chip(
+                  label: Text(f),
+                  deleteIcon: const Icon(Icons.close, size: 16),
+                  onDeleted: () {
+                    setState(() => selectedFilters.remove(f));
+                  },
+                );
+              }).toList(),
+            ),
+
           /// 🚀 SEARCH BUTTON
           SizedBox(
             width: double.infinity,
@@ -197,7 +214,16 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               onPressed: state is StayProviderQueryLoading
                   ? null
                   : _performQuery,
-              child: const Text("Search stays"),
+              child: state is StayProviderQueryLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text("Search stays"),
             ),
           ),
 
@@ -209,18 +235,46 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     );
   }
 
-  Widget _pill({required IconData icon, required String text}) {
-    return Container(
+  Widget _pill({
+    required IconData icon,
+    required String text,
+    bool isActive = false,
+  }) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: isActive ? Colors.white : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isActive ? const Color(0xFF5A67D8) : Colors.transparent,
+          width: 1.5,
+        ),
+        boxShadow: isActive
+            ? [
+                BoxShadow(
+                  color: const Color(0xFF5A67D8).withValues(alpha: 0.15),
+                  blurRadius: 8,
+                ),
+              ]
+            : [],
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18),
+          Icon(
+            icon,
+            size: 18,
+            color: isActive ? const Color(0xFF5A67D8) : null,
+          ),
           const SizedBox(width: 8),
-          Expanded(child: Text(text)),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -228,21 +282,29 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
   Widget _buildChips(List<String> items, Color accent) {
     return Wrap(
-      spacing: 4,
-      runSpacing: 3,
+      spacing: 6,
+      runSpacing: 6,
       children: items.map((item) {
         final selected = selectedFilters.contains(item);
+
         return FilterChip(
           label: Text(
             item,
             style: TextStyle(
-              color: selected ? accent : Colors.black87,
-              fontWeight: selected ? FontWeight.bold : FontWeight.w200,
-              fontSize: 10,
+              color: selected ? Colors.white : Colors.black87,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
             ),
           ),
           selected: selected,
-          selectedColor: accent.withValues(alpha: 0.2),
+          backgroundColor: Colors.grey.shade100,
+          selectedColor: accent,
+          checkmarkColor: Colors.white,
+          side: BorderSide(
+            color: selected ? accent : Colors.transparent,
+            width: 1.2,
+          ),
+          elevation: selected ? 2 : 0,
+          pressElevation: 2,
           onSelected: (_) {
             setState(() {
               selected
@@ -281,6 +343,28 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     if (state is StayProviderQueryLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is StayProviderQueryLoaded) {
+      if (state.providers.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40),
+            child: Column(
+              children: [
+                Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
+                const SizedBox(height: 10),
+                const Text(
+                  "No stays found",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Try adjusting filters or changing location",
+                  style: TextStyle(color: Colors.grey.shade600),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
       return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -333,6 +417,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     } else if (state is StayProviderQueryError) {
       return Text(state.message);
     }
+
     return const SizedBox();
   }
 }

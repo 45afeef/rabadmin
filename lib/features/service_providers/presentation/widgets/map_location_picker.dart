@@ -26,8 +26,9 @@ class MapLocationPicker extends StatefulWidget {
   const MapLocationPicker({
     super.key,
     required this.onLocationSelected,
-    this.initialLatitude = 20.5937,
-    this.initialLongitude = 78.9629,
+    // Default to Kerala center if not provided
+    this.initialLatitude = 10.8505,
+    this.initialLongitude = 76.2711,
   });
 
   @override

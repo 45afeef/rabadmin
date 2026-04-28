@@ -206,8 +206,10 @@ class _CreateStayProviderPageState
       MaterialPageRoute(
         builder: (context) => MapLocationPicker(
           onLocationSelected: (location) {},
-          initialLatitude: _selectedLatitude ?? 11.610278,
-          initialLongitude: _selectedLongitude ?? 76.08281,
+          initialLatitude:
+              _selectedLatitude ?? 11.614806, // Default to Kalpetta, India
+          initialLongitude:
+              _selectedLongitude ?? 76.082733, // Default to Kalpetta, India
         ),
       ),
     );
