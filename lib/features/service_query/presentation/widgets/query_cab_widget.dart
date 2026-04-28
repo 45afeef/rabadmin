@@ -12,6 +12,8 @@ class CabQueryWidget extends ConsumerStatefulWidget {
 }
 
 class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
+  final _locationController = TextEditingController();
+
   bool showAdvanced = false;
 
   String? providerId;
@@ -41,95 +43,74 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
 
     const accent = Color(0xFFFF7A00);
 
+    final isLocationValid = location != null && location!.trim().isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// 📍 LOCATION INPUT
+        /// 📍 LOCATION
         TextField(
+          controller: _locationController,
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.location_on),
+            prefixIcon: const Icon(Icons.search),
             hintText: "Pickup location",
             filled: true,
-            fillColor: Colors.grey.shade100,
+            fillColor: Colors.black.withValues(alpha: 0.18),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
             ),
           ),
-          onChanged: (v) => location = v,
+          onChanged: (v) => location = v.trim(),
         ),
 
         const SizedBox(height: 16),
 
-        /// 🚘 VEHICLE TYPE (CHIPS UI)
+        /// 🚘 VEHICLE TYPE
         const Text(
           "Select Vehicle Type",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
 
-        Wrap(
-          spacing: 10,
-          children: vehicleTypes.map((type) {
-            final selected = vehicleType == type;
-            return ChoiceChip(
-              label: Text(
-                type,
-                style: TextStyle(
-                  color: selected ? accent : Colors.black87,
-                  fontWeight: selected ? FontWeight.bold : FontWeight.w200,
-                  fontSize: 10,
+        _buildChips(vehicleTypes, accent),
+
+        const SizedBox(height: 16),
+
+        /// 👥 CAPACITY + ⚙️ TOGGLE
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.people),
+                  hintText: "Minimum passengers",
+                  filled: true,
+                  fillColor: Colors.black.withValues(alpha: 0.18),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
+                keyboardType: TextInputType.number,
+                onChanged: (v) => minCapacity = int.tryParse(v),
               ),
-              selected: selected,
-              selectedColor: accent,
-              labelStyle: TextStyle(
-                color: selected ? Colors.white : Colors.black87,
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () => setState(() => showAdvanced = !showAdvanced),
+              child: _pill(
+                icon: Icons.tune,
+                text: "Filters",
+                isActive: showAdvanced,
               ),
-              onSelected: (_) {
-                setState(() {
-                  vehicleType = selected ? null : type;
-                });
-              },
-            );
-          }).toList(),
+            ),
+          ],
         ),
 
         const SizedBox(height: 16),
 
-        /// 👥 CAPACITY
-        TextField(
-          decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.people),
-            hintText: "Minimum passengers",
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          keyboardType: TextInputType.number,
-          onChanged: (v) => minCapacity = int.tryParse(v),
-        ),
-
-        const SizedBox(height: 12),
-
-        /// ⚙️ FILTER TOGGLE (LIGHT STYLE)
-        TextButton.icon(
-          onPressed: () => setState(() => showAdvanced = !showAdvanced),
-          icon: Icon(
-            showAdvanced ? Icons.expand_less : Icons.tune,
-            color: Colors.black,
-          ),
-          label: Text(
-            showAdvanced ? "Hide filters" : "More filters",
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-
-        /// ⚙️ ADVANCED (LIGHT PANEL STYLE)
         AnimatedCrossFade(
           duration: const Duration(milliseconds: 250),
           crossFadeState: showAdvanced
@@ -152,14 +133,14 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
                   Text("${radiusKm.toStringAsFixed(1)} km"),
                 ],
               ),
-
+              const SizedBox(height: 10),
               TextField(
                 decoration: InputDecoration(
                   hintText: "Provider ID (optional)",
                   filled: true,
-                  fillColor: Colors.grey.shade100,
+                  fillColor: Colors.black.withValues(alpha: 0.18),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -172,7 +153,7 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
 
         const SizedBox(height: 16),
 
-        /// 🚀 SEARCH BUTTON (RIDE STYLE)
+        /// 🚀 SEARCH BUTTON
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -181,27 +162,117 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
             onPressed: state is CabQueryLoading ? null : _performQuery,
-            child: const Text("Find Cabs", style: TextStyle(fontSize: 16)),
+            child: state is CabQueryLoading
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text(
+                    "Find Cabs",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
           ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
 
         _buildBody(state),
       ],
     );
   }
 
+  Widget _pill({
+    required IconData icon,
+    required String text,
+    required bool isActive,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        color: isActive ? Colors.white : Colors.black.withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: Colors.black87),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.black87,
+              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChips(List<String> items, Color accent) {
+    return Wrap(
+      spacing: 4,
+      runSpacing: 3,
+      children: items.map((item) {
+        final selected = vehicleType == item;
+
+        return ChoiceChip(
+          label: Text(
+            item,
+            style: TextStyle(
+              color: selected ? accent : Colors.black87,
+              fontSize: 10,
+              fontWeight: selected ? FontWeight.bold : FontWeight.w200,
+            ),
+          ),
+          side: BorderSide(color: Colors.transparent),
+          selected: selected,
+          backgroundColor: const Color.fromARGB(102, 254, 8, 0),
+          selectedColor: Colors.white,
+          onSelected: (_) {
+            setState(() {
+              vehicleType = selected ? null : item;
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
+
   Widget _buildBody(CabQueryState state) {
-    if (state is CabQueryInitial) {
-      return const Center(child: Text('Start searching for rides'));
-    } else if (state is CabQueryLoading) {
+    if (state is CabQueryLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is CabQueryLoaded) {
+      if (state.cabs.isEmpty) {
+        return Center(
+          child: Column(
+            children: [
+              Icon(Icons.search_off, size: 48, color: Colors.white54),
+              const SizedBox(height: 10),
+              const Text(
+                "No cabs found",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Try changing filters or location",
+                style: TextStyle(color: Colors.black.withValues(alpha: 0.7)),
+              ),
+            ],
+          ),
+        );
+      }
+
       return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -210,43 +281,41 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
           final cab = state.cabs[index];
 
           return Container(
-            margin: const EdgeInsets.symmetric(vertical: 6),
-            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 8,
+                  blurRadius: 10,
+                  color: Colors.black.withValues(alpha: 0.08),
                 ),
               ],
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.directions_car, size: 30),
-
-                const SizedBox(width: 12),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        cab.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "${cab.vehicleType} • ${cab.capacity} pax",
-                        style: const TextStyle(color: Colors.black54),
-                      ),
-                    ],
+                Text(
+                  cab.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
-
-                Text(
-                  "₹${cab.minimumRate}",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${cab.vehicleType} • ${cab.capacity} pax",
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    Text(
+                      "₹${cab.minimumRate}",
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -254,8 +323,9 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
         },
       );
     } else if (state is CabQueryError) {
-      return Text('Error: ${state.message}');
+      return Text(state.message);
     }
+
     return const SizedBox();
   }
 }

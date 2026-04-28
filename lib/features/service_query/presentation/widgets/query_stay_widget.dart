@@ -75,7 +75,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               prefixIcon: const Icon(Icons.search),
               hintText: "Where are you going?",
               filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.18),
+              fillColor: Colors.black.withValues(alpha: 0.18),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
@@ -169,10 +169,20 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                 _buildChips(special, accent),
                 const SizedBox(height: 10),
                 TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Minimum Room Count",
                     hintText: "e.g. 2",
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: Colors.black.withValues(alpha: 0.18),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Colors.red),
+                    ),
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (v) => roomCount = int.tryParse(v),
@@ -195,7 +205,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                 ),
               ),
               onPressed: state is StayProviderQueryLoading
@@ -233,7 +242,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.18),
+        color: isActive ? Colors.white : Colors.black.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -319,19 +328,16 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
         return Center(
           child: Column(
             children: [
-              Icon(Icons.search_off, size: 48, color: Colors.white54),
+              Icon(Icons.search_off, size: 48),
               const SizedBox(height: 10),
               const Text(
                 "No stays found",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 6),
               Text(
                 "Try changing filters or location",
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                style: TextStyle(color: Colors.black.withValues(alpha: 0.7)),
               ),
             ],
           ),
