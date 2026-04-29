@@ -34,6 +34,7 @@ class QueryRepositoryImpl implements QueryRepository {
   @override
   Future<List<PublicStayProviderEntity>> queryStayProviders({
     required String locationName,
+    num? radiusKm,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,
@@ -43,6 +44,7 @@ class QueryRepositoryImpl implements QueryRepository {
   }) {
     return _dataSource.queryStayProviders(
       locationName: locationName,
+      radiusKm: radiusKm,
       checkIn: checkIn,
       checkOut: checkOut,
       pax: pax,

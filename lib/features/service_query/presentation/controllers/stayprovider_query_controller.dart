@@ -14,6 +14,7 @@ class StayProviderQueryNotifier extends Notifier<StayProviderQueryState> {
 
   Future<void> queryStayProviders({
     required String locationName,
+    num? radiusKm,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,
@@ -25,6 +26,7 @@ class StayProviderQueryNotifier extends Notifier<StayProviderQueryState> {
     try {
       final providers = await _providerUseCase.call(
         locationName: locationName,
+        radiusKm: radiusKm,
         checkIn: checkIn,
         checkOut: checkOut,
         pax: pax,

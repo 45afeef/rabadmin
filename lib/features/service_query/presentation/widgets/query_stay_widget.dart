@@ -20,6 +20,8 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
   int adults = 0;
   int kids = 0;
 
+  double radiusKm = 5.0;
+
   Set<String> selectedFilters = {};
 
   String? location;
@@ -46,6 +48,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
         .read(stayProviderQueryControllerProvider.notifier)
         .queryStayProviders(
           locationName: location!,
+          radiusKm: radiusKm,
           checkIn: checkIn,
           checkOut: checkOut,
           pax: adults + kids,
@@ -70,7 +73,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
           /// 📍 LOCATION (VALIDATED)
           TextFormField(
             controller: _locationController,
-            autofocus: true,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search),
               hintText: "Where are you going?",
@@ -92,6 +94,29 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
               return null;
             },
             onChanged: (v) => location = v.trim(),
+          ),
+
+          const SizedBox(height: 10),
+
+          const Text(
+            "Search Radius",
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Slider(
+                  activeColor: accent,
+                  value: radiusKm,
+                  min: 1,
+                  max: 50,
+                  divisions: 49,
+                  label: "${radiusKm.round()} km",
+                  onChanged: (v) => setState(() => radiusKm = v),
+                ),
+              ),
+              Text("${radiusKm.toStringAsFixed(0)} km"),
+            ],
           ),
 
           const SizedBox(height: 16),
@@ -139,18 +164,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
 
           const SizedBox(height: 16),
 
-          /// 🌿 FILTERS
-          const Text(
-            "What are you looking for?",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-
-          const SizedBox(height: 10),
-
-          _buildChips([...popular, ...nature, ...vibe], accent),
-
-          const SizedBox(height: 10),
-
           /// ⚙️ ADVANCED
           TextButton(
             onPressed: () => setState(() => showAdvanced = !showAdvanced),
@@ -193,6 +206,18 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
           ),
 
           const SizedBox(height: 16),
+
+          /// 🌿 FILTERS
+          const Text(
+            "What are you looking for?",
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+
+          const SizedBox(height: 10),
+
+          _buildChips([...popular, ...nature, ...vibe], accent),
+
+          const SizedBox(height: 10),
 
           /// 🚀 SEARCH BUTTON
           SizedBox(

@@ -61,6 +61,7 @@ class QueryRemoteDataSource implements QueryDataSource {
   @override
   Future<List<PublicStayProviderModel>> queryStayProviders({
     required String locationName,
+    num? radiusKm,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,
@@ -71,6 +72,7 @@ class QueryRemoteDataSource implements QueryDataSource {
     try {
       final response = await _queryApi.queryListStayProviders(
         location: locationName,
+        radiusKm: radiusKm,
         maxPrice: maxRate,
         limit: 10,
         paxCount: pax! > 0 ? pax : null,

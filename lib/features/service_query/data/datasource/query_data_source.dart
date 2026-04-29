@@ -16,6 +16,7 @@ abstract class QueryDataSource {
 
   Future<List<PublicStayProviderModel>> queryStayProviders({
     required String locationName,
+    num? radiusKm,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,

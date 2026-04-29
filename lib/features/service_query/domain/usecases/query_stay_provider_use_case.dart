@@ -8,6 +8,7 @@ class QueryStayProvidersUseCase {
 
   Future<List<PublicStayProviderEntity>> call({
     required String locationName,
+    num? radiusKm,
     DateTime? checkIn,
     DateTime? checkOut,
     int? pax,
@@ -17,6 +18,7 @@ class QueryStayProvidersUseCase {
   }) {
     return repository.queryStayProviders(
       locationName: locationName,
+      radiusKm: radiusKm,
       checkIn: checkIn,
       checkOut: checkOut,
       pax: pax,
