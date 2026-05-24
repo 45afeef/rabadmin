@@ -6,6 +6,9 @@ class StayUnitEntity {
   final int? perHeadRate;
   final int? maxOccupancy;
   final String providerId;
+  final String? location;
+  final List<String>? amenities;
+  final int? roomCount;
 
   StayUnitEntity({
     required this.id,
@@ -15,6 +18,9 @@ class StayUnitEntity {
     this.perHeadRate,
     this.maxOccupancy,
     required this.providerId,
+    this.location,
+    this.amenities,
+    this.roomCount,
   });
 
   StayUnitEntity copyWith({
@@ -25,6 +31,9 @@ class StayUnitEntity {
     int? perHeadRate,
     int? maxOccupancy,
     String? providerId,
+    String? location,
+    List<String>? amenities,
+    int? roomCount,
   }) {
     return StayUnitEntity(
       id: id ?? this.id,
@@ -34,6 +43,9 @@ class StayUnitEntity {
       perHeadRate: perHeadRate ?? this.perHeadRate,
       maxOccupancy: maxOccupancy ?? this.maxOccupancy,
       providerId: providerId ?? this.providerId,
+      location: location ?? this.location,
+      amenities: amenities ?? this.amenities,
+      roomCount: roomCount ?? this.roomCount,
     );
   }
 

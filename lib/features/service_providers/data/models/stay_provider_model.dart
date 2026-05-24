@@ -9,6 +9,9 @@ class StayProviderModel extends StayProviderEntity {
     super.updatedAt,
     super.ownerId,
     super.createdBy,
+    super.propertyType,
+    super.maxOccupancy,
+    super.optimalOccupancy,
   });
 
   factory StayProviderModel.fromJson(Map<String, dynamic> json) =>
@@ -29,12 +32,15 @@ class StayProviderModel extends StayProviderEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'ownerId': ownerId,
       'providerName': name,
-      'propertyType': type,
+      'providerType': type.toString().split('.').last,
       'roomCount': roomCount,
+      'optimalOccupancy': optimalOccupancy,
+      'maxOccupancy': maxOccupancy,
+      'propertyType': propertyType,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
-      'ownerId': ownerId,
       'createdBy': createdBy,
     };
   }
@@ -45,15 +51,21 @@ class StayProviderModel extends StayProviderEntity {
     String? providerName,
     int? roomCount,
     DateTime? updatedAt,
+    String? propertyType,
+    int? optimalOccupancy,
+    int? maxOccupancy,
   }) {
     return StayProviderModel(
-      id: id ?? this.id,
-      name: providerName ?? name,
+      id: this.id,
+      name: providerName ?? super.name,
       roomCount: roomCount ?? this.roomCount,
-      createdAt: super.createdAt,
       updatedAt: updatedAt ?? super.updatedAt,
-      ownerId: super.ownerId,
+      propertyType: propertyType ?? this.propertyType,
+      optimalOccupancy: optimalOccupancy ?? this.optimalOccupancy,
+      maxOccupancy: maxOccupancy ?? this.maxOccupancy,
       createdBy: super.createdBy,
+      ownerId: super.ownerId,
+      createdAt: super.createdAt,
     );
   }
 }

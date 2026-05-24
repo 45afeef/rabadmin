@@ -9,6 +9,9 @@ class StayUnitModel extends StayUnitEntity {
     super.perHeadRate,
     super.maxOccupancy,
     required super.providerId,
+    super.location,
+    super.amenities,
+    super.roomCount,
   });
 
   factory StayUnitModel.fromJson(Map<String, dynamic> json) => StayUnitModel(
@@ -19,6 +22,11 @@ class StayUnitModel extends StayUnitEntity {
     perHeadRate: json['per_head_rate'] as int?,
     maxOccupancy: json['max_occupancy'] as int?,
     providerId: json['provider_id'] as String,
+    location: json['location'] as String?,
+    amenities: (json['amenities'] as List<dynamic>?)
+        ?.map((e) => e as String)
+        .toList(),
+    roomCount: json['room_count'] as int?,
   );
 
   Map<String, dynamic> toJson() {
@@ -30,6 +38,9 @@ class StayUnitModel extends StayUnitEntity {
       'perHeadRate': perHeadRate,
       'maxOccupancy': maxOccupancy,
       'providerId': providerId,
+      'location': location,
+      'amenities': amenities,
+      'roomCount': roomCount,
     };
   }
 
@@ -42,6 +53,9 @@ class StayUnitModel extends StayUnitEntity {
     int? perHeadRate,
     int? maxOccupancy,
     String? providerId,
+    String? location,
+    List<String>? amenities,
+    int? roomCount,
   }) {
     return StayUnitModel(
       id: id ?? this.id,
@@ -51,6 +65,9 @@ class StayUnitModel extends StayUnitEntity {
       perHeadRate: perHeadRate ?? this.perHeadRate,
       maxOccupancy: maxOccupancy ?? this.maxOccupancy,
       providerId: providerId ?? this.providerId,
+      location: location ?? this.location,
+      amenities: amenities ?? this.amenities,
+      roomCount: roomCount ?? this.roomCount,
     );
   }
 }

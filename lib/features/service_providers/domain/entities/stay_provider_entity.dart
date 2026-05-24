@@ -3,6 +3,9 @@ import 'abstract_service_provider.dart';
 class StayProviderEntity extends ServiceProvider {
   final ServiceProviderType providerType = ServiceProviderType.STAY;
   final int? roomCount;
+  final String? propertyType;
+  final int? optimalOccupancy;
+  final int? maxOccupancy;
 
   StayProviderEntity({
     required super.id,
@@ -12,6 +15,9 @@ class StayProviderEntity extends ServiceProvider {
     super.ownerId,
     super.createdAt,
     super.updatedAt,
+    this.propertyType,
+    this.optimalOccupancy,
+    this.maxOccupancy,
   }) : super(type: ServiceProviderType.STAY);
 
   @override
@@ -20,12 +26,18 @@ class StayProviderEntity extends ServiceProvider {
     String? providerName,
     int? roomCount,
     DateTime? updatedAt,
+    String? propertyType,
+    int? optimalOccupancy,
+    int? maxOccupancy,
   }) {
     return StayProviderEntity(
-      id: id ?? this.id,
+      id: this.id,
       name: providerName ?? super.name,
       roomCount: roomCount ?? this.roomCount,
       updatedAt: updatedAt ?? super.updatedAt,
+      propertyType: propertyType ?? this.propertyType,
+      optimalOccupancy: optimalOccupancy ?? this.optimalOccupancy,
+      maxOccupancy: maxOccupancy ?? this.maxOccupancy,
       createdBy: super.createdBy,
       ownerId: super.ownerId,
       createdAt: super.createdAt,
