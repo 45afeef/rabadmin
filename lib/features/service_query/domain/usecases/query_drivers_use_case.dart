@@ -1,4 +1,4 @@
-import '../entity/driver_entity.dart';
+import '../../../service_providers/domain/entities/driver_entity.dart';
 import '../repository/query_repository.dart';
 
 class QueryDriversUseCase {

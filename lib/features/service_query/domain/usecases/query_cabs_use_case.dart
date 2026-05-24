@@ -1,4 +1,4 @@
-import '../entity/cab_entity.dart';
+import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../repository/query_repository.dart';
 
 class QueryCabsUseCase {

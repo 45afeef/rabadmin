@@ -11,10 +11,10 @@ import 'package:rab_dio/rab_dio.dart'
         DriverPublic,
         VehicleType;
 
-import '../models/public_stay_provider_model.dart';
-import '../models/public_stay_unit_model.dart';
-import '../models/cab_model.dart';
-import '../models/driver_model.dart';
+import '../../../service_providers/data/models/cab_model.dart';
+import '../../../service_providers/data/models/driver_model.dart';
+import '../../../service_providers/data/models/stay_provider_model.dart';
+import '../../../service_providers/data/models/stay_unit_model.dart';
 import 'query_data_source.dart';
 
 class QueryRemoteDataSource implements QueryDataSource {
@@ -23,7 +23,7 @@ class QueryRemoteDataSource implements QueryDataSource {
   QueryRemoteDataSource(this._queryApi);
 
   @override
-  Future<List<PublicStayUnitModel>> queryStayUnits({
+  Future<List<StayUnitModel>> queryStayUnits({
     String? location,
     DateTime? checkIn,
     DateTime? checkOut,
@@ -49,7 +49,7 @@ class QueryRemoteDataSource implements QueryDataSource {
           StayUnitPublic.serializer,
           unit,
         );
-        return PublicStayUnitModel.fromJson(unitJson as Map<String, dynamic>);
+        return StayUnitModel.fromJson(unitJson as Map<String, dynamic>);
       }).toList();
     } on DioException catch (e) {
       throw Exception('Network error: ${e.message}');
@@ -59,7 +59,7 @@ class QueryRemoteDataSource implements QueryDataSource {
   }
 
   @override
-  Future<List<PublicStayProviderModel>> queryStayProviders({
+  Future<List<StayProviderModel>> queryStayProviders({
     required String locationName,
     num? radiusKm,
     DateTime? checkIn,
@@ -85,9 +85,7 @@ class QueryRemoteDataSource implements QueryDataSource {
           StayProviderPublic.serializer,
           provider,
         );
-        return PublicStayProviderModel.fromJson(
-          providerJson as Map<String, dynamic>,
-        );
+        return StayProviderModel.fromJson(providerJson as Map<String, dynamic>);
       }).toList();
     } on DioException catch (e) {
       throw Exception('Network error: ${e.message}');

@@ -1,12 +1,12 @@
+import '../../../service_providers/domain/entities/stay_unit_entity.dart';
 import '../repository/query_repository.dart';
-import '../entity/public_stay_unit_entity.dart';
 
 class QueryStayUnitsUseCase {
   final QueryRepository repository;
 
   QueryStayUnitsUseCase(this.repository);
 
-  Future<List<PublicStayUnitEntity>> call({
+  Future<List<StayUnitEntity>> call({
     String? location,
     DateTime? checkIn,
     DateTime? checkOut,

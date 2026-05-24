@@ -1,4 +1,4 @@
-import '../entity/public_stay_provider_entity.dart';
+import '../../../service_providers/domain/entities/stay_provider_entity.dart';
 import '../repository/query_repository.dart';
 
 class QueryStayProvidersUseCase {
@@ -6,7 +6,7 @@ class QueryStayProvidersUseCase {
 
   QueryStayProvidersUseCase(this.repository);
 
-  Future<List<PublicStayProviderEntity>> call({
+  Future<List<StayProviderEntity>> call({
     required String locationName,
     num? radiusKm,
     DateTime? checkIn,

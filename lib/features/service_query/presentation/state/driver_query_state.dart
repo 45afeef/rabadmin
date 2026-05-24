@@ -1,4 +1,4 @@
-import '../../domain/entity/driver_entity.dart';
+import '../../../service_providers/domain/entities/driver_entity.dart';
 
 abstract class DriverQueryState {}
 

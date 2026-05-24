@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/providers.dart';
+import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../state/cab_query_state.dart';
 
 class CabQueryWidget extends ConsumerStatefulWidget {
-  const CabQueryWidget({super.key});
+  final void Function(CabEntity cab)? onCabSelected;
+
+  const CabQueryWidget({super.key, this.onCabSelected});
 
   @override
   ConsumerState<CabQueryWidget> createState() => _CabQueryWidgetState();
@@ -280,44 +283,47 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
         itemBuilder: (context, index) {
           final cab = state.cabs[index];
 
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: Colors.black.withValues(alpha: 0.08),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  cab.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+          return InkWell(
+            onTap: () => widget.onCabSelected?.call(cab),
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    color: Colors.black.withValues(alpha: 0.08),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${cab.vehicleType} • ${cab.capacity} pax",
-                      style: const TextStyle(color: Colors.black54),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cab.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                    Text(
-                      "₹${cab.minimumRate}",
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${cab.vehicleType} • ${cab.capacity} pax",
+                        style: const TextStyle(color: Colors.black54),
+                      ),
+                      Text(
+                        "₹${cab.minimumRate}",
+                        style: const TextStyle(color: Colors.black54),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },

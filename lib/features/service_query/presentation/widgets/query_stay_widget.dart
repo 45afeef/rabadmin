@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/providers.dart';
@@ -375,6 +376,7 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
         itemBuilder: (context, index) {
           final p = state.providers[index];
 
+          // Single Stay Item
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             padding: const EdgeInsets.all(14),
@@ -388,31 +390,37 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  p.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                p.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              subtitle: Text(
+                "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax • ${p.roomCount} rooms",
+                style: const TextStyle(color: Colors.black54),
+              ),
+              trailing: Row(
+                mainAxisSize: .min,
+                children: [
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
+                  IconButton(
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: p.id)).then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Stay id copied to clipboard!'),
+                          ),
+                        );
+                      });
+                    },
+                    icon: const Icon(Icons.copy),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax",
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    Text(
-                      " ${p.roomCount} rooms",
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

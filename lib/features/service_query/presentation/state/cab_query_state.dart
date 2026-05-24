@@ -1,4 +1,4 @@
-import '../../domain/entity/cab_entity.dart';
+import '../../../service_providers/domain/entities/cab_entity.dart';
 
 abstract class CabQueryState {}
 

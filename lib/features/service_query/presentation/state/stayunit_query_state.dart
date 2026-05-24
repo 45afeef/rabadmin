@@ -1,4 +1,4 @@
-import '../../domain/entity/public_stay_unit_entity.dart';
+import '../../../service_providers/domain/entities/stay_unit_entity.dart';
 
 abstract class UnitQueryState {}
 
@@ -7,7 +7,7 @@ class StayUnitQueryInitial extends UnitQueryState {}
 class StayUnitQueryLoading extends UnitQueryState {}
 
 class StayUnitQueryLoaded extends UnitQueryState {
-  final List<PublicStayUnitEntity> units;
+  final List<StayUnitEntity> units;
   StayUnitQueryLoaded(this.units);
 }
 

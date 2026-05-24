@@ -274,7 +274,7 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
           onPressed: () => launchUrl(Uri.parse('tel:$phone')),
         ),
         IconButton(
-          icon: const Icon(Icons.chat, size: 18),
+          icon: const Icon(Icons.chat_rounded, size: 18),
           onPressed: () => launchUrl(Uri.parse('https://wa.me/$clean')),
         ),
       ],

@@ -1,7 +1,7 @@
-import '../../domain/entity/public_stay_provider_entity.dart';
-import '../../domain/entity/public_stay_unit_entity.dart';
-import '../../domain/entity/cab_entity.dart';
-import '../../domain/entity/driver_entity.dart';
+import '../../../service_providers/domain/entities/cab_entity.dart';
+import '../../../service_providers/domain/entities/driver_entity.dart';
+import '../../../service_providers/domain/entities/stay_provider_entity.dart';
+import '../../../service_providers/domain/entities/stay_unit_entity.dart';
 import '../../domain/repository/query_repository.dart';
 import '../datasource/query_data_source.dart';
 
@@ -11,7 +11,7 @@ class QueryRepositoryImpl implements QueryRepository {
   QueryRepositoryImpl(this._dataSource);
 
   @override
-  Future<List<PublicStayUnitEntity>> queryStayUnits({
+  Future<List<StayUnitEntity>> queryStayUnits({
     String? location,
     DateTime? checkIn,
     DateTime? checkOut,
@@ -32,7 +32,7 @@ class QueryRepositoryImpl implements QueryRepository {
   }
 
   @override
-  Future<List<PublicStayProviderEntity>> queryStayProviders({
+  Future<List<StayProviderEntity>> queryStayProviders({
     required String locationName,
     num? radiusKm,
     DateTime? checkIn,
