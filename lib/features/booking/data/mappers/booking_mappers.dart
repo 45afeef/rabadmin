@@ -15,7 +15,6 @@ class BookingMappers {
   }) {
     return rab_dio.BookingCreate(
       (b) => b
-        // ..travelerId = travelerId
         ..bookingDate = (booking.bookingDate ?? DateTime.now()).toUtc()
         ..status = _mapBookingStatus(booking.status)
         ..totalAmount = booking.totalAmount
@@ -27,6 +26,7 @@ class BookingMappers {
   }
 
   /// Build travellers list for API
+  /// Maps SelectedTravellerEntity.travellerId to BookingTravellerCreate
   static ListBuilder<rab_dio.BookingTravellerCreate>? _buildTravellersList(
     List<SelectedTravellerEntity> travellers,
   ) {
@@ -44,6 +44,7 @@ class BookingMappers {
   }
 
   /// Build cabs list for API
+  /// Maps CabEntity.id to BookingCabCreate
   static ListBuilder<rab_dio.BookingCabCreate>? _buildCabsList(
     List<CabEntity> cabs,
   ) {
@@ -57,25 +58,46 @@ class BookingMappers {
   }
 
   /// Build stays list for API
+  /// Maps StayProviderEntity fields to BookingStayCreate model
+  /// 
+  /// Field Mappings:
+  /// - stayProviderId: Maps to stay.id (the stay provider's identifier)
+  /// - roomType: Maps to stay.propertyType (e.g., "Apartment", "House")
+  /// 
+  /// Note: The following fields require additional booking-specific data not currently
+  /// stored in StayProviderEntity and would need to be populated separately:
+  /// - stayunitId: Unit identifier (from booking selection)
+  /// - checkIn: Check-in date (from booking draft)
+  /// - checkOut: Check-out date (from booking draft)
+  /// - rate: Booking rate/price (from booking draft or pricing service)
+  /// - status: Booking status (handled at BookingCreate level)
   static ListBuilder<rab_dio.BookingStayCreate>? _buildStaysList(
     List<StayProviderEntity> stays,
   ) {
     if (stays.isEmpty) return null;
 
     final builder = ListBuilder<rab_dio.BookingStayCreate>();
-    for (int i = 0; i < stays.length; i++) {
-      // Note: Only creating empty BookingStayCreate objects
-      // Property mapping requires verification of rab_dio BookingStayCreate field names
+    for (final stay in stays) {
       builder.add(
         rab_dio.BookingStayCreate(
-          (b) => b, // Create empty builder to be populated by API defaults
+          (b) => b
+            ..stayProviderId = stay.id
+            ..roomType = stay.propertyType,
+            // TODO: Populate booking-specific fields from enhanced entity:
+            // ..stayunitId = stay.stayunitId (requires entity enhancement)
+            // ..checkIn = stay.checkInDate (requires entity enhancement)
+            // ..checkOut = stay.checkOutDate (requires entity enhancement)
+            // ..rate = stay.rate (requires entity enhancement)
+            // ..status = _mapBookingStatus(stay.status) (requires entity enhancement)
         ),
       );
     }
     return builder;
   }
 
-  /// Map booking status to rab_dio status
+  /// Map booking status from domain enum to rab_dio BookingStatus
+  /// Converts status to uppercase string and uses valueOf for matching
+  /// Defaults to PENDING if status cannot be mapped
   static rab_dio.BookingStatus _mapBookingStatus(dynamic status) {
     final statusStr = status.toString().split('.').last.toUpperCase();
     try {
