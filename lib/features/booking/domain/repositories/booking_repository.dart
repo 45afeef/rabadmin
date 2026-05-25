@@ -3,8 +3,7 @@ import '../entities/booking_status.dart';
 
 abstract class BookingRepository {
   Future<BookingDraftEntity> createBookingDraft({
-    required String serviceType,
-    required String serviceId,
+    required BookingDraftEntity draft,
   });
 
   Future<BookingDraftEntity> getBookingDraft(String draftId);

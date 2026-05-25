@@ -118,6 +118,7 @@ class TravellerSection extends ConsumerWidget {
 
     return ListView.separated(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: travellers.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
@@ -157,6 +158,7 @@ class CabSection extends ConsumerWidget {
 
     return ListView.separated(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: cabs.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
@@ -196,6 +198,7 @@ class StaySection extends ConsumerWidget {
 
     return ListView.separated(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: stays.length,
       separatorBuilder: (_, __) => const Divider(height: 8),
       itemBuilder: (context, index) {

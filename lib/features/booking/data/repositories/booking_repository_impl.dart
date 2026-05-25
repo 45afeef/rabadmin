@@ -10,14 +10,10 @@ class BookingRepositoryImpl implements BookingRepository {
 
   @override
   Future<BookingDraftEntity> createBookingDraft({
-    required String serviceType,
-    required String serviceId,
+    required BookingDraftEntity draft,
   }) async {
     try {
-      final model = await remoteDataSource.createBookingDraft(
-        serviceType: serviceType,
-        serviceId: serviceId,
-      );
+      final model = await remoteDataSource.createBookingDraft(draft: draft);
       return model;
     } catch (e) {
       throw Exception('Failed to create booking draft: $e');

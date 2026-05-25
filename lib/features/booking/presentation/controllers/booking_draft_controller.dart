@@ -1,11 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers/providers.dart';
 import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../../../service_providers/domain/entities/driver_entity.dart';
 import '../../../service_providers/domain/entities/stay_provider_entity.dart';
 import '../../domain/entities/booking_draft.dart';
 import '../../domain/entities/booking_status.dart';
 import '../../domain/entities/selected_Traveller_entity.dart';
+import '../../domain/usecases/submit_booking_usecase.dart';
 
 final bookingDraftControllerProvider =
     NotifierProvider<BookingDraftController, BookingDraftEntity>(
@@ -169,8 +171,6 @@ class BookingDraftController extends Notifier<BookingDraftEntity> {
 
     final updatedStays = [...state.stays];
 
-    final removedStay = updatedStays[index];
-
     updatedStays.removeAt(index);
 
     state = state.copyWith(stays: updatedStays);
@@ -246,5 +246,13 @@ class BookingDraftController extends Notifier<BookingDraftEntity> {
 
   int _calculateCabCost(CabEntity cab) {
     return int.tryParse(cab.perKmRate.toString()) ?? 0;
+  }
+
+  void submitBooking() {
+    SubmitBookingUsecase submitUseCase = SubmitBookingUsecase(
+      ref.watch(bookingRepositoryProvider),
+    );
+
+    submitUseCase.call(state);
   }
 }

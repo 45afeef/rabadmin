@@ -1,9 +1,9 @@
+import '../../domain/entities/booking_draft.dart';
 import '../models/booking_draft_model.dart';
 
 abstract class BookingRemoteDataSource {
   Future<BookingDraftModel> createBookingDraft({
-    required String serviceType,
-    required String serviceId,
+    required BookingDraftEntity draft,
   });
 
   Future<BookingDraftModel> getBookingDraft(String draftId);
