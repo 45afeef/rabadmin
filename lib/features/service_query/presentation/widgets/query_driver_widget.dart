@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/providers/providers.dart';
+import '../../../service_providers/domain/entities/driver_entity.dart';
 import '../state/driver_query_state.dart';
 
 class DriverQueryWidget extends ConsumerStatefulWidget {
-  const DriverQueryWidget({super.key});
+  final void Function(DriverEntity driver)? onDriverSelected;
+
+  const DriverQueryWidget({super.key, this.onDriverSelected});
 
   @override
   ConsumerState<DriverQueryWidget> createState() => _DriverQueryWidgetState();
@@ -232,27 +235,30 @@ class _DriverQueryWidgetState extends ConsumerState<DriverQueryWidget> {
           final name =
               d.fullName ?? '${d.firstName ?? ''} ${d.lastName ?? ''}'.trim();
 
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 6),
-            elevation: 1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.blueGrey.shade100,
-                child: const Icon(Icons.person, color: Colors.black54),
+          return GestureDetector(
+            onTap: () => widget.onDriverSelected?.call(d),
+            child: Card(
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              title: Text(name.isEmpty ? 'Driver ${d.id}' : name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (d.primaryPhoneNumber != null)
-                    _contactRow(d.primaryPhoneNumber!),
-                  if (d.secondaryPhoneNumber != null)
-                    _contactRow(d.secondaryPhoneNumber!),
-                  if (d.primaryEmail != null) _emailRow(d.primaryEmail!),
-                ],
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.blueGrey.shade100,
+                  child: const Icon(Icons.person, color: Colors.black54),
+                ),
+                title: Text(name.isEmpty ? 'Driver ${d.id}' : name),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (d.primaryPhoneNumber != null)
+                      _contactRow(d.primaryPhoneNumber!),
+                    if (d.secondaryPhoneNumber != null)
+                      _contactRow(d.secondaryPhoneNumber!),
+                    if (d.primaryEmail != null) _emailRow(d.primaryEmail!),
+                  ],
+                ),
               ),
             ),
           );

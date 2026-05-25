@@ -4,15 +4,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../booking/presentation/controllers/booking_draft_controller.dart';
 import '../../../service_query/presentation/widgets/query_cab_widget.dart';
 import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
+import '../../../booking/presentation/widgets/booking_create_widget.dart';
 
 // Color constants for each section
 const List<Color> _appBarColors = [
   Color(0xFF4FACFE), // Stay - Blue
   Color(0xFFFF9966), // Cab - Orange
   Color(0xFF43E97B), // Driver - Green
+  Color(0xFF8E2DE2), // Booking - Purple
 ];
 
 class HomePage extends ConsumerStatefulWidget {
@@ -30,6 +33,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     StaySection(),
     CabSection(),
     DriverSection(),
+    BookingSection(),
   ];
 
   @override
@@ -110,20 +114,37 @@ class _HomePageState extends ConsumerState<HomePage> {
         unselectedItemColor: Colors.white70,
         backgroundColor: Colors.black,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.hotel), label: 'Stay'),
-          BottomNavigationBarItem(icon: Icon(Icons.local_taxi), label: 'Cab'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Driver'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.hotel),
+            label: 'Stay',
+            backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_taxi),
+            label: 'Cab',
+            backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Driver',
+            backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'Book',
+            backgroundColor: Colors.black,
+          ),
         ],
       ),
     );
   }
 }
 
-class StaySection extends StatelessWidget {
+class StaySection extends ConsumerWidget {
   const StaySection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       key: const ValueKey('stay'),
       padding: const EdgeInsets.all(16),
@@ -135,24 +156,34 @@ class StaySection extends StatelessWidget {
         ),
       ),
       child: ListView(
-        children: const [
+        children: [
           SectionHeader(
             title: 'Find Your Stay',
             subtitle: 'Search by location, price, amenities & more',
           ),
           SizedBox(height: 16),
-          StayQueryWidget(),
+          StayQueryWidget(
+            onStaySelected: (stay) {
+              ref
+                  .read(bookingDraftControllerProvider.notifier)
+                  .addStay(stay: stay);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Selected Stay: ${stay.name}')),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-class CabSection extends StatelessWidget {
+class CabSection extends ConsumerWidget {
   const CabSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       key: const ValueKey('cab'),
       padding: const EdgeInsets.all(16),
@@ -164,24 +195,35 @@ class CabSection extends StatelessWidget {
         ),
       ),
       child: ListView(
-        children: const [
+        children: [
           SectionHeader(
             title: 'Book a Cab',
             subtitle: 'Quick rides with flexible options',
           ),
           SizedBox(height: 16),
-          CabQueryWidget(),
+          CabQueryWidget(
+            onCabSelected: (cab) {
+              ref
+                  .read(bookingDraftControllerProvider.notifier)
+                  .addCab(cab: cab);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Selected Cab: ${cab.name}')),
+              );
+            },
+            // Add onCabSelected callback if needed
+          ),
         ],
       ),
     );
   }
 }
 
-class DriverSection extends StatelessWidget {
+class DriverSection extends ConsumerWidget {
   const DriverSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       key: const ValueKey('driver'),
       padding: const EdgeInsets.all(16),
@@ -193,13 +235,53 @@ class DriverSection extends StatelessWidget {
         ),
       ),
       child: ListView(
-        children: const [
+        children: [
           SectionHeader(
             title: 'Hire a Driver',
             subtitle: 'Professional drivers at your service',
           ),
           SizedBox(height: 16),
-          DriverQueryWidget(),
+          DriverQueryWidget(
+            onDriverSelected: (driver) {
+              throw UnimplementedError("Driver selection not implemented yet");
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BookingSection extends ConsumerWidget {
+  const BookingSection({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      key: const ValueKey('booking'),
+      padding: const EdgeInsets.all(16),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ListView(
+        children: [
+          SectionHeader(
+            title: 'Your Bookings',
+            subtitle: 'Manage your stay, cab & driver bookings',
+          ),
+          SizedBox(height: 16),
+
+          BookingFormWidget(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            showSubmitButton: true,
+            onSubmit: () {
+              ref.read(bookingDraftControllerProvider.notifier).submitBooking();
+            },
+          ),
         ],
       ),
     );

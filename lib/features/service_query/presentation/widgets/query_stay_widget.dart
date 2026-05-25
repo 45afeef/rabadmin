@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/providers.dart';
+import '../../../service_providers/domain/entities/stay_provider_entity.dart';
 import '../state/stayprovider_query_state.dart';
 
 class StayQueryWidget extends ConsumerStatefulWidget {
-  const StayQueryWidget({super.key});
+  final void Function(StayProviderEntity stay)? onStaySelected;
+
+  const StayQueryWidget({super.key, this.onStaySelected});
 
   @override
   ConsumerState<StayQueryWidget> createState() => _StayQueryWidgetState();
@@ -63,8 +66,6 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
     final state = ref.watch(stayProviderQueryControllerProvider);
 
     const accent = Color(0xFF5A67D8);
-
-    final isLocationValid = location != null && location!.trim().isNotEmpty;
 
     return Form(
       key: _formKey,
@@ -377,49 +378,52 @@ class _StayQueryWidgetState extends ConsumerState<StayQueryWidget> {
           final p = state.providers[index];
 
           // Single Stay Item
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: Colors.black.withValues(alpha: 0.08),
-                ),
-              ],
-            ),
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                p.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              subtitle: Text(
-                "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax • ${p.roomCount} rooms",
-                style: const TextStyle(color: Colors.black54),
-              ),
-              trailing: Row(
-                mainAxisSize: .min,
-                children: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
-                  IconButton(
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: p.id)).then((_) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Stay id copied to clipboard!'),
-                          ),
-                        );
-                      });
-                    },
-                    icon: const Icon(Icons.copy),
+          return GestureDetector(
+            onTap: () => widget.onStaySelected?.call(p),
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    color: Colors.black.withValues(alpha: 0.08),
                   ),
                 ],
+              ),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  p.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                subtitle: Text(
+                  "${p.propertyType} • ${p.optimalOccupancy}-${p.maxOccupancy} pax • ${p.roomCount} rooms",
+                  style: const TextStyle(color: Colors.black54),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
+                    IconButton(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: p.id)).then((_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Stay id copied to clipboard!'),
+                            ),
+                          );
+                        });
+                      },
+                      icon: const Icon(Icons.copy),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

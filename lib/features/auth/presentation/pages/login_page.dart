@@ -8,8 +8,8 @@ import '../widgets/login_form.dart';
 class LoginPage extends ConsumerWidget {
   LoginPage({super.key});
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(text: "+910123456789");
+  final passwordController = TextEditingController(text: "changethis");
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(authControllerProvider);

@@ -46,7 +46,7 @@ abstract class AppRoutes {
       '/service-providers/stay/:providerId/units/create';
   static const addAmenity =
       '/service-providers/stay/:providerId/units/:unitId/amenities/add';
-  
+
   // helper to generate detail path with actual provider ID
   static String cabProviderDetailPath(String id) {
     return cabProviderDetail.replaceFirst(':providerId', id);

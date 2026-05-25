@@ -46,8 +46,6 @@ class _CabQueryWidgetState extends ConsumerState<CabQueryWidget> {
 
     const accent = Color(0xFFFF7A00);
 
-    final isLocationValid = location != null && location!.trim().isNotEmpty;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

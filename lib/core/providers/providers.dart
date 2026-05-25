@@ -34,6 +34,12 @@ import '../../features/service_query/presentation/state/stayunit_query_state.dar
 import '../../features/service_query/presentation/state/cab_query_state.dart';
 import '../../features/service_query/presentation/state/driver_query_state.dart';
 
+// Booking feature imports
+import '../../features/booking/data/datasources/booking_remote_data_source.dart';
+import '../../features/booking/data/datasources/booking_remote_data_source_impl.dart';
+import '../../features/booking/data/repositories/booking_repository_impl.dart';
+import '../../features/booking/domain/repositories/booking_repository.dart';
+
 // Agency feature imports
 import '../../features/agency/data/datasources/agency_remote_data_source.dart';
 import '../../features/agency/data/repositories/agency_repository_impl.dart';
@@ -285,7 +291,7 @@ final queryDriversUseCaseProvider = Provider<QueryDriversUseCase>(
 /// Provider for the Stay Unit Query State Notifier.
 final stayunitQueryControllerProvider =
     NotifierProvider<StayUnitQueryNotifier, UnitQueryState>(
-      () => StayUnitQueryNotifier(),
+      StayUnitQueryNotifier.new,
     );
 
 /// Provider for the Stay Provider Query State Notifier.
@@ -303,3 +309,24 @@ final driverQueryControllerProvider =
     NotifierProvider<DriverQueryNotifier, DriverQueryState>(
       () => DriverQueryNotifier(),
     );
+
+// =============================================================================
+// BOOKING FEATURE PROVIDERS
+// =============================================================================
+
+/// Provider for the Booking remote data source.
+final bookingRemoteDataSourceProvider = Provider<BookingRemoteDataSource>(
+  (ref) =>
+      BookingRemoteDataSourceImpl(ref.watch(rabDioProvider).getBookingApi()),
+);
+
+/// Provider for the Booking repository.
+final bookingRepositoryProvider = Provider<BookingRepository>(
+  (ref) => BookingRepositoryImpl(
+    remoteDataSource: ref.watch(bookingRemoteDataSourceProvider),
+  ),
+);
+
+/// Provider for the Booking draft controller (already defined in providers, exported here for convenience).
+// Note: bookingDraftControllerProvider is already defined in booking_draft_controller_provider.dart
+// and imported above for use throughout the app.
