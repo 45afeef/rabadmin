@@ -49,11 +49,11 @@
 ### Presentation Layer (UI & State)
 
 **State Management** - Riverpod providers and notifiers
-- [agency_state.dart](./presentation/controllers/agency_state.dart) - State classes
-- [agencies_list_notifier.dart](./presentation/controllers/agencies_list_notifier.dart) - List state management
-- [agency_detail_notifier.dart](./presentation/controllers/agency_detail_notifier.dart) - Detail state management
-- [agency_staff_list_notifier.dart](./presentation/controllers/agency_staff_list_notifier.dart) - Staff state management
-- [agency_usecases_provider.dart](./presentation/controllers/agency_usecases_provider.dart) - Use case providers
+- [agency_state.dart](./presentation/notifiers/agency_state.dart) - State classes
+- [agencies_list_notifier.dart](./presentation/notifiers/agencies_list_notifier.dart) - List state management
+- [agency_detail_notifier.dart](./presentation/notifiers/agency_detail_notifier.dart) - Detail state management
+- [agency_staff_list_notifier.dart](./presentation/notifiers/agency_staff_list_notifier.dart) - Staff state management
+- [agency_usecases_provider.dart](./presentation/notifiers/agency_usecases_provider.dart) - Use case providers
 
 **Widgets**
 - [agency_widget.dart](./presentation/widgets/agency_widget.dart) - Base agency widget (stub)

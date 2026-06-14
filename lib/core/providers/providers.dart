@@ -25,10 +25,10 @@ import '../../features/service_query/domain/usecases/query_stay_provider_use_cas
 import '../../features/service_query/domain/usecases/query_stay_units_use_case.dart';
 import '../../features/service_query/domain/usecases/query_cabs_use_case.dart';
 import '../../features/service_query/domain/usecases/query_drivers_use_case.dart';
-import '../../features/service_query/presentation/controllers/stayprovider_query_controller.dart';
-import '../../features/service_query/presentation/controllers/stayunit_query_controller.dart';
-import '../../features/service_query/presentation/controllers/cab_query_controller.dart';
-import '../../features/service_query/presentation/controllers/driver_query_controller.dart';
+import '../../features/service_query/presentation/notifier/stayprovider_query_notifier.dart';
+import '../../features/service_query/presentation/notifier/stayunit_query_notifier.dart';
+import '../../features/service_query/presentation/notifier/cab_query_notifier.dart';
+import '../../features/service_query/presentation/notifier/driver_query_notifier.dart';
 import '../../features/service_query/presentation/state/stayprovider_query_state.dart';
 import '../../features/service_query/presentation/state/stayunit_query_state.dart';
 import '../../features/service_query/presentation/state/cab_query_state.dart';
@@ -326,7 +326,3 @@ final bookingRepositoryProvider = Provider<BookingRepository>(
     remoteDataSource: ref.watch(bookingRemoteDataSourceProvider),
   ),
 );
-
-/// Provider for the Booking draft controller (already defined in providers, exported here for convenience).
-// Note: bookingDraftControllerProvider is already defined in booking_draft_controller_provider.dart
-// and imported above for use throughout the app.

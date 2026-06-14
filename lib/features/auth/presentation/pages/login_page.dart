@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ConsumerWidget, WidgetRef;
 
-import '../controllers/auth_controller.dart';
+import '../notifier/auth_notifier.dart';
 import '../widgets/login_form.dart';
 
 class LoginPage extends ConsumerWidget {
@@ -12,7 +12,7 @@ class LoginPage extends ConsumerWidget {
   final passwordController = TextEditingController(text: "changethis");
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(authControllerProvider);
+    final state = ref.watch(authNotifierProvider);
 
     return Scaffold(
       body: Padding(
@@ -25,7 +25,7 @@ class LoginPage extends ConsumerWidget {
             error: state.error,
             onSubmit: () {
               ref
-                  .read(authControllerProvider.notifier)
+                  .read(authNotifierProvider.notifier)
                   .login(
                     email: emailController.text,
                     password: passwordController.text,

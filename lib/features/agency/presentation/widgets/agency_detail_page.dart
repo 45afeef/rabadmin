@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/providers/providers.dart';
 import '../../domain/usecases/remove_agency_staff_use_case.dart';
-import '../controllers/agency_detail_notifier.dart';
-import '../controllers/agency_staff_list_notifier.dart';
+import '../notifiers/agency_detail_notifier.dart';
+import '../notifiers/agency_staff_list_notifier.dart';
 
 /// Page for displaying agency details with staff management.
 ///

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/agency_staff.dart';
-import '../controllers/add_staff_notifier.dart';
+import '../notifiers/add_staff_notifier.dart';
 
 /// Page for adding staff to an agency.
 ///

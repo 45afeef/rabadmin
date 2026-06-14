@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
-import '../../../auth/presentation/controllers/auth_controller.dart';
-import '../../../booking/presentation/controllers/booking_draft_controller.dart';
+import '../../../auth/presentation/notifier/auth_notifier.dart';
+import '../../../booking/presentation/notifiers/booking_draft_notifier.dart';
 import '../../../service_query/presentation/widgets/query_cab_widget.dart';
 import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
@@ -87,7 +87,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               IconButton(
                 icon: const Icon(Icons.logout, color: Colors.white),
                 onPressed: () {
-                  ref.read(authControllerProvider.notifier).logout();
+                  ref.read(authNotifierProvider.notifier).logout();
                 },
               ),
             ],
@@ -165,7 +165,7 @@ class StaySection extends ConsumerWidget {
           StayQueryWidget(
             onStaySelected: (stay) {
               ref
-                  .read(bookingDraftControllerProvider.notifier)
+                  .read(bookingDraftNotifierProvider.notifier)
                   .addStay(stay: stay);
 
               ScaffoldMessenger.of(context).showSnackBar(
@@ -203,9 +203,7 @@ class CabSection extends ConsumerWidget {
           SizedBox(height: 16),
           CabQueryWidget(
             onCabSelected: (cab) {
-              ref
-                  .read(bookingDraftControllerProvider.notifier)
-                  .addCab(cab: cab);
+              ref.read(bookingDraftNotifierProvider.notifier).addCab(cab: cab);
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Selected Cab: ${cab.name}')),
@@ -273,13 +271,26 @@ class BookingSection extends ConsumerWidget {
             subtitle: 'Manage your stay, cab & driver bookings',
           ),
           SizedBox(height: 16),
+          FilledButton(
+            onPressed: () {
+              ref.read(bookingDraftNotifierProvider.notifier).clearDraft();
+            },
+            child: const Text('Clear Current Booking Draft'),
+          ),
 
+          SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('View All Bookings'),
+          ),
+
+          SizedBox(height: 16),
           BookingFormWidget(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             showSubmitButton: true,
             onSubmit: () {
-              ref.read(bookingDraftControllerProvider.notifier).submitBooking();
+              ref.read(bookingDraftNotifierProvider.notifier).submitBooking();
             },
           ),
         ],

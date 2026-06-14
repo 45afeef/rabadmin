@@ -9,12 +9,12 @@ import '../../domain/entities/booking_status.dart';
 import '../../domain/entities/selected_Traveller_entity.dart';
 import '../../domain/usecases/submit_booking_usecase.dart';
 
-final bookingDraftControllerProvider =
-    NotifierProvider<BookingDraftController, BookingDraftEntity>(
-      BookingDraftController.new,
+final bookingDraftNotifierProvider =
+    NotifierProvider<BookingDraftNotifier, BookingDraftEntity>(
+      BookingDraftNotifier.new,
     );
 
-class BookingDraftController extends Notifier<BookingDraftEntity> {
+class BookingDraftNotifier extends Notifier<BookingDraftEntity> {
   // =========================================================
   // BUILD
   // =========================================================

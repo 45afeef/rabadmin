@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../controllers/agencies_list_notifier.dart';
+import '../notifiers/agencies_list_notifier.dart';
 import 'agency_form.dart';
-import '../controllers/agency_create_notifier.dart';
+import '../notifiers/agency_create_notifier.dart';
 
 /// Page for displaying a list of all agencies.
 ///

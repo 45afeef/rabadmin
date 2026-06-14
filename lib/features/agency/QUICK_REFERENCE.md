@@ -273,7 +273,7 @@
 ///     - agency_repository_impl.dart
 
 /// Presentation Layer (UI):
-///   presentation/controllers/
+///   presentation/notifiers/
 ///     - agency_state.dart
 ///     - agencies_list_notifier.dart
 ///     - agency_detail_notifier.dart

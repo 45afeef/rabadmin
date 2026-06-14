@@ -186,7 +186,7 @@ lib/features/agency/
 │   └── repositories/
 │       └── agency_repository_impl.dart
 ├── presentation/
-│   ├── controllers/
+│   ├── notifiers/
 │   │   ├── agency_state.dart
 │   │   ├── agencies_list_notifier.dart
 │   │   ├── agency_detail_notifier.dart
@@ -267,7 +267,7 @@ test/features/agency/
 │   ├── datasources/ (API mock tests)
 │   └── repositories/ (implementation tests)
 └── presentation/
-    └── controllers/ (state management tests)
+    └── notifiers/ (state management tests)
 ```
 
 ## 💡 Best Practices Implemented

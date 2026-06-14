@@ -62,7 +62,7 @@ lib/features/agency/
 │   └── repositories/
 │       └── agency_repository_impl.dart     # Concrete implementation
 └── presentation/
-    ├── controllers/
+    ├── notifiers/
     │   ├── agency_state.dart
     │   ├── agencies_list_notifier.dart
     │   ├── agency_detail_notifier.dart

@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controllers/agencies_list_notifier.dart';
-import "../controllers/agency_create_notifier.dart";
+import '../notifiers/agencies_list_notifier.dart';
+import "../notifiers/agency_create_notifier.dart";
 import 'agency_form.dart';
-
-// Import paths (adjust based on your file locations)
-// import 'package:rabadmin/features/agency/presentation/controllers/agencies_list_notifier.dart';
-// import 'package:rabadmin/features/agency/presentation/controllers/agency_detail_notifier.dart';
-// import 'package:rabadmin/core/providers/providers.dart';
 
 // ============================================================================
 // EXAMPLE 1: Display List of Agencies

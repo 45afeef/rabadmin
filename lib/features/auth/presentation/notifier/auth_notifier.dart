@@ -5,20 +5,20 @@ import '../../domain/usecases/validate_token_use_case.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/providers/providers.dart';
 
-final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
-  (ref) => AuthController(
+final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
+  (ref) => AuthNotifier(
     ref.read(loginUseCaseProvider),
     ref.read(validateTokenUseCaseProvider),
     ref.read(authRepositoryProvider),
   ),
 );
 
-class AuthController extends StateNotifier<AuthState> {
+class AuthNotifier extends StateNotifier<AuthState> {
   final LoginUseCase loginUseCase;
   final ValidateTokenUseCase validateTokenUseCase;
   final AuthRepository repository;
 
-  AuthController(this.loginUseCase, this.validateTokenUseCase, this.repository)
+  AuthNotifier(this.loginUseCase, this.validateTokenUseCase, this.repository)
     : super(AuthState.unauthenticated());
 
   Future<void> login({required String email, required String password}) async {

@@ -6,7 +6,7 @@ import '../core/providers/app_initialization.dart';
 import '../features/agency/presentation/widgets/agencies_list_page.dart';
 import '../features/agency/presentation/widgets/agency_detail_page.dart';
 import '../features/agency/presentation/widgets/add_staff_page.dart';
-import '../features/auth/presentation/controllers/auth_controller.dart';
+import '../features/auth/presentation/notifier/auth_notifier.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
 
@@ -65,7 +65,7 @@ abstract class AppRoutes {
 
 /// Router provider (reactive)
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authControllerProvider);
+  final authState = ref.watch(authNotifierProvider);
   final initializationState = ref.watch(appInitializationProvider);
 
   return GoRouter(
@@ -206,6 +206,17 @@ class _SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: .min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 10),
+            Text("Checking  authentication..."),
+          ],
+        ),
+      ),
+    );
   }
 }

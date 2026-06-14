@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controllers/booking_draft_controller.dart';
+import '../notifiers/booking_draft_notifier.dart';
 
 /// =============================================================
 /// REUSABLE BOOKING FORM WIDGET
@@ -27,8 +27,7 @@ import '../controllers/booking_draft_controller.dart';
 /// =============================================================
 
 class BookingFormWidget extends ConsumerWidget {
-  // final BookingController controller;
-
+  
   /// IMPORTANT FOR NESTED SCROLLS
   final ScrollPhysics? physics;
   final bool shrinkWrap;
@@ -44,7 +43,6 @@ class BookingFormWidget extends ConsumerWidget {
 
   const BookingFormWidget({
     super.key,
-    // required this.controller,
     this.physics,
     this.shrinkWrap = true,
     this.padding = const EdgeInsets.all(16),
@@ -56,7 +54,6 @@ class BookingFormWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final totalAmountCtrl = TextEditingController();
     return Form(
-      // key: controller.formKey,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return ListView(
@@ -111,10 +108,10 @@ class TravellerSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final travellers = ref.watch(
-      bookingDraftControllerProvider.select((s) => s.travellers),
+      bookingDraftNotifierProvider.select((s) => s.travellers),
     );
 
-    final controller = ref.read(bookingDraftControllerProvider.notifier);
+    final bookingNotifier = ref.read(bookingDraftNotifierProvider.notifier);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -132,7 +129,7 @@ class TravellerSection extends ConsumerWidget {
             subtitle: Text(traveller.travellerPhone ?? "N/A"),
             trailing: IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => controller.removeTraveller(index),
+              onPressed: () => bookingNotifier.removeTraveller(index),
             ),
           ),
         );
@@ -150,11 +147,9 @@ class CabSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cabs = ref.watch(
-      bookingDraftControllerProvider.select((s) => s.cabs),
-    );
+    final cabs = ref.watch(bookingDraftNotifierProvider.select((s) => s.cabs));
 
-    final controller = ref.read(bookingDraftControllerProvider.notifier);
+    final bookingNotifier = ref.read(bookingDraftNotifierProvider.notifier);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -172,7 +167,7 @@ class CabSection extends ConsumerWidget {
             subtitle: Text(cab.companyModel),
             trailing: IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => controller.removeTraveller(index),
+              onPressed: () => bookingNotifier.removeTraveller(index),
             ),
           ),
         );
@@ -191,10 +186,10 @@ class StaySection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stays = ref.watch(
-      bookingDraftControllerProvider.select((s) => s.stays),
+      bookingDraftNotifierProvider.select((s) => s.stays),
     );
 
-    final controller = ref.read(bookingDraftControllerProvider.notifier);
+    final bookingNotifier = ref.read(bookingDraftNotifierProvider.notifier);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -214,7 +209,7 @@ class StaySection extends ConsumerWidget {
             ),
             trailing: IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => controller.removeTraveller(index),
+              onPressed: () => bookingNotifier.removeTraveller(index),
             ),
           ),
         );
@@ -391,30 +386,3 @@ InputDecoration _inputDecoration(String label) {
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
   );
 }
-
-/// =============================================================
-/// EXAMPLE USAGE
-/// =============================================================
-
-/// final controller = BookingController();
-///
-/// BookingFormWidget(
-///   controller: controller,
-///   physics: const NeverScrollableScrollPhysics(),
-///   shrinkWrap: true,
-///   showSubmitButton: true,
-///   onSubmit: () {
-///     if (controller.validate()) {
-///       debugPrint(controller.payload().toString());
-///     }
-///   },
-/// )
-///
-/// IMPORTANT:
-/// Dispose controller when page/widget disposes.
-///
-/// @override
-/// void dispose() {
-///   controller.dispose();
-///   super.dispose();
-/// }

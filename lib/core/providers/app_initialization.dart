@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 // Import the provider to make it available
 import '../../core/providers/providers.dart';
 import '../../features/auth/data/datasources/auth_local_data_source.dart';
-import '../../features/auth/presentation/controllers/auth_controller.dart';
+import '../../features/auth/presentation/notifier/auth_notifier.dart';
 
 /// Initializes the app (Hive, token validation, etc.)
 final appInitializationProvider = FutureProvider<void>((ref) async {
@@ -18,5 +18,5 @@ final appInitializationProvider = FutureProvider<void>((ref) async {
   }
 
   // Validate existing token and restore session
-  await ref.read(authControllerProvider.notifier).validateExistingToken();
+  await ref.read(authNotifierProvider.notifier).validateExistingToken();
 });
