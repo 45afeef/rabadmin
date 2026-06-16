@@ -1,15 +1,29 @@
+import '../../../service_providers/domain/entities/cab_entity.dart';
+import '../../../service_providers/domain/entities/stay_provider_entity.dart';
 import '../../domain/entities/booking_draft.dart';
 import '../../domain/entities/booking_status.dart';
+import '../../domain/entities/selected_Traveller_entity.dart';
 
-class BookingDraftModel extends BookingDraftEntity {
+class BookingDraftModel {
+  final String id;
+
+  final DateTime? bookingDate;
+  final BookingStatus status;
+
+  final List<SelectedTravellerEntity> travellers;
+  final List<CabEntity> cabs;
+  final List<StayProviderEntity> stays;
+
+  final int totalAmount;
+
   const BookingDraftModel({
-    required super.status,
-    required super.travellers,
-    required super.cabs,
-    required super.stays,
-    required super.totalAmount,
-    super.id,
-    super.bookingDate,
+    required this.status,
+    required this.travellers,
+    required this.cabs,
+    required this.stays,
+    required this.totalAmount,
+    required this.id,
+    required this.bookingDate,
   });
 
   factory BookingDraftModel.fromJson(Map<String, dynamic> json) {
@@ -28,7 +42,7 @@ class BookingDraftModel extends BookingDraftEntity {
 
   factory BookingDraftModel.fromEntity(BookingDraftEntity entity) {
     return BookingDraftModel(
-      id: entity.id,
+      id: entity.id!,
       status: entity.status,
       travellers: entity.travellers,
       cabs: entity.cabs,
@@ -48,5 +62,17 @@ class BookingDraftModel extends BookingDraftEntity {
       'cabs': [],
       'stays': [],
     };
+  }
+
+  BookingDraftEntity toEntity() {
+    return BookingDraftEntity(
+      id: id,
+      bookingDate: bookingDate,
+      status: status,
+      travellers: travellers,
+      cabs: cabs,
+      stays: stays,
+      totalAmount: totalAmount,
+    );
   }
 }

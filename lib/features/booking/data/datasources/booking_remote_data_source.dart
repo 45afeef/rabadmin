@@ -21,4 +21,6 @@ abstract class BookingRemoteDataSource {
     required String draftId,
     required Map<String, dynamic> bookingData,
   });
+
+  Future<List<BookingDraftModel>> getAllBookings();
 }

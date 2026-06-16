@@ -29,4 +29,6 @@ abstract class BookingRepository {
     int? cost,
     BookingStatus status,
   );
+
+  Future<List<BookingDraftEntity>> getBookingList();
 }

@@ -1,10 +1,15 @@
+import 'package:collection/collection.dart';
+
 import '../datasources/booking_remote_data_source.dart';
 import '../../domain/entities/booking_draft.dart';
 import '../../domain/entities/booking_status.dart';
 import '../../domain/repositories/booking_repository.dart';
+import '../models/booking_draft_model.dart';
 
 class BookingRepositoryImpl implements BookingRepository {
   final BookingRemoteDataSource remoteDataSource;
+
+  List<BookingDraftEntity>? _cachedBookings;
 
   BookingRepositoryImpl({required this.remoteDataSource});
 
@@ -14,7 +19,7 @@ class BookingRepositoryImpl implements BookingRepository {
   }) async {
     try {
       final model = await remoteDataSource.createBookingDraft(draft: draft);
-      return model;
+      return model.toEntity();
     } catch (e) {
       throw Exception('Failed to create booking draft: $e');
     }
@@ -22,9 +27,18 @@ class BookingRepositoryImpl implements BookingRepository {
 
   @override
   Future<BookingDraftEntity> getBookingDraft(String draftId) async {
+    final cachedDraft = _cachedBookings?.firstWhereOrNull(
+      (booking) => booking.id == draftId,
+    );
+
+    if (cachedDraft != null) return cachedDraft;
+
     try {
       final model = await remoteDataSource.getBookingDraft(draftId);
-      return model;
+      final entity = model.toEntity();
+
+      _cachedBookings = (_cachedBookings ?? [])..add(entity);
+      return entity;
     } catch (e) {
       throw Exception('Failed to get booking draft: $e');
     }
@@ -44,7 +58,7 @@ class BookingRepositoryImpl implements BookingRepository {
         serviceId: serviceId,
         bookingDetails: bookingDetails,
       );
-      return model;
+      return model.toEntity();
     } catch (e) {
       throw Exception('Failed to update booking draft: $e');
     }
@@ -91,6 +105,21 @@ class BookingRepositoryImpl implements BookingRepository {
       );
     } catch (e) {
       throw Exception('Failed to add cab to booking: $e');
+    }
+  }
+
+  @override
+  Future<List<BookingDraftEntity>> getBookingList() async {
+    try {
+      final List<BookingDraftModel> bookingsModel = await remoteDataSource
+          .getAllBookings();
+
+      final bookings = bookingsModel.map((model) => model.toEntity()).toList();
+
+      _cachedBookings = bookings;
+      return bookings;
+    } catch (e) {
+      throw Exception('Failed to get staff bookings: $e');
     }
   }
 }

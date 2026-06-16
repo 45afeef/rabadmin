@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rab_dio/rab_dio.dart';
 
 // Service Provider feature imports
+import '../../features/booking/domain/entities/booking_draft.dart';
+import '../../features/booking/domain/usecases/get_booking_usecase.dart';
+import '../../features/booking/domain/usecases/get_booking_list_usecase.dart';
 import '../../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../../features/profile/data/datasources/profile_remote_datasource_impl.dart';
 import '../../features/profile/data/repository/profile_repository_impl.dart';
@@ -325,4 +328,19 @@ final bookingRepositoryProvider = Provider<BookingRepository>(
   (ref) => BookingRepositoryImpl(
     remoteDataSource: ref.watch(bookingRemoteDataSourceProvider),
   ),
+);
+
+final bookingListProvider = FutureProvider<List<BookingDraftEntity>>((
+  ref,
+) async {
+  final usecase = GetBookingListUsecase(ref.watch(bookingRepositoryProvider));
+  return usecase();
+});
+
+final singleBookingProvider = FutureProvider.family<BookingDraftEntity, String>(
+  (ref, bookingId) async {
+    final useCase = GetBookingUseCase(ref.watch(bookingRepositoryProvider));
+
+    return useCase(bookingId);
+  },
 );

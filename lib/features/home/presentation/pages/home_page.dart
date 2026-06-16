@@ -280,7 +280,9 @@ class BookingSection extends ConsumerWidget {
 
           SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push(AppRoutes.bookingList);
+            },
             child: const Text('View All Bookings'),
           ),
 

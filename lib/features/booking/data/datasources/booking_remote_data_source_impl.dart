@@ -101,4 +101,25 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       throw Exception('Failed to submit booking: $e');
     }
   }
+
+  @override
+  Future<List<BookingDraftModel>> getAllBookings() async {
+    try {
+      final response = await api.bookingListBookings();
+
+      return response.data?.map((BookingResponse bookingResponse) {
+            final bookingJson = standardSerializers.serializeWith(
+              BookingResponse.serializer,
+              bookingResponse,
+            );
+
+            return BookingDraftModel.fromJson(
+              bookingJson as Map<String, dynamic>,
+            );
+          }).toList() ??
+          [];
+    } catch (e) {
+      throw Exception('Failed to fetch bookings: $e');
+    }
+  }
 }

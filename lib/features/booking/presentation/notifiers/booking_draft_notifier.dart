@@ -248,11 +248,15 @@ class BookingDraftNotifier extends Notifier<BookingDraftEntity> {
     return int.tryParse(cab.perKmRate.toString()) ?? 0;
   }
 
-  void submitBooking() {
-    SubmitBookingUsecase submitUseCase = SubmitBookingUsecase(
-      ref.watch(bookingRepositoryProvider),
-    );
+  Future<void> submitBooking() async {
+    try {
+      final submitUseCase = SubmitBookingUsecase(
+        ref.watch(bookingRepositoryProvider),
+      );
 
-    submitUseCase.call(state);
+      await submitUseCase.call(state);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

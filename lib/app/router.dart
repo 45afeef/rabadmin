@@ -8,6 +8,9 @@ import '../features/agency/presentation/widgets/agency_detail_page.dart';
 import '../features/agency/presentation/widgets/add_staff_page.dart';
 import '../features/auth/presentation/notifier/auth_notifier.dart';
 import '../features/auth/presentation/pages/login_page.dart';
+import '../features/booking/presentation/pages/booking_create_page.dart';
+import '../features/booking/presentation/pages/booking_detail_page.dart';
+import '../features/booking/presentation/pages/booking_list_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
 
 // service providers presentation
@@ -30,6 +33,12 @@ abstract class AppRoutes {
   static const agencies = '/agencies';
   static const agencyDetail = '/agencies/:agencyId';
   static const addStaff = '/agencies/:agencyId/add-staff';
+
+  // booking routes
+  static const bookingList = '/bookings';
+  static const bookingDetail = '/booking/:bookingId';
+  static const createBooking = '/booking/create';
+  static const editBooking = '/booking/:bookingId/edit';
 
   // service provider feature
   static const serviceProviders = '/service-providers';
@@ -60,6 +69,10 @@ abstract class AppRoutes {
   // helper to generate create driver path with actual provider ID
   static String createDriverPath(String id) {
     return createDriver.replaceFirst(':providerId', id);
+  }
+
+  static String bookingDetailPath(String bookingId) {
+    return bookingDetail.replaceFirst(':bookingId', bookingId);
   }
 }
 
@@ -195,6 +208,23 @@ final routerProvider = Provider<GoRouter>((ref) {
           final unitId = state.pathParameters['unitId']!;
           return AddAmenityPage(providerId: providerId, unitId: unitId);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.bookingList,
+        builder: (context, state) => const BookingListPage(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.bookingDetail,
+        builder: (context, state) {
+          final bookingId = state.pathParameters['bookingId']!;
+          return BookingDetailPage(bookingId: bookingId);
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.createBooking,
+        builder: (context, state) => const BookingCreatePage(),
       ),
     ],
   );

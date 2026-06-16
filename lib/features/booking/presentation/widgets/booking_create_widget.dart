@@ -27,7 +27,6 @@ import '../notifiers/booking_draft_notifier.dart';
 /// =============================================================
 
 class BookingFormWidget extends ConsumerWidget {
-  
   /// IMPORTANT FOR NESTED SCROLLS
   final ScrollPhysics? physics;
   final bool shrinkWrap;
@@ -252,67 +251,6 @@ class ResponsiveWrap extends StatelessWidget {
       children: children.map((child) {
         return SizedBox(width: itemWidth, child: child);
       }).toList(),
-    );
-  }
-}
-
-/// =============================================================
-/// SHARED INPUT
-/// =============================================================
-
-/// =============================================================
-/// DATE INPUT
-/// =============================================================
-
-class AppDateInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final DateTime? firstDate;
-  final DateTime? lastDate;
-
-  const AppDateInput({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.firstDate,
-    this.lastDate,
-  });
-
-  Future<void> _pickDate(BuildContext context) async {
-    final now = DateTime.now();
-
-    DateTime initialDate = now;
-
-    if (controller.text.isNotEmpty) {
-      try {
-        initialDate = DateTime.parse(controller.text);
-      } catch (_) {}
-    }
-
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate ?? DateTime(now.year - 5),
-      lastDate: lastDate ?? DateTime(now.year + 10),
-    );
-
-    if (picked != null) {
-      controller.text =
-          "${picked.year.toString().padLeft(4, '0')}-"
-          "${picked.month.toString().padLeft(2, '0')}-"
-          "${picked.day.toString().padLeft(2, '0')}";
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      readOnly: true,
-      decoration: _inputDecoration(
-        label,
-      ).copyWith(suffixIcon: const Icon(Icons.calendar_month)),
-      onTap: () => _pickDate(context),
     );
   }
 }
