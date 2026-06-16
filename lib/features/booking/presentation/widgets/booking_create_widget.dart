@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../notifiers/booking_draft_notifier.dart';
+import '../notifiers/booking_notifier.dart';
 
 /// =============================================================
 /// REUSABLE BOOKING FORM WIDGET
@@ -107,10 +107,10 @@ class TravellerSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final travellers = ref.watch(
-      bookingDraftNotifierProvider.select((s) => s.travellers),
+      bookingNotifierProvider.select((s) => s.travellers),
     );
 
-    final bookingNotifier = ref.read(bookingDraftNotifierProvider.notifier);
+    final bookingNotifier = ref.read(bookingNotifierProvider.notifier);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -146,9 +146,9 @@ class CabSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cabs = ref.watch(bookingDraftNotifierProvider.select((s) => s.cabs));
+    final cabs = ref.watch(bookingNotifierProvider.select((s) => s.cabs));
 
-    final bookingNotifier = ref.read(bookingDraftNotifierProvider.notifier);
+    final bookingNotifier = ref.read(bookingNotifierProvider.notifier);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -184,11 +184,9 @@ class StaySection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stays = ref.watch(
-      bookingDraftNotifierProvider.select((s) => s.stays),
-    );
+    final stays = ref.watch(bookingNotifierProvider.select((s) => s.stays));
 
-    final bookingNotifier = ref.read(bookingDraftNotifierProvider.notifier);
+    final bookingNotifier = ref.read(bookingNotifierProvider.notifier);
 
     return ListView.separated(
       shrinkWrap: true,

@@ -1,4 +1,4 @@
-import '../entities/booking_draft.dart';
+import '../entities/booking_entity.dart';
 import '../repositories/booking_repository.dart';
 
 class SubmitBookingUsecase {
@@ -6,7 +6,7 @@ class SubmitBookingUsecase {
 
   SubmitBookingUsecase(this.repository);
 
-  Future<void> call(BookingDraftEntity bookingDraft) async {
-    await repository.createBookingDraft(draft: bookingDraft);
+  Future<void> call(BookingEntity entity) async {
+    await repository.createBooking(entity: entity);
   }
 }

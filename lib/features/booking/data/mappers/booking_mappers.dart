@@ -1,15 +1,16 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:rab_dio/rab_dio.dart' as rab_dio;
+
 import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../../../service_providers/domain/entities/stay_provider_entity.dart';
-import '../../domain/entities/booking_draft.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/selected_Traveller_entity.dart';
 
 /// Maps domain entities to rab_dio models for API communication
 class BookingMappers {
-  /// Convert BookingDraftEntity to BookingCreate model
+  /// Convert BookingEntity to BookingCreate model
   static rab_dio.BookingCreate toDioBookingCreate(
-    BookingDraftEntity booking, {
+    BookingEntity booking, {
     required String travelerId,
     required String? travelAgencyId,
   }) {
@@ -59,11 +60,11 @@ class BookingMappers {
 
   /// Build stays list for API
   /// Maps StayProviderEntity fields to BookingStayCreate model
-  /// 
+  ///
   /// Field Mappings:
   /// - stayProviderId: Maps to stay.id (the stay provider's identifier)
   /// - roomType: Maps to stay.propertyType (e.g., "Apartment", "House")
-  /// 
+  ///
   /// Note: The following fields require additional booking-specific data not currently
   /// stored in StayProviderEntity and would need to be populated separately:
   /// - stayunitId: Unit identifier (from booking selection)
@@ -83,12 +84,12 @@ class BookingMappers {
           (b) => b
             ..stayProviderId = stay.id
             ..roomType = stay.propertyType,
-            // TODO: Populate booking-specific fields from enhanced entity:
-            // ..stayunitId = stay.stayunitId (requires entity enhancement)
-            // ..checkIn = stay.checkInDate (requires entity enhancement)
-            // ..checkOut = stay.checkOutDate (requires entity enhancement)
-            // ..rate = stay.rate (requires entity enhancement)
-            // ..status = _mapBookingStatus(stay.status) (requires entity enhancement)
+          // TODO: Populate booking-specific fields from enhanced entity:
+          // ..stayunitId = stay.stayunitId (requires entity enhancement)
+          // ..checkIn = stay.checkInDate (requires entity enhancement)
+          // ..checkOut = stay.checkOutDate (requires entity enhancement)
+          // ..rate = stay.rate (requires entity enhancement)
+          // ..status = _mapBookingStatus(stay.status) (requires entity enhancement)
         ),
       );
     }

@@ -1,75 +1,73 @@
 import 'package:collection/collection.dart';
 
-import '../datasources/booking_remote_data_source.dart';
-import '../../domain/entities/booking_draft.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
 import '../../domain/repositories/booking_repository.dart';
-import '../models/booking_draft_model.dart';
+import '../datasources/booking_remote_data_source.dart';
+import '../models/booking_model.dart';
 
 class BookingRepositoryImpl implements BookingRepository {
   final BookingRemoteDataSource remoteDataSource;
 
-  List<BookingDraftEntity>? _cachedBookings;
+  List<BookingEntity>? _cachedBookings;
 
   BookingRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<BookingDraftEntity> createBookingDraft({
-    required BookingDraftEntity draft,
-  }) async {
+  Future<BookingEntity> createBooking({required BookingEntity entity}) async {
     try {
-      final model = await remoteDataSource.createBookingDraft(draft: draft);
+      final model = await remoteDataSource.createBooking(entity: entity);
       return model.toEntity();
     } catch (e) {
-      throw Exception('Failed to create booking draft: $e');
+      throw Exception('Failed to create booking: $e');
     }
   }
 
   @override
-  Future<BookingDraftEntity> getBookingDraft(String draftId) async {
-    final cachedDraft = _cachedBookings?.firstWhereOrNull(
-      (booking) => booking.id == draftId,
+  Future<BookingEntity> getBooking(String id) async {
+    final cached = _cachedBookings?.firstWhereOrNull(
+      (booking) => booking.id == id,
     );
 
-    if (cachedDraft != null) return cachedDraft;
+    if (cached != null) return cached;
 
     try {
-      final model = await remoteDataSource.getBookingDraft(draftId);
+      final model = await remoteDataSource.getBooking(id);
       final entity = model.toEntity();
 
       _cachedBookings = (_cachedBookings ?? [])..add(entity);
       return entity;
     } catch (e) {
-      throw Exception('Failed to get booking draft: $e');
+      throw Exception('Failed to get booking: $e');
     }
   }
 
   @override
-  Future<BookingDraftEntity> updateBookingDraft(
-    String draftId, {
+  Future<BookingEntity> updateBooking(
+    String id, {
     String? serviceType,
     String? serviceId,
     Map<String, dynamic>? bookingDetails,
   }) async {
     try {
-      final model = await remoteDataSource.updateBookingDraft(
-        draftId,
+      final model = await remoteDataSource.updateBooking(
+        id,
         serviceType: serviceType,
         serviceId: serviceId,
         bookingDetails: bookingDetails,
       );
       return model.toEntity();
     } catch (e) {
-      throw Exception('Failed to update booking draft: $e');
+      throw Exception('Failed to update booking: $e');
     }
   }
 
   @override
-  Future<void> deleteBookingDraft(String draftId) async {
+  Future<void> deleteBooking(String id) async {
     try {
-      await remoteDataSource.deleteBookingDraft(draftId);
+      await remoteDataSource.deleteBooking(id);
     } catch (e) {
-      throw Exception('Failed to delete booking draft: $e');
+      throw Exception('Failed to delete booking: $e');
     }
   }
 
@@ -100,7 +98,7 @@ class BookingRepositoryImpl implements BookingRepository {
       };
 
       await remoteDataSource.submitBooking(
-        draftId: bookingId ?? 'draft',
+        id: bookingId ?? 'draft',
         bookingData: bookingData,
       );
     } catch (e) {
@@ -109,9 +107,9 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<List<BookingDraftEntity>> getBookingList() async {
+  Future<List<BookingEntity>> getBookingList() async {
     try {
-      final List<BookingDraftModel> bookingsModel = await remoteDataSource
+      final List<BookingModel> bookingsModel = await remoteDataSource
           .getAllBookings();
 
       final bookings = bookingsModel.map((model) => model.toEntity()).toList();

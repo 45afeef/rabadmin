@@ -1,21 +1,19 @@
-import '../entities/booking_draft.dart';
+import '../entities/booking_entity.dart';
 import '../entities/booking_status.dart';
 
 abstract class BookingRepository {
-  Future<BookingDraftEntity> createBookingDraft({
-    required BookingDraftEntity draft,
-  });
+  Future<BookingEntity> createBooking({required BookingEntity entity});
 
-  Future<BookingDraftEntity> getBookingDraft(String draftId);
+  Future<BookingEntity> getBooking(String id);
 
-  Future<BookingDraftEntity> updateBookingDraft(
-    String draftId, {
+  Future<BookingEntity> updateBooking(
+    String id, {
     String? serviceType,
     String? serviceId,
     Map<String, dynamic>? bookingDetails,
   });
 
-  Future<void> deleteBookingDraft(String draftId);
+  Future<void> deleteBooking(String id);
 
   Future<void> addCabtoBooking(
     String? cabId,
@@ -30,5 +28,5 @@ abstract class BookingRepository {
     BookingStatus status,
   );
 
-  Future<List<BookingDraftEntity>> getBookingList();
+  Future<List<BookingEntity>> getBookingList();
 }

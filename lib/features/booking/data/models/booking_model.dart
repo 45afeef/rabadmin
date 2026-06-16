@@ -1,10 +1,10 @@
 import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../../../service_providers/domain/entities/stay_provider_entity.dart';
-import '../../domain/entities/booking_draft.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
 import '../../domain/entities/selected_Traveller_entity.dart';
 
-class BookingDraftModel {
+class BookingModel {
   final String id;
 
   final DateTime? bookingDate;
@@ -16,7 +16,7 @@ class BookingDraftModel {
 
   final int totalAmount;
 
-  const BookingDraftModel({
+  const BookingModel({
     required this.status,
     required this.travellers,
     required this.cabs,
@@ -26,8 +26,8 @@ class BookingDraftModel {
     required this.bookingDate,
   });
 
-  factory BookingDraftModel.fromJson(Map<String, dynamic> json) {
-    return BookingDraftModel(
+  factory BookingModel.fromJson(Map<String, dynamic> json) {
+    return BookingModel(
       id: json['id'],
       status: BookingStatus.DRAFT,
       travellers: [],
@@ -40,8 +40,8 @@ class BookingDraftModel {
     );
   }
 
-  factory BookingDraftModel.fromEntity(BookingDraftEntity entity) {
-    return BookingDraftModel(
+  factory BookingModel.fromEntity(BookingEntity entity) {
+    return BookingModel(
       id: entity.id!,
       status: entity.status,
       travellers: entity.travellers,
@@ -64,8 +64,8 @@ class BookingDraftModel {
     };
   }
 
-  BookingDraftEntity toEntity() {
-    return BookingDraftEntity(
+  BookingEntity toEntity() {
+    return BookingEntity(
       id: id,
       bookingDate: bookingDate,
       status: status,

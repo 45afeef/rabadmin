@@ -1,4 +1,4 @@
-import '../entities/booking_draft.dart';
+import '../entities/booking_entity.dart';
 import '../repositories/booking_repository.dart';
 
 class GetBookingListUsecase {
@@ -6,7 +6,7 @@ class GetBookingListUsecase {
 
   GetBookingListUsecase(this.repository);
 
-  Future<List<BookingDraftEntity>> call() async {
+  Future<List<BookingEntity>> call() async {
     return await repository.getBookingList();
   }
 }

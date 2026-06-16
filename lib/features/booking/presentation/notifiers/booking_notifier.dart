@@ -4,24 +4,22 @@ import '../../../../core/providers/providers.dart';
 import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../../../service_providers/domain/entities/driver_entity.dart';
 import '../../../service_providers/domain/entities/stay_provider_entity.dart';
-import '../../domain/entities/booking_draft.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
 import '../../domain/entities/selected_Traveller_entity.dart';
 import '../../domain/usecases/submit_booking_usecase.dart';
 
-final bookingDraftNotifierProvider =
-    NotifierProvider<BookingDraftNotifier, BookingDraftEntity>(
-      BookingDraftNotifier.new,
-    );
+final bookingNotifierProvider =
+    NotifierProvider<BookingNotifier, BookingEntity>(BookingNotifier.new);
 
-class BookingDraftNotifier extends Notifier<BookingDraftEntity> {
+class BookingNotifier extends Notifier<BookingEntity> {
   // =========================================================
   // BUILD
   // =========================================================
 
   @override
-  BookingDraftEntity build() {
-    return BookingDraftEntity(
+  BookingEntity build() {
+    return BookingEntity(
       status: BookingStatus.DRAFT,
       travellers: [],
       cabs: [],
@@ -213,7 +211,7 @@ class BookingDraftNotifier extends Notifier<BookingDraftEntity> {
   // =========================================================
 
   void clearDraft() {
-    state = BookingDraftEntity(
+    state = BookingEntity(
       status: BookingStatus.DRAFT,
       travellers: [],
       cabs: [],

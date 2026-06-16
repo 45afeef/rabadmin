@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
 import '../../../auth/presentation/notifier/auth_notifier.dart';
-import '../../../booking/presentation/notifiers/booking_draft_notifier.dart';
+import '../../../booking/presentation/notifiers/booking_notifier.dart';
+import '../../../booking/presentation/widgets/booking_create_widget.dart';
 import '../../../service_query/presentation/widgets/query_cab_widget.dart';
 import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
-import '../../../booking/presentation/widgets/booking_create_widget.dart';
 
 // Color constants for each section
 const List<Color> _appBarColors = [
@@ -164,9 +164,7 @@ class StaySection extends ConsumerWidget {
           SizedBox(height: 16),
           StayQueryWidget(
             onStaySelected: (stay) {
-              ref
-                  .read(bookingDraftNotifierProvider.notifier)
-                  .addStay(stay: stay);
+              ref.read(bookingNotifierProvider.notifier).addStay(stay: stay);
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Selected Stay: ${stay.name}')),
@@ -203,7 +201,7 @@ class CabSection extends ConsumerWidget {
           SizedBox(height: 16),
           CabQueryWidget(
             onCabSelected: (cab) {
-              ref.read(bookingDraftNotifierProvider.notifier).addCab(cab: cab);
+              ref.read(bookingNotifierProvider.notifier).addCab(cab: cab);
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Selected Cab: ${cab.name}')),
@@ -273,7 +271,7 @@ class BookingSection extends ConsumerWidget {
           SizedBox(height: 16),
           FilledButton(
             onPressed: () {
-              ref.read(bookingDraftNotifierProvider.notifier).clearDraft();
+              ref.read(bookingNotifierProvider.notifier).clearDraft();
             },
             child: const Text('Clear Current Booking Draft'),
           ),
@@ -292,7 +290,7 @@ class BookingSection extends ConsumerWidget {
             shrinkWrap: true,
             showSubmitButton: true,
             onSubmit: () {
-              ref.read(bookingDraftNotifierProvider.notifier).submitBooking();
+              ref.read(bookingNotifierProvider.notifier).submitBooking();
             },
           ),
         ],

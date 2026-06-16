@@ -3,7 +3,7 @@ import '../../../service_providers/domain/entities/stay_provider_entity.dart';
 import 'booking_status.dart';
 import 'selected_Traveller_entity.dart';
 
-class BookingDraftEntity {
+class BookingEntity {
   final String? id;
 
   final DateTime? bookingDate;
@@ -15,7 +15,7 @@ class BookingDraftEntity {
 
   final int totalAmount;
 
-  const BookingDraftEntity({
+  const BookingEntity({
     required this.status,
     required this.travellers,
     required this.cabs,
@@ -25,7 +25,7 @@ class BookingDraftEntity {
     this.bookingDate,
   });
 
-  BookingDraftEntity copyWith({
+  BookingEntity copyWith({
     String? id,
     DateTime? bookingDate,
     BookingStatus? status,
@@ -34,7 +34,7 @@ class BookingDraftEntity {
     List<StayProviderEntity>? stays,
     int? totalAmount,
   }) {
-    return BookingDraftEntity(
+    return BookingEntity(
       id: id ?? this.id,
       bookingDate: bookingDate ?? this.bookingDate,
       status: status ?? this.status,

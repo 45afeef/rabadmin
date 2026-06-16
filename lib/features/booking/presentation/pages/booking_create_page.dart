@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../notifiers/booking_draft_notifier.dart';
+import '../notifiers/booking_notifier.dart';
 import '../widgets/booking_create_widget.dart';
 
 /// Booking Create/Edit Page
 ///
 /// Full-screen page for creating or editing a booking.
-/// Manages booking form state through BookingDraftNotifier.
+/// Manages booking form state through BookingNotifier.
 ///
 /// States:
 /// - Initial: Page loaded, showing empty form
@@ -52,7 +52,7 @@ class _BookingCreatePageState extends ConsumerState<BookingCreatePage> {
   }
 
   void _handleSubmit() async {
-    final notifier = ref.read(bookingDraftNotifierProvider.notifier);
+    final notifier = ref.read(bookingNotifierProvider.notifier);
 
     setState(() => _isSubmitting = true);
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/providers.dart';
-import '../../domain/entities/booking_draft.dart';
+import '../../domain/entities/booking_entity.dart';
 
 /// Booking Detail Page
 ///
@@ -48,10 +48,7 @@ class BookingDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildBookingDetails(
-    BuildContext context,
-    BookingDraftEntity booking,
-  ) {
+  Widget _buildBookingDetails(BuildContext context, BookingEntity booking) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -74,7 +71,7 @@ class BookingDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BookingDraftEntity booking) {
+  Widget _buildHeader(BookingEntity booking) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -131,7 +128,7 @@ class BookingDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildTravellersList(BookingDraftEntity booking) {
+  Widget _buildTravellersList(BookingEntity booking) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -148,7 +145,7 @@ class BookingDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildCabsList(BookingDraftEntity booking) {
+  Widget _buildCabsList(BookingEntity booking) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -171,7 +168,7 @@ class BookingDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildStaysList(BookingDraftEntity booking) {
+  Widget _buildStaysList(BookingEntity booking) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -194,7 +191,7 @@ class BookingDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildTotalAmount(BookingDraftEntity booking) {
+  Widget _buildTotalAmount(BookingEntity booking) {
     return Card(
       color: Colors.blue.shade50,
       child: Padding(

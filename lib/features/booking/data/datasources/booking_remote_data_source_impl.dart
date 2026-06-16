@@ -1,10 +1,10 @@
 import 'package:rab_dio/rab_dio.dart' hide BookingStatus;
 
-import '../../domain/entities/booking_draft.dart';
-import 'booking_remote_data_source.dart';
-import '../models/booking_draft_model.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
 import '../mappers/booking_mappers.dart';
+import '../models/booking_model.dart';
+import 'booking_remote_data_source.dart';
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   final BookingApi api;
@@ -12,15 +12,13 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   BookingRemoteDataSourceImpl(this.api);
 
   @override
-  Future<BookingDraftModel> createBookingDraft({
-    required BookingDraftEntity draft,
-  }) async {
+  Future<BookingModel> createBooking({required BookingEntity entity}) async {
     try {
       // Convert domain entity to rab_dio model
       // Note: travelerId and travelAgencyId should be obtained from authentication/profile
       // For now using empty strings as placeholders
       final bookingCreate = BookingMappers.toDioBookingCreate(
-        draft,
+        entity,
         travelerId: '',
         travelAgencyId: null,
       );
@@ -29,13 +27,13 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       await api.bookingCreateBooking(bookingCreate: bookingCreate);
 
       // Return the draft model with generated ID
-      return BookingDraftModel(
+      return BookingModel(
         id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
         status: BookingStatus.CONFIRM,
-        travellers: draft.travellers,
-        cabs: draft.cabs,
-        stays: draft.stays,
-        totalAmount: draft.totalAmount,
+        travellers: entity.travellers,
+        cabs: entity.cabs,
+        stays: entity.stays,
+        totalAmount: entity.totalAmount,
         bookingDate: DateTime.now(),
       );
     } catch (e) {
@@ -44,22 +42,22 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<BookingDraftModel> getBookingDraft(String draftId) async {
+  Future<BookingModel> getBooking(String id) async {
     try {
       // Fetch booking details from API
       // This would require a getBooking method on BookingApi
       // For now, throw an error as this might not be implemented in rab_dio yet
       throw UnimplementedError(
-        'getBookingDraft not implemented - requires getBooking endpoint',
+        'getBooking not implemented - requires getBooking endpoint',
       );
     } catch (e) {
-      throw Exception('Failed to get booking draft: $e');
+      throw Exception('Failed to get booking: $e');
     }
   }
 
   @override
-  Future<BookingDraftModel> updateBookingDraft(
-    String draftId, {
+  Future<BookingModel> updateBooking(
+    String id, {
     String? serviceType,
     String? serviceId,
     Map<String, dynamic>? bookingDetails,
@@ -68,34 +66,34 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       // Update booking via API
       // This would require an updateBooking method on BookingApi
       throw UnimplementedError(
-        'updateBookingDraft not implemented - requires updateBooking endpoint',
+        'updateBooking not implemented - requires updateBooking endpoint',
       );
     } catch (e) {
-      throw Exception('Failed to update booking draft: $e');
+      throw Exception('Failed to update booking: $e');
     }
   }
 
   @override
-  Future<void> deleteBookingDraft(String draftId) async {
+  Future<void> deleteBooking(String id) async {
     try {
       // Delete booking via API
       // This would require a deleteBooking method on BookingApi
       throw UnimplementedError(
-        'deleteBookingDraft not implemented - requires deleteBooking endpoint',
+        'deleteBooking not implemented - requires deleteBooking endpoint',
       );
     } catch (e) {
-      throw Exception('Failed to delete booking draft: $e');
+      throw Exception('Failed to delete booking: $e');
     }
   }
 
   @override
   Future<void> submitBooking({
-    required String draftId,
+    required String id,
     required Map<String, dynamic> bookingData,
   }) async {
     try {
       // This is an alternative submission method that accepts raw booking data
-      // Currently the createBookingDraft method is the primary submission path
+      // Currently the createBooking method is the primary submission path
       throw UnimplementedError('submitBooking with raw data not implemented');
     } catch (e) {
       throw Exception('Failed to submit booking: $e');
@@ -103,7 +101,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<List<BookingDraftModel>> getAllBookings() async {
+  Future<List<BookingModel>> getAllBookings() async {
     try {
       final response = await api.bookingListBookings();
 
@@ -113,9 +111,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
               bookingResponse,
             );
 
-            return BookingDraftModel.fromJson(
-              bookingJson as Map<String, dynamic>,
-            );
+            return BookingModel.fromJson(bookingJson as Map<String, dynamic>);
           }).toList() ??
           [];
     } catch (e) {

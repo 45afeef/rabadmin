@@ -1,26 +1,24 @@
-import '../../domain/entities/booking_draft.dart';
-import '../models/booking_draft_model.dart';
+import '../../domain/entities/booking_entity.dart';
+import '../models/booking_model.dart';
 
 abstract class BookingRemoteDataSource {
-  Future<BookingDraftModel> createBookingDraft({
-    required BookingDraftEntity draft,
-  });
+  Future<BookingModel> createBooking({required BookingEntity entity});
 
-  Future<BookingDraftModel> getBookingDraft(String draftId);
+  Future<BookingModel> getBooking(String id);
 
-  Future<BookingDraftModel> updateBookingDraft(
-    String draftId, {
+  Future<BookingModel> updateBooking(
+    String id, {
     String? serviceType,
     String? serviceId,
     Map<String, dynamic>? bookingDetails,
   });
 
-  Future<void> deleteBookingDraft(String draftId);
+  Future<void> deleteBooking(String id);
 
   Future<void> submitBooking({
-    required String draftId,
+    required String id,
     required Map<String, dynamic> bookingData,
   });
 
-  Future<List<BookingDraftModel>> getAllBookings();
+  Future<List<BookingModel>> getAllBookings();
 }

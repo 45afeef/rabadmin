@@ -4,13 +4,13 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router.dart';
 import '../../../../core/utils/date_time_extension.dart';
 import '../../../home/presentation/widget/toggle_text.dart';
-import '../../domain/entities/booking_draft.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
 
 class BookingTile extends StatelessWidget {
   const BookingTile({super.key, required this.booking});
 
-  final BookingDraftEntity booking;
+  final BookingEntity booking;
 
   @override
   Widget build(BuildContext context) {
