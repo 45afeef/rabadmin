@@ -3,28 +3,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/providers/app_initialization.dart';
+// agency presentation
+import '../features/agency/presentation/widgets/add_staff_page.dart';
 import '../features/agency/presentation/widgets/agencies_list_page.dart';
 import '../features/agency/presentation/widgets/agency_detail_page.dart';
-import '../features/agency/presentation/widgets/add_staff_page.dart';
+// authentication presentation
 import '../features/auth/presentation/notifier/auth_notifier.dart';
 import '../features/auth/presentation/pages/login_page.dart';
+// booking presentation
 import '../features/booking/presentation/pages/booking_create_page.dart';
 import '../features/booking/presentation/pages/booking_detail_page.dart';
 import '../features/booking/presentation/pages/booking_list_page.dart';
+// home
 import '../features/home/presentation/pages/home_page.dart';
-
 // service providers presentation
-import '../features/service_providers/presentation/pages/service_providers_home_page.dart';
-import '../features/service_providers/presentation/pages/cab_providers_list_page.dart';
-import '../features/service_providers/presentation/pages/stay_providers_list_page.dart';
-import '../features/service_providers/presentation/pages/create_cab_provider_page.dart';
-import '../features/service_providers/presentation/pages/create_stay_provider_page.dart';
-import '../features/service_providers/presentation/pages/cab_provider_detail_page.dart';
-import '../features/service_providers/presentation/pages/stay_provider_detail_page.dart';
-import '../features/service_providers/presentation/pages/create_cab_page.dart';
-import '../features/service_providers/presentation/pages/create_driver_page.dart';
-import '../features/service_providers/presentation/pages/create_stay_unit_page.dart';
 import '../features/service_providers/presentation/pages/add_amenity_page.dart';
+import '../features/service_providers/presentation/pages/cab_provider_detail_page.dart';
+import '../features/service_providers/presentation/pages/cab_providers_list_page.dart';
+import '../features/service_providers/presentation/pages/create_cab_page.dart';
+import '../features/service_providers/presentation/pages/create_cab_provider_page.dart';
+import '../features/service_providers/presentation/pages/create_driver_page.dart';
+import '../features/service_providers/presentation/pages/create_stay_provider_page.dart';
+import '../features/service_providers/presentation/pages/create_stay_unit_page.dart';
+import '../features/service_providers/presentation/pages/service_providers_home_page.dart';
+import '../features/service_providers/presentation/pages/stay_provider_detail_page.dart';
+import '../features/service_providers/presentation/pages/stay_providers_list_page.dart';
 
 abstract class AppRoutes {
   static const login = '/login';

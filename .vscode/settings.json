@@ -1,4 +1,7 @@
 {
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always"
+    },
     "chat.tools.terminal.autoApprove": {
         "/^flutter test$/": {
             "approve": true,

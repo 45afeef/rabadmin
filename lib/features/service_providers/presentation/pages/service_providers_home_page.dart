@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../app/router.dart';
 
 /// Simple landing page for the service providers section. Allows users to

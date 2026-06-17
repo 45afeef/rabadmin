@@ -3,10 +3,32 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rab_dio/rab_dio.dart';
 
+// Agency feature imports
+import '../../features/agency/data/datasources/agency_remote_data_source.dart';
+// Users wrappers for agency feature
+import '../../features/agency/data/datasources/users_remote_data_source.dart';
+import '../../features/agency/data/repositories/agency_repository_impl.dart';
+import '../../features/agency/data/repositories/users_repository_impl.dart';
+import '../../features/agency/domain/repositories/agency_repository.dart';
+import '../../features/agency/domain/repositories/users_repository.dart';
+import '../../features/agency/domain/usecases/create_user_use_case.dart';
+import '../../features/agency/domain/usecases/get_available_users_use_case.dart';
+// Auth feature imports
+import '../../features/auth/data/datasources/auth_local_data_source.dart';
+import '../../features/auth/data/datasources/auth_remote_data_source.dart';
+import '../../features/auth/data/repositories/auth_repository_impl.dart';
+import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/login_use_case.dart';
+import '../../features/auth/domain/usecases/validate_token_use_case.dart';
+// Booking feature imports
+import '../../features/booking/data/datasources/booking_remote_data_source.dart';
+import '../../features/booking/data/datasources/booking_remote_data_source_impl.dart';
+import '../../features/booking/data/repositories/booking_repository_impl.dart';
 // Service Provider feature imports
 import '../../features/booking/domain/entities/booking_entity.dart';
-import '../../features/booking/domain/usecases/get_booking_usecase.dart';
+import '../../features/booking/domain/repositories/booking_repository.dart';
 import '../../features/booking/domain/usecases/get_booking_list_usecase.dart';
+import '../../features/booking/domain/usecases/get_booking_usecase.dart';
 import '../../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../../features/profile/data/datasources/profile_remote_datasource_impl.dart';
 import '../../features/profile/data/repository/profile_repository_impl.dart';
@@ -18,48 +40,23 @@ import '../../features/service_providers/domain/entities/cab_provider_entity.dar
 import '../../features/service_providers/domain/entities/driver_entity.dart';
 import '../../features/service_providers/domain/entities/stay_unit_entity.dart';
 import '../../features/service_providers/domain/repositories/service_provider_repository.dart';
-
 // Service Query feature imports
 import '../../features/service_query/data/datasource/query_data_source.dart';
 import '../../features/service_query/data/datasource/query_remote_data_source.dart';
 import '../../features/service_query/data/repository/query_repository_impl.dart';
 import '../../features/service_query/domain/repository/query_repository.dart';
-import '../../features/service_query/domain/usecases/query_stay_provider_use_case.dart';
-import '../../features/service_query/domain/usecases/query_stay_units_use_case.dart';
 import '../../features/service_query/domain/usecases/query_cabs_use_case.dart';
 import '../../features/service_query/domain/usecases/query_drivers_use_case.dart';
-import '../../features/service_query/presentation/notifier/stayprovider_query_notifier.dart';
-import '../../features/service_query/presentation/notifier/stayunit_query_notifier.dart';
+import '../../features/service_query/domain/usecases/query_stay_provider_use_case.dart';
+import '../../features/service_query/domain/usecases/query_stay_units_use_case.dart';
 import '../../features/service_query/presentation/notifier/cab_query_notifier.dart';
 import '../../features/service_query/presentation/notifier/driver_query_notifier.dart';
-import '../../features/service_query/presentation/state/stayprovider_query_state.dart';
-import '../../features/service_query/presentation/state/stayunit_query_state.dart';
+import '../../features/service_query/presentation/notifier/stayprovider_query_notifier.dart';
+import '../../features/service_query/presentation/notifier/stayunit_query_notifier.dart';
 import '../../features/service_query/presentation/state/cab_query_state.dart';
 import '../../features/service_query/presentation/state/driver_query_state.dart';
-
-// Booking feature imports
-import '../../features/booking/data/datasources/booking_remote_data_source.dart';
-import '../../features/booking/data/datasources/booking_remote_data_source_impl.dart';
-import '../../features/booking/data/repositories/booking_repository_impl.dart';
-import '../../features/booking/domain/repositories/booking_repository.dart';
-
-// Agency feature imports
-import '../../features/agency/data/datasources/agency_remote_data_source.dart';
-import '../../features/agency/data/repositories/agency_repository_impl.dart';
-import '../../features/agency/domain/repositories/agency_repository.dart';
-// Users wrappers for agency feature
-import '../../features/agency/data/datasources/users_remote_data_source.dart';
-import '../../features/agency/data/repositories/users_repository_impl.dart';
-import '../../features/agency/domain/repositories/users_repository.dart';
-import '../../features/agency/domain/usecases/get_available_users_use_case.dart';
-import '../../features/agency/domain/usecases/create_user_use_case.dart';
-// Auth feature imports
-import '../../features/auth/data/datasources/auth_local_data_source.dart';
-import '../../features/auth/data/datasources/auth_remote_data_source.dart';
-import '../../features/auth/data/repositories/auth_repository_impl.dart';
-import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/domain/usecases/login_use_case.dart';
-import '../../features/auth/domain/usecases/validate_token_use_case.dart';
+import '../../features/service_query/presentation/state/stayprovider_query_state.dart';
+import '../../features/service_query/presentation/state/stayunit_query_state.dart';
 import '../network/auth_interceptor.dart';
 
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>(
