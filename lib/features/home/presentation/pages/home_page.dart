@@ -9,6 +9,7 @@ import '../../../booking/presentation/widgets/booking_create_widget.dart';
 import '../../../service_query/presentation/widgets/query_cab_widget.dart';
 import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
+import 'marketplace_page.dart';
 
 // Color constants for each section
 const List<Color> _appBarColors = [
@@ -135,6 +136,17 @@ class _HomePageState extends ConsumerState<HomePage> {
             backgroundColor: Colors.black,
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // navigate to new home page using material page router push
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MarketplacePage()),
+          );
+        },
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.home, color: Colors.black),
       ),
     );
   }
