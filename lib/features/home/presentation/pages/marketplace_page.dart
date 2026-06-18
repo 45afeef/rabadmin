@@ -4,18 +4,17 @@ import '../widget/category_grid.dart';
 import '../widget/filters_panel.dart';
 import '../widget/service_card.dart';
 
+const primary = Color(0xFF001E40);
+const secondaryContainer = Color(0xFFD5E3FC);
+const background = Color(0xFFF7F9FB);
+
 class MarketplacePage extends StatelessWidget {
   const MarketplacePage({super.key});
-
-  static const primary = Color(0xFF001E40);
-  static const secondaryContainer = Color(0xFFD5E3FC);
-  static const background = Color(0xFFF7F9FB);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
-
       appBar: AppBar(
         backgroundColor: background,
         elevation: 0,
@@ -85,26 +84,58 @@ class HeroSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            children: [
-              const Expanded(
-                child: Text(
-                  "Marketplace",
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.add_circle),
-                label: const Text("Add New Service"),
-              ),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isSmall = constraints.maxWidth < 600;
+
+              if (isSmall) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Marketplace",
+                      style: TextStyle(
+                        color: primary,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.add),
+                      label: const Text("Add New Service"),
+                    ),
+                  ],
+                );
+              }
+
+              return Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      "Marketplace",
+                      style: TextStyle(
+                        color: primary,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add New Service"),
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 12),
 
           const Text(
             "Discover exclusive partnerships and premium services from our globally vetted network of hotels, private transport, and local tour operators.",
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: Color.fromRGBO(117, 117, 117, 1)),
           ),
 
           const SizedBox(height: 24),
@@ -115,24 +146,34 @@ class HeroSection extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Row(
+            child: Column(
               children: [
-                const Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: "Search destinations, hotels, or services...",
-                      border: InputBorder.none,
-                    ),
+                TextField(
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    hintText: "Search destinations, hotels, or services...",
+                    border: InputBorder.none,
                   ),
                 ),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.filter_list),
-                  label: const Text("Filters"),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.filter_list),
+                        label: const Text("Filters"),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Search"),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                ElevatedButton(onPressed: () {}, child: const Text("Search")),
               ],
             ),
           ),
