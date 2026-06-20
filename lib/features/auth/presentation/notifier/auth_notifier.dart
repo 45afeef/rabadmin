@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'auth_state.dart';
+
+import '../../../../core/providers/providers.dart';
+import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/login_use_case.dart';
 import '../../domain/usecases/validate_token_use_case.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../../../core/providers/providers.dart';
+import 'auth_state.dart';
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
   (ref) => AuthNotifier(
@@ -32,8 +33,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       state = AuthState.authenticated(userId: userId);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
       state = AuthState.unauthenticated();
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 

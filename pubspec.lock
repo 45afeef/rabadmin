@@ -731,9 +731,11 @@ packages:
   rab_dio:
     dependency: "direct main"
     description:
-      path: "../rab_client/dart_sdk"
-      relative: true
-    source: path
+      path: dart_sdk
+      ref: master
+      resolved-ref: cd7d7f92a5fca8783579d4ed318106f62231831f
+      url: "https://github.com/45afeef/rab_client.git"
+    source: git
     version: "1.0.0"
   record_use:
     dependency: transitive

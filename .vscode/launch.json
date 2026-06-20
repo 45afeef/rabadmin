@@ -14,7 +14,8 @@
         {
             "name": "rabadmin - Online",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": ["--web-port=55574"]
         },
         {
             "name": "rabadmin (profile mode)",
