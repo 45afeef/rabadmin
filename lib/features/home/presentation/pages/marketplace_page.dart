@@ -242,24 +242,28 @@ class ResultsColumn extends StatefulWidget {
     String text, {
     bool active = false,
     IconData? icon,
+    void Function()? onTap,
   }) {
-    return Container(
-      width: 42,
-      height: 42,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        color: active ? Colors.white : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: icon != null
-            ? Icon(icon)
-            : Text(
-                text,
-                style: TextStyle(
-                  fontWeight: active ? FontWeight.bold : FontWeight.normal,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 42,
+        height: 42,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          color: active ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: icon != null
+              ? Icon(icon)
+              : Text(
+                  text,
+                  style: TextStyle(
+                    fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -267,6 +271,7 @@ class ResultsColumn extends StatefulWidget {
 
 class _ResultsColumnState extends State<ResultsColumn> {
   String selectedSort = "relevance";
+  int currentPage = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -363,10 +368,26 @@ class _ResultsColumnState extends State<ResultsColumn> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ResultsColumn._pageButton("1", active: true),
-            ResultsColumn._pageButton("2"),
-            ResultsColumn._pageButton("3"),
-            ResultsColumn._pageButton("", icon: Icons.chevron_right),
+            ResultsColumn._pageButton(
+              "1",
+              active: currentPage == 1,
+              onTap: () => setState(() => currentPage = 1),
+            ),
+            ResultsColumn._pageButton(
+              "2",
+              active: currentPage == 2,
+              onTap: () => setState(() => currentPage = 2),
+            ),
+            ResultsColumn._pageButton(
+              "3",
+              active: currentPage == 3,
+              onTap: () => setState(() => currentPage = 3),
+            ),
+            ResultsColumn._pageButton(
+              "",
+              icon: Icons.chevron_right,
+              onTap: () => setState(() => currentPage++),
+            ),
           ],
         ),
       ],
