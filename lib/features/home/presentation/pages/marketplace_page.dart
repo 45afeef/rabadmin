@@ -368,21 +368,14 @@ class _ResultsColumnState extends State<ResultsColumn> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ResultsColumn._pageButton(
-              "1",
-              active: currentPage == 1,
-              onTap: () => setState(() => currentPage = 1),
-            ),
-            ResultsColumn._pageButton(
-              "2",
-              active: currentPage == 2,
-              onTap: () => setState(() => currentPage = 2),
-            ),
-            ResultsColumn._pageButton(
-              "3",
-              active: currentPage == 3,
-              onTap: () => setState(() => currentPage = 3),
-            ),
+            ...["1", "2", "3", "4"].map((page) {
+              final pageNum = int.parse(page);
+              return ResultsColumn._pageButton(
+                page,
+                active: currentPage == pageNum,
+                onTap: () => setState(() => currentPage = pageNum),
+              );
+            }),
             ResultsColumn._pageButton(
               "",
               icon: Icons.chevron_right,
