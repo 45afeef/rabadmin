@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widget/category_grid.dart';
+import '../widget/category_row.dart';
 import '../widget/filters_panel.dart';
 import '../widget/service_card.dart';
 
@@ -10,7 +10,6 @@ const background = Color(0xFFF7F9FB);
 
 class MarketplacePage extends StatelessWidget {
   const MarketplacePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,10 +17,6 @@ class MarketplacePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: primary),
-          onPressed: () {},
-        ),
         title: const Text(
           'The Executive Concierge',
           style: TextStyle(color: primary, fontWeight: FontWeight.bold),
@@ -67,7 +62,7 @@ class MarketplacePage extends StatelessWidget {
 
       body: SingleChildScrollView(
         child: Column(
-          children: const [HeroSection(), CategoryGrid(), MarketplaceContent()],
+          children: const [HeroSection(), CategoryRow(), MarketplaceContent()],
         ),
       ),
     );
@@ -90,7 +85,7 @@ class HeroSection extends StatelessWidget {
 
               if (isSmall) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
                       "Marketplace",
@@ -237,8 +232,41 @@ class MarketplaceContent extends StatelessWidget {
   }
 }
 
-class ResultsColumn extends StatelessWidget {
+class ResultsColumn extends StatefulWidget {
   const ResultsColumn({super.key});
+
+  @override
+  State<ResultsColumn> createState() => _ResultsColumnState();
+
+  static Widget _pageButton(
+    String text, {
+    bool active = false,
+    IconData? icon,
+  }) {
+    return Container(
+      width: 42,
+      height: 42,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: active ? Colors.white : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: icon != null
+            ? Icon(icon)
+            : Text(
+                text,
+                style: TextStyle(
+                  fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class _ResultsColumnState extends State<ResultsColumn> {
+  String selectedSort = "relevance";
 
   @override
   Widget build(BuildContext context) {
@@ -247,29 +275,60 @@ class ResultsColumn extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87),
-                children: [
-                  TextSpan(
-                    text: "128",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF001E40),
+            Expanded(
+              child: RichText(
+                text: const TextSpan(
+                  style: TextStyle(color: Colors.black87),
+                  children: [
+                    TextSpan(
+                      text: "128",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF001E40),
+                      ),
                     ),
-                  ),
-                  TextSpan(text: " services matching your criteria"),
-                ],
+                    TextSpan(text: " services matching your criteria"),
+                  ],
+                ),
               ),
             ),
 
-            Row(
-              children: const [
-                Text(
-                  "SORT BY: RELEVANCE",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+            Column(
+              children: [
+                Text("SORT BY:", style: TextStyle(fontWeight: FontWeight.bold)),
+
+                DropdownButton<String>(
+                  value: selectedSort,
+                  onChanged: (value) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('This feature is not implemented yet'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+
+                    setState(() {
+                      selectedSort = value!;
+                    });
+
+                    // Handle sorting logic here
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: "relevance",
+                      child: Text("Relevance"),
+                    ),
+                    DropdownMenuItem(
+                      value: "price_low_high",
+                      child: Text("Price: Low to High"),
+                    ),
+                    DropdownMenuItem(
+                      value: "price_high_low",
+                      child: Text("Price: High to Low"),
+                    ),
+                    DropdownMenuItem(value: "newest", child: Text("Newest")),
+                  ],
                 ),
-                Icon(Icons.expand_more),
               ],
             ),
           ],
@@ -304,39 +363,13 @@ class ResultsColumn extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _pageButton("1", active: true),
-            _pageButton("2"),
-            _pageButton("3"),
-            _pageButton("", icon: Icons.chevron_right),
+            ResultsColumn._pageButton("1", active: true),
+            ResultsColumn._pageButton("2"),
+            ResultsColumn._pageButton("3"),
+            ResultsColumn._pageButton("", icon: Icons.chevron_right),
           ],
         ),
       ],
-    );
-  }
-
-  static Widget _pageButton(
-    String text, {
-    bool active = false,
-    IconData? icon,
-  }) {
-    return Container(
-      width: 42,
-      height: 42,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        color: active ? Colors.white : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: icon != null
-            ? Icon(icon)
-            : Text(
-                text,
-                style: TextStyle(
-                  fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-      ),
     );
   }
 }

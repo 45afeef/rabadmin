@@ -22,67 +22,116 @@ class ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
+      margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            ClipRRect(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 700;
+
+            final imageSection = ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
                 image,
-                width: 240,
-                height: 180,
+                width: double.infinity,
+                height: isMobile ? 220 : 180,
                 fit: BoxFit.cover,
               ),
-            ),
+            );
 
-            const SizedBox(width: 20),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+            final contentSection = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: isMobile ? 20 : 22,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
 
-                  Text(location),
+                const SizedBox(height: 6),
 
-                  const SizedBox(height: 12),
+                Text(location),
 
-                  Text(description),
+                const SizedBox(height: 12),
 
-                  const SizedBox(height: 12),
+                Text(
+                  description,
+                  maxLines: isMobile ? null : 4,
+                  overflow: isMobile
+                      ? TextOverflow.visible
+                      : TextOverflow.ellipsis,
+                ),
 
-                  Wrap(
-                    spacing: 8,
-                    children: tags.map((e) => Chip(label: Text(e))).toList(),
-                  ),
+                const SizedBox(height: 12),
 
-                  const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: tags.map((e) => Chip(label: Text(e))).toList(),
+                ),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(height: 16),
+
+                isMobile
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Commission $commission",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("View Details"),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Commission $commission",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: const Text("View Details"),
+                          ),
+                        ],
+                      ),
+              ],
+            );
+
+            return isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Commission $commission",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("View Details"),
-                      ),
+                      imageSection,
+                      const SizedBox(height: 16),
+                      contentSection,
                     ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 240, child: imageSection),
+
+                      const SizedBox(width: 20),
+
+                      Expanded(child: contentSection),
+                    ],
+                  );
+          },
         ),
       ),
     );
