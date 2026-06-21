@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/entities/selected_Traveller_entity.dart';
 import '../notifiers/booking_notifier.dart';
 
 /// =============================================================
@@ -67,7 +68,71 @@ class BookingFormWidget extends ConsumerWidget {
               ),
 
               const SizedBox(height: 24),
-              SectionHeader(title: "Travellers", onAdd: () {}),
+              SectionHeader(
+                title: "Travellers",
+                onAdd: () {
+                  void showAddTravellerDialog(
+                    BuildContext context,
+                    WidgetRef ref,
+                  ) {
+                    final nameController = TextEditingController();
+                    final phoneController = TextEditingController();
+
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Add Traveller'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: nameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Name',
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              TextField(
+                                controller: phoneController,
+                                keyboardType: TextInputType.phone,
+                                decoration: const InputDecoration(
+                                  labelText: 'Phone Number',
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                            FilledButton(
+                              onPressed: () {
+                                final bookingNotifier = ref.read(
+                                  bookingNotifierProvider.notifier,
+                                );
+
+                                bookingNotifier.addTraveller(
+                                  SelectedTravellerEntity.byGuest(
+                                    name: nameController.text.trim(),
+                                    phone: phoneController.text.trim(),
+                                  ),
+                                );
+
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Add'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+
+                  showAddTravellerDialog(context, ref);
+                },
+              ),
               TravellerSection(),
 
               const SizedBox(height: 24),
