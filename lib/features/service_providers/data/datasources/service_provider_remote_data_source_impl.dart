@@ -63,6 +63,8 @@ class ServiceProviderRemoteDataSourceImpl
     required String providerName,
     // TODO : ideally the API would handle setting the createdBy field based on the authenticated user, rather than requiring the client to pass it in; this is a potential source of bugs if the client and server get out of sync on how this field is set. For now we have to pass it in because the generated types require it, but this is something to consider improving in the future.
     required String createdBy,
+    required double latitude,
+    required double longitude,
   }) async {
     try {
       // build request payload using rab_dio generated models
@@ -74,6 +76,8 @@ class ServiceProviderRemoteDataSourceImpl
               // ownerId is required by the generated type; use createdBy as a placeholder
               ..ownerId = createdBy
               ..createdBy = createdBy
+              ..latitude = latitude
+              ..longitude = longitude
               ..providerType = CabProviderCreateProviderTypeEnum.CAB;
           }),
         );
@@ -179,8 +183,8 @@ class ServiceProviderRemoteDataSourceImpl
             sb
               ..providerName = providerName
               ..createdBy = createdBy
-              ..ownerId =
-                  createdBy // ownerId is required by the generated type; use createdBy as a placeholder
+              // ownerId is required by the generated type; use createdBy as a placeholder
+              ..ownerId = createdBy
               ..providerType = StayProviderCreateProviderTypeEnum.STAY
               ..propertyType = propertyType
               ..roomCount = roomCount

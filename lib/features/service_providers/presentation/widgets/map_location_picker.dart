@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
 class LocationPickerModel {
@@ -47,20 +50,49 @@ class _MapLocationPickerState extends State<MapLocationPicker> {
     _selectedLocation = LatLng(widget.initialLatitude, widget.initialLongitude);
   }
 
-  void _onMapTap(LatLng location) {
+  void _onMapTap(LatLng location) async {
     setState(() {
       _selectedLocation = location;
-      _selectedAddress = null; // Reset address when tapping
+      _selectedAddress = null;
     });
 
-    // Notify parent with selected location
+    // fetch location name
+    final placeName = await _getPlaceName(
+      location.latitude,
+      location.longitude,
+    );
+
+    setState(() {
+      _selectedAddress = placeName;
+    });
+
     widget.onLocationSelected(
       LocationPickerModel(
         latitude: location.latitude,
         longitude: location.longitude,
-        address: _selectedAddress,
+        address: placeName,
       ),
     );
+  }
+
+  Future<String?> _getPlaceName(double lat, double lon) async {
+    final url = Uri.parse(
+      'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon',
+    );
+
+    final response = await http.get(
+      url,
+      headers: {'User-Agent': 'com.redandblack.rabadmin'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      // This is the human-readable place name
+      return data['display_name'];
+    }
+
+    return null;
   }
 
   @override

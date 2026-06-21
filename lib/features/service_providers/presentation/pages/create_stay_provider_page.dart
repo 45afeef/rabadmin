@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/providers/providers.dart';
 import '../widgets/map_location_picker.dart';
 
@@ -191,7 +192,7 @@ class _CreateStayProviderPageState
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Create Provider'),
+                    : const Text('Create Stay Provider'),
               ),
             ],
           ),

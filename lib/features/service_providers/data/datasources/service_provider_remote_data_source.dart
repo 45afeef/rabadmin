@@ -12,6 +12,8 @@ abstract class ServiceProviderRemoteDataSource {
   Future<CabProviderModel> createCabProvider({
     required String providerName,
     required String createdBy,
+    required double latitude,
+    required double longitude,
   });
   Future<CabProviderModel> updateCabProvider(
     String providerId, {

@@ -1,3 +1,4 @@
+import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../profile/domain/repository/profile_repository.dart';
 import '../../domain/entities/cab_entity.dart';
 import '../../domain/entities/cab_provider_entity.dart';
@@ -9,8 +10,6 @@ import '../../domain/repositories/service_provider_repository.dart';
 import '../datasources/service_provider_remote_data_source.dart';
 import '../models/cab_model.dart';
 import '../models/cab_provider_model.dart';
-
-import '../../../auth/domain/repositories/auth_repository.dart';
 import '../models/driver_model.dart';
 import '../models/stay_amenity_model.dart';
 import '../models/stay_provider_model.dart';
@@ -44,6 +43,8 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
   @override
   Future<CabProviderEntity> createCabProvider({
     required String providerName,
+    required double latitude,
+    required double longitude,
   }) async {
     // pull the current user id from auth; repository will return `null` if the
     // caller is not authenticated (which should not happen in production).
@@ -57,6 +58,8 @@ class ServiceProviderRepositoryImpl extends ServiceProviderRepository {
     final model = await remoteDataSource.createCabProvider(
       providerName: providerName,
       createdBy: createdBy,
+      latitude: latitude,
+      longitude: longitude,
     );
     return _mapCabProviderModelToEntity(model);
   }

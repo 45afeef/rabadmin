@@ -9,7 +9,11 @@ abstract class ServiceProviderRepository {
   // CAB PROVIDERS
   Future<List<CabProviderEntity>> listCabProviders();
   Future<CabProviderEntity> getCabProvider(String providerId);
-  Future<CabProviderEntity> createCabProvider({required String providerName});
+  Future<CabProviderEntity> createCabProvider({
+    required String providerName,
+    required double latitude,
+    required double longitude,
+  });
   Future<CabProviderEntity> updateCabProvider(
     String providerId, {
     String? providerName,
