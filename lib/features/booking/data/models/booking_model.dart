@@ -17,13 +17,13 @@ class BookingModel {
   final int totalAmount;
 
   const BookingModel({
+    required this.id,
+    required this.bookingDate,
     required this.status,
     required this.travellers,
     required this.cabs,
     required this.stays,
     required this.totalAmount,
-    required this.id,
-    required this.bookingDate,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
@@ -43,12 +43,12 @@ class BookingModel {
   factory BookingModel.fromEntity(BookingEntity entity) {
     return BookingModel(
       id: entity.id!,
+      bookingDate: entity.bookingDate,
       status: entity.status,
-      travellers: entity.travellers,
+      totalAmount: entity.totalAmount,
+
       cabs: entity.cabs,
       stays: entity.stays,
-      totalAmount: entity.totalAmount,
-      bookingDate: entity.bookingDate,
     );
   }
 

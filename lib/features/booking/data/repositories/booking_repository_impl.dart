@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
 
 import '../../domain/entities/booking_entity.dart';
+import '../../domain/entities/booking_list_item.dart';
 import '../../domain/entities/booking_status.dart';
 import '../../domain/repositories/booking_repository.dart';
 import '../datasources/booking_remote_data_source.dart';
-import '../models/booking_model.dart';
+import '../mappers/booking_response_model_mapper.dart';
+import '../models/booking_response_model.dart';
 
 class BookingRepositoryImpl implements BookingRepository {
   final BookingRemoteDataSource remoteDataSource;
@@ -107,14 +109,13 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<List<BookingEntity>> getBookingList() async {
+  Future<List<BookingListItem>> getBookingList() async {
     try {
-      final List<BookingModel> bookingsModel = await remoteDataSource
+      final List<BookingResponseModel> bookingsModel = await remoteDataSource
           .getAllBookings();
 
       final bookings = bookingsModel.map((model) => model.toEntity()).toList();
 
-      _cachedBookings = bookings;
       return bookings;
     } catch (e) {
       throw Exception('Failed to get staff bookings: $e');

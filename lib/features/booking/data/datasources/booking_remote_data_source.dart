@@ -1,5 +1,6 @@
 import '../../domain/entities/booking_entity.dart';
 import '../models/booking_model.dart';
+import '../models/booking_response_model.dart';
 
 abstract class BookingRemoteDataSource {
   Future<BookingModel> createBooking({required BookingEntity entity});
@@ -20,5 +21,5 @@ abstract class BookingRemoteDataSource {
     required Map<String, dynamic> bookingData,
   });
 
-  Future<List<BookingModel>> getAllBookings();
+  Future<List<BookingResponseModel>> getAllBookings();
 }

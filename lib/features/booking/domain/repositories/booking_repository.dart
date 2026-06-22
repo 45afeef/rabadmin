@@ -1,4 +1,5 @@
 import '../entities/booking_entity.dart';
+import '../entities/booking_list_item.dart';
 import '../entities/booking_status.dart';
 
 abstract class BookingRepository {
@@ -28,5 +29,5 @@ abstract class BookingRepository {
     BookingStatus status,
   );
 
-  Future<List<BookingEntity>> getBookingList();
+  Future<List<BookingListItem>> getBookingList();
 }

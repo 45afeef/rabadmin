@@ -4,6 +4,8 @@ import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
 import '../mappers/booking_mappers.dart';
 import '../models/booking_model.dart';
+import '../models/booking_response_model.dart';
+import '../models/selected_traveler_model.dart';
 import 'booking_remote_data_source.dart';
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
@@ -19,7 +21,6 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       // For now using empty strings as placeholders
       final bookingCreate = BookingMappers.toDioBookingCreate(
         entity,
-        travelerId: '',
         travelAgencyId: null,
       );
 
@@ -30,7 +31,9 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       return BookingModel(
         id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
         status: BookingStatus.CONFIRM,
-        travellers: entity.travellers,
+        travellers: entity.travellers
+            .map(SelectedTravellerModel.fromEntity)
+            .toList(),
         cabs: entity.cabs,
         stays: entity.stays,
         totalAmount: entity.totalAmount,
@@ -101,7 +104,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<List<BookingModel>> getAllBookings() async {
+  Future<List<BookingResponseModel>> getAllBookings() async {
     try {
       final response = await api.bookingListBookings();
 
@@ -111,7 +114,9 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
               bookingResponse,
             );
 
-            return BookingModel.fromJson(bookingJson as Map<String, dynamic>);
+            return BookingResponseModel.fromJson(
+              bookingJson as Map<String, dynamic>,
+            );
           }).toList() ??
           [];
     } catch (e) {

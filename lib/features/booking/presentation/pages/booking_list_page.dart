@@ -27,7 +27,11 @@ class BookingListPage extends ConsumerWidget {
             : ListView.separated(
                 separatorBuilder: (context, index) => const Divider(),
                 itemCount: data.length,
-                itemBuilder: (_, i) => BookingTile(booking: data[i]),
+                itemBuilder: (_, i) => BookingTile(
+                  booking: data[i],
+                  onTap: () =>
+                      context.push(AppRoutes.bookingDetailPath(data[i].id)),
+                ),
               ),
       ),
       floatingActionButton: FloatingActionButton(

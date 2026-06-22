@@ -24,8 +24,8 @@ import '../../features/auth/domain/usecases/validate_token_use_case.dart';
 import '../../features/booking/data/datasources/booking_remote_data_source.dart';
 import '../../features/booking/data/datasources/booking_remote_data_source_impl.dart';
 import '../../features/booking/data/repositories/booking_repository_impl.dart';
-// Service Provider feature imports
 import '../../features/booking/domain/entities/booking_entity.dart';
+import '../../features/booking/domain/entities/booking_list_item.dart';
 import '../../features/booking/domain/repositories/booking_repository.dart';
 import '../../features/booking/domain/usecases/get_booking_list_usecase.dart';
 import '../../features/booking/domain/usecases/get_booking_usecase.dart';
@@ -327,8 +327,8 @@ final bookingRepositoryProvider = Provider<BookingRepository>(
   ),
 );
 
-final bookingListProvider = FutureProvider<List<BookingEntity>>((ref) async {
-  final usecase = GetBookingListUsecase(ref.watch(bookingRepositoryProvider));
+final bookingListProvider = FutureProvider<List<BookingListItem>>((ref) async {
+  final usecase = GetBookingListUsecase(ref.read(bookingRepositoryProvider));
   return usecase();
 });
 

@@ -11,8 +11,7 @@ class BookingMappers {
   /// Convert BookingEntity to BookingCreate model
   static rab_dio.BookingCreate toDioBookingCreate(
     BookingEntity booking, {
-    required String travelerId,
-    required String? travelAgencyId,
+    String? travelAgencyId,
   }) {
     return rab_dio.BookingCreate(
       (b) => b
@@ -37,7 +36,10 @@ class BookingMappers {
     for (final traveller in travellers) {
       builder.add(
         rab_dio.BookingTravellerCreate(
-          (b) => b..travellerId = traveller.travellerId,
+          (b) => b
+            ..travellerId = traveller.travellerId
+            ..travellerName = traveller.travellerName
+            ..travellerPhone = traveller.travellerPhone,
         ),
       );
     }
