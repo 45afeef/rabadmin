@@ -12,7 +12,7 @@ import '../features/auth/presentation/notifier/auth_notifier.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 // booking presentation
 import '../features/booking/presentation/pages/booking_create_page.dart';
-import '../features/booking/presentation/pages/booking_detail_page.dart';
+import '../features/booking/presentation/pages/booking_list_item_details_page.dart';
 import '../features/booking/presentation/pages/booking_list_page.dart';
 // home
 import '../features/home/presentation/pages/home_page.dart';
@@ -221,7 +221,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.bookingDetail,
         builder: (context, state) {
           final bookingId = state.pathParameters['bookingId']!;
-          return BookingDetailPage(bookingId: bookingId);
+          return BookingListItemDetailsPage(bookingId: bookingId);
         },
       ),
 

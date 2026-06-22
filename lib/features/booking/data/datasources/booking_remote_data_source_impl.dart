@@ -45,14 +45,18 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<BookingModel> getBooking(String id) async {
+  Future<BookingResponseModel> getBooking(String id) async {
     try {
       // Fetch booking details from API
-      // This would require a getBooking method on BookingApi
-      // For now, throw an error as this might not be implemented in rab_dio yet
-      throw UnimplementedError(
-        'getBooking not implemented - requires getBooking endpoint',
+
+      final response = await api.bookingGetBooking(bookingId: id);
+
+      final bookingJson = standardSerializers.serializeWith(
+        BookingResponse.serializer,
+        response.data,
       );
+
+      return BookingResponseModel.fromJson(bookingJson as Map<String, dynamic>);
     } catch (e) {
       throw Exception('Failed to get booking: $e');
     }

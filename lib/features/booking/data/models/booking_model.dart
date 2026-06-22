@@ -1,8 +1,10 @@
+import '../../../service_providers/data/models/cab_model.dart';
+import '../../../service_providers/data/models/stay_provider_model.dart';
 import '../../../service_providers/domain/entities/cab_entity.dart';
 import '../../../service_providers/domain/entities/stay_provider_entity.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../../domain/entities/booking_status.dart';
-import '../../domain/entities/selected_Traveller_entity.dart';
+import 'selected_traveler_model.dart';
 
 class BookingModel {
   final String id;
@@ -10,7 +12,7 @@ class BookingModel {
   final DateTime? bookingDate;
   final BookingStatus status;
 
-  final List<SelectedTravellerEntity> travellers;
+  final List<SelectedTravellerModel> travellers;
   final List<CabEntity> cabs;
   final List<StayProviderEntity> stays;
 
@@ -29,14 +31,23 @@ class BookingModel {
   factory BookingModel.fromJson(Map<String, dynamic> json) {
     return BookingModel(
       id: json['id'],
-      status: BookingStatus.DRAFT,
-      travellers: [],
-      cabs: [],
-      stays: [],
-      totalAmount: json['total_amount'] ?? 0,
       bookingDate: json['booking_date'] != null
           ? DateTime.tryParse(json['booking_date'])
           : null,
+      status: BookingStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => BookingStatus.DRAFT,
+      ),
+      totalAmount: json['total_amount'] ?? 0,
+      travellers: (json['travellers'] as List<dynamic>? ?? [])
+          .map((e) => SelectedTravellerModel.fromJson(e))
+          .toList(),
+      cabs: (json['cab_providers'] as List<dynamic>? ?? [])
+          .map((e) => CabModel.fromJson(e))
+          .toList(),
+      stays: (json['stay_providers'] as List<dynamic>? ?? [])
+          .map((e) => StayProviderModel.fromJson(e))
+          .toList(),
     );
   }
 
@@ -46,7 +57,9 @@ class BookingModel {
       bookingDate: entity.bookingDate,
       status: entity.status,
       totalAmount: entity.totalAmount,
-
+      travellers: entity.travellers
+          .map(SelectedTravellerModel.fromEntity)
+          .toList(),
       cabs: entity.cabs,
       stays: entity.stays,
     );
@@ -56,9 +69,9 @@ class BookingModel {
     return {
       'id': id,
       'booking_date': bookingDate?.toIso8601String(),
-      'status': status.toString(),
+      'status': status.name,
       'total_amount': totalAmount,
-      'travellers': [], // will be populated from entities
+      'travellers': travellers.map((e) => e.toJson()).toList(),
       'cabs': [],
       'stays': [],
     };
@@ -69,10 +82,10 @@ class BookingModel {
       id: id,
       bookingDate: bookingDate,
       status: status,
-      travellers: travellers,
+      totalAmount: totalAmount,
+      travellers: travellers.map((e) => e.toEntity()).toList(),
       cabs: cabs,
       stays: stays,
-      totalAmount: totalAmount,
     );
   }
 }

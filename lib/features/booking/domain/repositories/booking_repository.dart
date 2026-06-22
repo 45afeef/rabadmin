@@ -5,7 +5,7 @@ import '../entities/booking_status.dart';
 abstract class BookingRepository {
   Future<BookingEntity> createBooking({required BookingEntity entity});
 
-  Future<BookingEntity> getBooking(String id);
+  Future<BookingListItem> getBooking(String id);
 
   Future<BookingEntity> updateBooking(
     String id, {

@@ -5,7 +5,7 @@ import '../models/booking_response_model.dart';
 abstract class BookingRemoteDataSource {
   Future<BookingModel> createBooking({required BookingEntity entity});
 
-  Future<BookingModel> getBooking(String id);
+  Future<BookingResponseModel> getBooking(String id);
 
   Future<BookingModel> updateBooking(
     String id, {

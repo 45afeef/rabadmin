@@ -1,4 +1,4 @@
-import '../entities/booking_entity.dart';
+import '../entities/booking_list_item.dart';
 import '../repositories/booking_repository.dart';
 
 class GetBookingUseCase {
@@ -6,7 +6,7 @@ class GetBookingUseCase {
 
   GetBookingUseCase(this.repository);
 
-  Future<BookingEntity> call(String bookingId) async {
+  Future<BookingListItem> call(String bookingId) async {
     return await repository.getBooking(bookingId);
   }
 }

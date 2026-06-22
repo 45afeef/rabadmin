@@ -332,7 +332,7 @@ final bookingListProvider = FutureProvider<List<BookingListItem>>((ref) async {
   return usecase();
 });
 
-final singleBookingProvider = FutureProvider.family<BookingEntity, String>((
+final singleBookingProvider = FutureProvider.family<BookingListItem, String>((
   ref,
   bookingId,
 ) async {

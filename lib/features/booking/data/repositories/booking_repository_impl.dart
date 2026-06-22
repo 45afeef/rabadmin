@@ -11,7 +11,7 @@ import '../models/booking_response_model.dart';
 class BookingRepositoryImpl implements BookingRepository {
   final BookingRemoteDataSource remoteDataSource;
 
-  List<BookingEntity>? _cachedBookings;
+  List<BookingListItem>? _cachedBookings;
 
   BookingRepositoryImpl({required this.remoteDataSource});
 
@@ -26,7 +26,7 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<BookingEntity> getBooking(String id) async {
+  Future<BookingListItem> getBooking(String id) async {
     final cached = _cachedBookings?.firstWhereOrNull(
       (booking) => booking.id == id,
     );
