@@ -10,16 +10,11 @@ class MarketplacePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
         elevation: 0,
         title: const Text(
           'The Executive Concierge',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(
@@ -37,8 +32,6 @@ class MarketplacePage extends StatelessWidget {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -90,7 +83,6 @@ class HeroSection extends StatelessWidget {
                     const Text(
                       "Marketplace",
                       style: TextStyle(
-                        color: AppColors.primary,
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                       ),
@@ -111,7 +103,6 @@ class HeroSection extends StatelessWidget {
                     child: Text(
                       "Marketplace",
                       style: TextStyle(
-                        color: AppColors.primary,
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                       ),
@@ -130,7 +121,7 @@ class HeroSection extends StatelessWidget {
 
           const Text(
             "Discover exclusive partnerships and premium services from our globally vetted network of hotels, private transport, and local tour operators.",
-            style: TextStyle(color: Color.fromRGBO(117, 117, 117, 1)),
+            style: TextStyle(color: AppColors.onSurfaceVariant),
           ),
 
           const SizedBox(height: 24),
