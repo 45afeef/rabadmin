@@ -19,6 +19,14 @@ class AppColorScheme {
     onSurface: AppColors.onSurface,
 
     outline: AppColors.outline,
+
+    primaryContainer: AppColors.primaryContainer,
+    onPrimaryContainer: AppColors.primary,
+
+    secondaryContainer: AppColors.secondaryContainer,
+    onSecondaryContainer: AppColors.onSurface,
+
+    surfaceContainerHighest: AppColors.surfaceVariant,
   );
 }
 
