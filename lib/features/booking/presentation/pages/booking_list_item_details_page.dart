@@ -420,6 +420,7 @@ class _TimelineCard extends StatelessWidget {
             title: cab.cab?.name ?? provider.name,
             subtitle:
                 "${cab.cab?.model ?? ''} - ${cab.cab?.vehicleNumber ?? ''}",
+            tagIcon: Icons.directions_bike_outlined,
             tag: "Transfer",
             tagColor: AppColors.success,
           ),
@@ -439,6 +440,7 @@ class _TimelineCard extends StatelessWidget {
             time: "Check-in",
             title: provider.name,
             subtitle: stay.roomType ?? "Stay",
+            tagIcon: Icons.villa,
             tag: "Accommodation",
             tagColor: Colors.blue,
           ),
@@ -480,6 +482,7 @@ class TimelineTile extends StatelessWidget {
   final String subtitle;
   final String tag;
   final Color tagColor;
+  final IconData tagIcon;
 
   const TimelineTile({
     super.key,
@@ -489,6 +492,7 @@ class TimelineTile extends StatelessWidget {
     required this.subtitle,
     required this.tag,
     required this.tagColor,
+    required this.tagIcon,
   });
 
   @override
@@ -522,9 +526,18 @@ class TimelineTile extends StatelessWidget {
                     color: tagColor,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text(
-                    tag,
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                  child: Row(
+                    children: [
+                      Text(
+                        tag,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                      ),
+                      Spacer(),
+                      Icon(tagIcon, size: 12, color: Colors.white),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 8),
