@@ -71,7 +71,7 @@ class BookingTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.04),
+                color: Colors.black.withValues(alpha: .04),
                 blurRadius: 24,
                 offset: const Offset(0, 10),
               ),
@@ -86,7 +86,7 @@ class BookingTile extends StatelessWidget {
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withOpacity(.4),
+                      color: AppColors.secondary.withValues(alpha: .4),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Icon(
@@ -129,7 +129,7 @@ class BookingTile extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: _statusColor.withOpacity(.12),
+                      color: _statusColor.withValues(alpha: .12),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: Row(
@@ -240,7 +240,7 @@ class _InfoColumn extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: AppColors.onSurfaceVariant.withOpacity(.7),
+            color: AppColors.onSurfaceVariant.withValues(alpha: .7),
             fontSize: 11,
             letterSpacing: 1.2,
             fontWeight: FontWeight.w600,

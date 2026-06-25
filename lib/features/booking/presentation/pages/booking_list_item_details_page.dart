@@ -458,7 +458,7 @@ class _TimelineCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Service Timeline",
+            "Service Items",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
