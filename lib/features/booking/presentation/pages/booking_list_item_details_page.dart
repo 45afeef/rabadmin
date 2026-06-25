@@ -88,7 +88,7 @@ class _Sidebar extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: active ? AppColors.sidebarActive : Colors.transparent,
+        color: active ? AppColors.brand200 : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -260,7 +260,7 @@ class _StatusCard extends StatelessWidget {
                         radius: 5,
                         backgroundColor: activeStep > 0
                             ? AppColors.success
-                            : AppColors.surfaceHigh,
+                            : AppColors.gray200,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -320,7 +320,7 @@ class _StepItem extends StatelessWidget {
     return Column(
       children: [
         CircleAvatar(
-          backgroundColor: active ? AppColors.primary : AppColors.surfaceHigh,
+          backgroundColor: active ? AppColors.primary : AppColors.gray200,
           child: Text(
             number,
             style: TextStyle(
@@ -558,7 +558,7 @@ class _InfoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.surfaceHighest.withOpacity(.3),
+            color: AppColors.gray100,
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

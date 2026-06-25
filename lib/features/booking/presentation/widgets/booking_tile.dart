@@ -86,7 +86,7 @@ class BookingTile extends StatelessWidget {
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withValues(alpha: .4),
+                      color: AppColors.primaryContainer,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Icon(
