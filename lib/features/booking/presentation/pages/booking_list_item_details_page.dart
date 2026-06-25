@@ -527,6 +527,7 @@ class TimelineTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Row(
+                    mainAxisSize: .min,
                     children: [
                       Text(
                         tag,
@@ -535,7 +536,7 @@ class TimelineTile extends StatelessWidget {
                           fontSize: 10,
                         ),
                       ),
-                      Spacer(),
+                      SizedBox(width: 10),
                       Icon(tagIcon, size: 12, color: Colors.white),
                     ],
                   ),
