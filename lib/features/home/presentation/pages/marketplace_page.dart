@@ -31,7 +31,8 @@ class MarketplacePage extends StatelessWidget {
       drawer: const _MarketplaceDrawer(),
 
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.primaryContainer,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../app/app_color.dart';
 import '../../../../app/router.dart';
 import '../../../../core/providers/providers.dart';
 import '../widgets/booking_tile.dart';
@@ -28,8 +27,7 @@ class BookingListPage extends ConsumerWidget {
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.separated(
-                  separatorBuilder: (context, index) =>
-                      Divider(color: AppColors.surfaceContainer),
+                  separatorBuilder: (context, index) => Divider(),
                   itemCount: data.length,
                   itemBuilder: (_, i) => BookingTile(
                     booking: data[i],

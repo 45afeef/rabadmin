@@ -19,6 +19,7 @@ class AppColorScheme {
     onSurface: AppColors.onSurface,
 
     outline: AppColors.outline,
+    outlineVariant: AppColors.outlineVariant,
 
     primaryContainer: AppColors.primaryContainer,
     onPrimaryContainer: AppColors.primary,

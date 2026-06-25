@@ -16,8 +16,6 @@ class AppThemes {
       centerTitle: false,
     ),
 
-    dividerColor: AppColors.outline,
-
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.surfaceContainer,
