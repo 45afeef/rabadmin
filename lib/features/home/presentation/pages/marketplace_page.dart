@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_color.dart';
 import '../widget/category_row.dart';
 import '../widget/filters_panel.dart';
 import '../widget/service_card.dart';
-
-const primary = Color(0xFF001E40);
-const secondaryContainer = Color(0xFFD5E3FC);
-const background = Color(0xFFF7F9FB);
 
 class MarketplacePage extends StatelessWidget {
   const MarketplacePage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: background,
+        backgroundColor: AppColors.background,
         elevation: 0,
         title: const Text(
           'The Executive Concierge',
-          style: TextStyle(color: primary, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           Padding(
@@ -37,7 +37,7 @@ class MarketplacePage extends StatelessWidget {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
-        selectedItemColor: primary,
+        selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
@@ -90,7 +90,7 @@ class HeroSection extends StatelessWidget {
                     const Text(
                       "Marketplace",
                       style: TextStyle(
-                        color: primary,
+                        color: AppColors.primary,
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                       ),
@@ -111,7 +111,7 @@ class HeroSection extends StatelessWidget {
                     child: Text(
                       "Marketplace",
                       style: TextStyle(
-                        color: primary,
+                        color: AppColors.primary,
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                       ),

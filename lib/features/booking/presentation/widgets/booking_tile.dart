@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_color.dart';
 import '../../../../core/utils/date_time_extension.dart';
 import '../../domain/entities/booking_list_item.dart';
 import '../../domain/entities/booking_status.dart';
-import '../pages/booking_list_item_details_page.dart';
 
 class BookingTile extends StatelessWidget {
   const BookingTile({super.key, required this.booking, this.onTap});
