@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/app_color.dart';
 import '../../../../app/router.dart';
 import '../../../../core/providers/providers.dart';
 import '../widgets/booking_tile.dart';
@@ -24,13 +25,17 @@ class BookingListPage extends ConsumerWidget {
         error: (e, s) => Center(child: Text(e.toString())),
         data: (data) => data.isEmpty
             ? const Center(child: Text('No bookings found'))
-            : ListView.separated(
-                separatorBuilder: (context, index) => const Divider(),
-                itemCount: data.length,
-                itemBuilder: (_, i) => BookingTile(
-                  booking: data[i],
-                  onTap: () =>
-                      context.push(AppRoutes.bookingDetailPath(data[i].id)),
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      Divider(color: AppColors.surfaceContainer),
+                  itemCount: data.length,
+                  itemBuilder: (_, i) => BookingTile(
+                    booking: data[i],
+                    onTap: () =>
+                        context.push(AppRoutes.bookingDetailPath(data[i].id)),
+                  ),
                 ),
               ),
       ),

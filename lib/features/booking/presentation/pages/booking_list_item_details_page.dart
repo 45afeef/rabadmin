@@ -103,11 +103,6 @@ class _MainContent extends StatelessWidget {
 
   const _MainContent({required this.booking});
 
-  String _formatDate(DateTime? date) {
-    if (date == null) return "N/A";
-    return "${date.toLocal().toString().split(' ')[0]}";
-  }
-
   String _buildTitle() {
     if (booking.stayProviders.isNotEmpty) {
       return booking.stayProviders.first.name;
