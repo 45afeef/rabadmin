@@ -9,7 +9,7 @@ import '../../../booking/presentation/widgets/booking_create_widget.dart';
 import '../../../service_query/presentation/widgets/query_cab_widget.dart';
 import '../../../service_query/presentation/widgets/query_driver_widget.dart';
 import '../../../service_query/presentation/widgets/query_stay_widget.dart';
-import 'marketplace_page.dart';
+import 'second_home_page.dart' as second_home_page show HomePage;
 
 // Color constants for each section
 const List<Color> _appBarColors = [
@@ -142,7 +142,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           // navigate to new home page using material page router push
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MarketplacePage()),
+            MaterialPageRoute(
+              builder: (context) => second_home_page.HomePage(),
+            ),
           );
         },
         backgroundColor: Colors.white,

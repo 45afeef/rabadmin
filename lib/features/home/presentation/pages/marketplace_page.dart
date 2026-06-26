@@ -30,30 +30,6 @@ class MarketplacePage extends StatelessWidget {
 
       drawer: const _MarketplaceDrawer(),
 
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.primaryContainer,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Market"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined),
-            label: "Bookings",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum_outlined),
-            label: "Chat",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.badge_outlined),
-            label: "Team",
-          ),
-        ],
-      ),
-
       body: SingleChildScrollView(
         child: Column(
           children: const [HeroSection(), CategoryRow(), MarketplaceContent()],
