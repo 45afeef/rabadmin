@@ -9,7 +9,8 @@ import 'selected_traveler_model.dart';
 class BookingModel {
   final String id;
 
-  final DateTime? bookingDate;
+  final DateTime? startingDate;
+  final DateTime? endingDate;
   final BookingStatus status;
 
   final List<SelectedTravellerModel> travellers;
@@ -20,7 +21,8 @@ class BookingModel {
 
   const BookingModel({
     required this.id,
-    required this.bookingDate,
+    this.startingDate,
+    this.endingDate,
     required this.status,
     required this.travellers,
     required this.cabs,
@@ -31,8 +33,11 @@ class BookingModel {
   factory BookingModel.fromJson(Map<String, dynamic> json) {
     return BookingModel(
       id: json['id'],
-      bookingDate: json['booking_date'] != null
-          ? DateTime.tryParse(json['booking_date'])
+      startingDate: json['date_starting_from'] != null
+          ? DateTime.tryParse(json['date_starting_from'])
+          : null,
+      endingDate: json['date_ending_on'] != null
+          ? DateTime.tryParse(json['date_ending_on'])
           : null,
       status: BookingStatus.values.firstWhere(
         (e) => e.name == json['status'],
@@ -54,7 +59,8 @@ class BookingModel {
   factory BookingModel.fromEntity(BookingEntity entity) {
     return BookingModel(
       id: entity.id!,
-      bookingDate: entity.bookingDate,
+      startingDate: entity.startingDate,
+      endingDate: entity.endingDate,
       status: entity.status,
       totalAmount: entity.totalAmount,
       travellers: entity.travellers
@@ -68,7 +74,8 @@ class BookingModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'booking_date': bookingDate?.toIso8601String(),
+      'starting_date': startingDate?.toIso8601String(),
+      'ending_date': endingDate?.toIso8601String(),
       'status': status.name,
       'total_amount': totalAmount,
       'travellers': travellers.map((e) => e.toJson()).toList(),
@@ -80,7 +87,8 @@ class BookingModel {
   BookingEntity toEntity() {
     return BookingEntity(
       id: id,
-      bookingDate: bookingDate,
+      startingDate: startingDate,
+      endingDate: endingDate,
       status: status,
       totalAmount: totalAmount,
       travellers: travellers.map((e) => e.toEntity()).toList(),

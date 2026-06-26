@@ -5,7 +5,8 @@ extension BookingResponseModelMapper on BookingResponseModel {
   BookingListItem toEntity() {
     return BookingListItem(
       id: id,
-      bookingDate: bookingDate,
+      startingDate: startingDate,
+      endingDate: endingDate,
       status: status,
       totalAmount: totalAmount,
       travellers: travellers

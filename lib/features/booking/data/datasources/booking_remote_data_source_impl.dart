@@ -37,7 +37,6 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
         cabs: entity.cabs,
         stays: entity.stays,
         totalAmount: entity.totalAmount,
-        bookingDate: DateTime.now(),
       );
     } catch (e) {
       throw Exception('Failed to create booking: $e');

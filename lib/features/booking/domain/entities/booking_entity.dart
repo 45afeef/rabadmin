@@ -6,7 +6,9 @@ import 'selected_Traveller_entity.dart';
 class BookingEntity {
   final String? id;
 
-  final DateTime? bookingDate;
+  final DateTime? startingDate;
+  final DateTime? endingDate;
+
   final BookingStatus status;
 
   final List<SelectedTravellerEntity> travellers;
@@ -22,12 +24,14 @@ class BookingEntity {
     required this.stays,
     required this.totalAmount,
     this.id,
-    this.bookingDate,
+    this.startingDate,
+    this.endingDate,
   });
 
   BookingEntity copyWith({
     String? id,
-    DateTime? bookingDate,
+    DateTime? startingDate,
+    DateTime? endingDate,
     BookingStatus? status,
     List<SelectedTravellerEntity>? travellers,
     List<CabEntity>? cabs,
@@ -36,7 +40,8 @@ class BookingEntity {
   }) {
     return BookingEntity(
       id: id ?? this.id,
-      bookingDate: bookingDate ?? this.bookingDate,
+      startingDate: startingDate ?? this.startingDate,
+      endingDate: endingDate ?? this.endingDate,
       status: status ?? this.status,
       travellers: travellers ?? this.travellers,
       cabs: cabs ?? this.cabs,

@@ -2,7 +2,8 @@ import '../../domain/entities/booking_status.dart';
 
 class BookingResponseModel {
   final String id;
-  final DateTime? bookingDate;
+  final DateTime? startingDate;
+  final DateTime? endingDate;
   final BookingStatus status;
   final int? totalAmount;
   final List<_BookingTraveller> travellers;
@@ -11,7 +12,8 @@ class BookingResponseModel {
 
   const BookingResponseModel({
     required this.id,
-    this.bookingDate,
+    this.startingDate,
+    this.endingDate,
     this.status = BookingStatus.DRAFT,
     this.totalAmount,
     this.travellers = const [],
@@ -22,8 +24,11 @@ class BookingResponseModel {
   factory BookingResponseModel.fromJson(Map<String, dynamic> json) {
     return BookingResponseModel(
       id: json['id'] as String,
-      bookingDate: json['booking_date'] != null
-          ? DateTime.parse(json['booking_date'])
+      startingDate: json['date_starting_from'] != null
+          ? DateTime.parse(json['date_starting_from'])
+          : null,
+      endingDate: json['date_ending_on'] != null
+          ? DateTime.parse(json['date_ending_on'])
           : null,
       status: BookingStatus.fromJson(json['status']) ?? BookingStatus.PENDING,
       totalAmount: json['total_amount'],
@@ -48,8 +53,9 @@ class BookingResponseModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'booking_date': bookingDate?.toIso8601String(),
-      'status': status?.toJson(),
+      'date_starting_from': startingDate?.toIso8601String(),
+      'date_ending_on': endingDate?.toIso8601String(),
+      'status': status.toJson(),
       'total_amount': totalAmount,
       'travellers': travellers.map((e) => e.toJson()).toList(),
       'cab_providers': cabProviders.map((e) => e.toJson()).toList(),
@@ -59,7 +65,8 @@ class BookingResponseModel {
 
   BookingResponseModel copyWith({
     String? id,
-    DateTime? bookingDate,
+    DateTime? startingDate,
+    DateTime? endingDate,
     BookingStatus? status,
     int? totalAmount,
     List<_BookingTraveller>? travellers,
@@ -68,7 +75,8 @@ class BookingResponseModel {
   }) {
     return BookingResponseModel(
       id: id ?? this.id,
-      bookingDate: bookingDate ?? this.bookingDate,
+      startingDate: startingDate ?? this.startingDate,
+      endingDate: endingDate ?? this.endingDate,
       status: status ?? this.status,
       totalAmount: totalAmount ?? this.totalAmount,
       travellers: travellers ?? this.travellers,

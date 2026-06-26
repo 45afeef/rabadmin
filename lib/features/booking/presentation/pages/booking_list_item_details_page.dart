@@ -116,9 +116,9 @@ class _MainContent extends StatelessWidget {
   }
 
   String _buildSubtitle() {
-    final dateStr = booking.bookingDate != null
-        ? booking.bookingDate!.friendlyDateTime
-        : "N/A";
+    final dateStr =
+        "${booking.startingDate?.friendlyDateTime ?? "N/A"} - ${booking.endingDate?.friendlyDateTime ?? "N/A"}";
+
     final services = [
       if (booking.hasCabBookings) "Transportation",
       if (booking.hasStayBookings) "Accommodation",

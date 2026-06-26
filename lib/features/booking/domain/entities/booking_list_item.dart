@@ -3,7 +3,8 @@ import 'booking_status.dart';
 // This object is the data should in the booking list
 class BookingListItem {
   final String id;
-  final DateTime? bookingDate;
+  final DateTime? startingDate;
+  final DateTime? endingDate;
   final BookingStatus status;
   final int? totalAmount;
 
@@ -13,7 +14,8 @@ class BookingListItem {
 
   const BookingListItem({
     required this.id,
-    this.bookingDate,
+    this.startingDate,
+    this.endingDate,
     this.status = BookingStatus.DRAFT,
     this.totalAmount,
     this.travellers = const [],
