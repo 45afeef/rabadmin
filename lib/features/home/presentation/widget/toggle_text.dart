@@ -5,18 +5,14 @@ class ToggleText extends StatefulWidget {
     super.key,
     required this.texts,
     this.initialIndex = 0,
-    this.style,
     this.onChanged,
-  }) : assert(texts.length > 1, 'Provide at least 2 texts');
+  }) : assert(texts.length > 1, 'Provide at least 2 widgets');
 
-  /// List of texts to toggle between
-  final List<String> texts;
+  /// List of widgets to toggle between
+  final List<Widget> texts;
 
   /// Starting index
   final int initialIndex;
-
-  /// Optional text style
-  final TextStyle? style;
 
   /// Callback when toggled
   final ValueChanged<int>? onChanged;
@@ -51,11 +47,7 @@ class _ToggleTextState extends State<ToggleText> {
         transitionBuilder: (child, animation) {
           return FadeTransition(opacity: animation, child: child);
         },
-        child: Text(
-          widget.texts[_index],
-          key: ValueKey(_index),
-          style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
-        ),
+        child: KeyedSubtree(key: ValueKey(_index), child: widget.texts[_index]),
       ),
     );
   }
