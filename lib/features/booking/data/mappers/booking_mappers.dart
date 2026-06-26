@@ -15,8 +15,8 @@ class BookingMappers {
   }) {
     return rab_dio.BookingCreate(
       (b) => b
-        ..dateStartingFrom = (booking.startingDate ?? DateTime.now())
-        ..dateEndingOn = (booking.endingDate ?? DateTime.now())
+        ..dateStartingFrom = booking.startingDate?.toUtc()
+        ..dateEndingOn = booking.endingDate?.toUtc()
         ..status = _mapBookingStatus(booking.status)
         ..totalAmount = booking.totalAmount
         ..travelAgencyId = travelAgencyId

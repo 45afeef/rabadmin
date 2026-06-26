@@ -112,7 +112,7 @@ class BookingTile extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "${booking.startingDate?.friendlyDateTime ?? "No start date"} - ${booking.endingDate?.friendlyDateTime ?? "No end date"}",
+                          "${booking.startingDate?.friendlyDate ?? "No start date"} - ${booking.endingDate?.friendlyDate ?? "No end date"}",
                           style: const TextStyle(
                             color: AppColors.onSurfaceVariant,
                             fontSize: 13,
